@@ -1,4 +1,0 @@
-App-ReactNative
-
-Mobile app
-
