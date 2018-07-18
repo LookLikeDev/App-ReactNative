@@ -5,7 +5,7 @@ import {
   reduxifyNavigator,
   createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
-import SplashScreen from './components/screens/SplashScreen';
+import SplashScreen from './tmp/SplashScreen';
 import MainScreen from './components/screens/MainScreen';
 
 export const middleware = createReactNavigationReduxMiddleware(
