@@ -6,13 +6,12 @@ import { getStatusBarHeight } from '../../utils/statusBar';
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: getStatusBarHeight(),
+    paddingTop: getStatusBarHeight(true),
   },
   title: {
     fontFamily: 'System',
     fontSize: 34,
     fontWeight: 'bold',
-    marginTop: 50,
     paddingHorizontal: 20,
   },
 });

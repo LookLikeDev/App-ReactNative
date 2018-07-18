@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../common/Header';
 
-export default class DiscountsScreen extends React.Component {
+export default class DiscountsListScreen extends React.Component {
   static propTypes = {
     // from <Scene />
     title: PropTypes.string.isRequired,

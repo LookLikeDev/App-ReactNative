@@ -4,7 +4,7 @@ import { View, Button } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Header from '../common/Header';
 
-export default class LooksScreen extends React.Component {
+export default class DiscountsListScreen extends React.Component {
   static propTypes = {
     // from <Scene />
     title: PropTypes.string.isRequired,
@@ -16,7 +16,7 @@ export default class LooksScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <Button onPress={Actions.looksDetail} title="Switch to Scene with a navBar hidden" />
+        <Button onPress={Actions.discountsDetail} title="Промо-код" />
       </View>
     );
   }
