@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Image } from 'react-native';
+import {
+  View, Image, Text, StyleSheet,
+} from 'react-native';
 import main from '../../assets/tabbar/main.png';
 import favorites from '../../assets/tabbar/favorites.png';
 import camera from '../../assets/tabbar/camera.png';
@@ -24,13 +26,36 @@ function getIconSource(type) {
   }
 }
 
+const styles = StyleSheet.create({
+  badge: {
+    position: 'absolute',
+    top: -12,
+    right: -12,
+    borderRadius: 24,
+    width: 24,
+    height: 24,
+    backgroundColor: '#FC4600',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  count: {
+    color: 'white',
+    fontSize: 14,
+  },
+});
+
 export default class TabIcon extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
+    count: PropTypes.number,
+  };
+
+  static defaultProps = {
+    count: null,
   };
 
   render() {
-    const { type } = this.props;
+    const { type, count } = this.props;
     return (
       <View>
         <Image
@@ -41,6 +66,13 @@ export default class TabIcon extends React.Component {
           }}
           source={getIconSource(type)}
         />
+        {count && count > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.count}>
+              {count}
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
