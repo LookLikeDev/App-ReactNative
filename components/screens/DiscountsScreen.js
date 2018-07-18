@@ -9,7 +9,7 @@ export default class LooksScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>
-          Looks Screen
+          Discounts Screen
         </Text>
       </View>
     );
