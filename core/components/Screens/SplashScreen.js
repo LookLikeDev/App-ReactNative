@@ -12,6 +12,11 @@ class SplashScreen extends React.Component {
     // from connect
     signIn: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
+    token: PropTypes.string,
+  };
+
+  static defaultProps = {
+    token: 'something want wrong',
   };
 
   componentDidMount() {
@@ -21,11 +26,16 @@ class SplashScreen extends React.Component {
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, token } = this.props;
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>
           {loading ? 'Loading' : 'Splash Screen'}
+        </Text>
+        <Text>
+          User Token:
+          {' '}
+          { token }
         </Text>
       </View>
     );
@@ -33,8 +43,8 @@ class SplashScreen extends React.Component {
 }
 
 export default connect(state => ({
-  user: state[moduleName].user,
   loading: state[moduleName].loading,
+  token: state[moduleName].token,
 }), {
   signIn,
 })(SplashScreen);
