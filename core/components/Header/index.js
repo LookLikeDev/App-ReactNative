@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
-import { getStatusBarHeight } from '../../utils/statusBar';
+import { getStatusBarHeight } from '../../../utils/index';
 
 const styles = StyleSheet.create({
   header: {
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class Header extends React.Component {
+export default class Header extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
   };
@@ -33,5 +32,3 @@ class Header extends React.Component {
     );
   }
 }
-
-export default connect(state => ({ router: state.router }))(Header);

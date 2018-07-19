@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   View, Image, Text, StyleSheet,
 } from 'react-native';
-import main from '../../assets/tabbar/main.png';
-import favorites from '../../assets/tabbar/favorites.png';
-import camera from '../../assets/tabbar/camera.png';
-import looks from '../../assets/tabbar/looks.png';
-import discounts from '../../assets/tabbar/discounts.png';
+import main from '../../../assets/icons/tabbar/main.png';
+import favorites from '../../../assets/icons/tabbar/favorites.png';
+import camera from '../../../assets/icons/tabbar/camera.png';
+import looks from '../../../assets/icons/tabbar/looks.png';
+import discounts from '../../../assets/icons/tabbar/discounts.png';
 
 function getIconSource(type) {
   switch (type) {
