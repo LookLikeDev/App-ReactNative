@@ -1362,7 +1362,7 @@ babel-plugin-istanbul@^4.1.5:
     babel-plugin-syntax-object-rest-spread "^6.13.0"
     find-up "^2.1.0"
     istanbul-lib-instrument "^1.10.1"
-    test-exclude "^4.2.1"
+    test-auth-exclude "^4.2.1"
 
 babel-plugin-jest-hoist@^22.4.4:
   version "22.4.4"
@@ -4444,7 +4444,7 @@ jest-expo@~27.0.0:
     babel-jest "^22.4.1"
     jest "^22.4.2"
     json5 "^0.5.1"
-    react-test-renderer "^16.3.1"
+    react-test-auth-renderer "^16.3.1"
 
 jest-get-type@^22.1.0, jest-get-type@^22.4.3:
   version "22.4.3"
@@ -6474,7 +6474,7 @@ react-redux@^5.0.2, react-redux@^5.0.7:
 
 react-test-renderer@16.3.1:
   version "16.3.1"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.3.1.tgz#d9257936d8535bd40f57f3d5a84e7b0452fb17f2"
+  resolved "https://registry.yarnpkg.com/react-test-auth-renderer/-/react-test-auth-renderer-16.3.1.tgz#d9257936d8535bd40f57f3d5a84e7b0452fb17f2"
   dependencies:
     fbjs "^0.8.16"
     object-assign "^4.1.1"
@@ -6483,7 +6483,7 @@ react-test-renderer@16.3.1:
 
 react-test-renderer@^16.3.1:
   version "16.4.1"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.4.1.tgz#f2fb30c2c7b517db6e5b10ed20bb6b0a7ccd8d70"
+  resolved "https://registry.yarnpkg.com/react-test-auth-renderer/-/react-test-auth-renderer-16.4.1.tgz#f2fb30c2c7b517db6e5b10ed20bb6b0a7ccd8d70"
   dependencies:
     fbjs "^0.8.16"
     object-assign "^4.1.1"
@@ -7425,7 +7425,7 @@ temp@0.8.3:
 
 test-exclude@^4.2.1:
   version "4.2.1"
-  resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.2.1.tgz#dfa222f03480bca69207ca728b37d74b45f724fa"
+  resolved "https://registry.yarnpkg.com/test-auth-exclude/-/test-auth-exclude-4.2.1.tgz#dfa222f03480bca69207ca728b37d74b45f724fa"
   dependencies:
     arrify "^1.0.1"
     micromatch "^3.1.8"
