@@ -1,19 +1,22 @@
-import firebase from 'firebase';
+import { AsyncStorage } from 'react-native';
 import { Record } from 'immutable';
-import { Actions } from 'react-native-router-flux';
 import {
-  all, put, call, cps, take, takeEvery,
+  all, put, call, takeEvery,
 } from 'redux-saga/effects';
-import { appName } from '../config';
+import { Actions } from 'react-native-router-flux';
+import { appName, firestore } from '../config';
 
 export const ReducerRecord = Record({
   user: null,
   error: null,
   loading: false,
+  token: null,
 });
 
+/**
+ * Consts
+ */
 export const moduleName = 'auth';
-// Actions
 export const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
 export const SIGN_UP_SUCCESS = `${appName}/${moduleName}/SIGN_UP_SUCCESS`;
 export const SIGN_UP_ERROR = `${appName}/${moduleName}/SIGN_UP_ERROR`;
@@ -23,13 +26,16 @@ export const SIGN_IN_ERROR = `${appName}/${moduleName}/SIGN_IN_ERROR`;
 export const SIGN_OUT_REQUEST = `${appName}/${moduleName}/SIGN_OUT_REQUEST`;
 export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 
-// Reducer
+/**
+ * Reducer
+ */
 export default function reducer(state = new ReducerRecord(), action) {
   const { type, payload, error } = action;
 
   switch (type) {
     case SIGN_UP_REQUEST:
     case SIGN_IN_REQUEST:
+    case SIGN_OUT_REQUEST:
       return state.set('loading', true);
 
     case SIGN_UP_SUCCESS:
@@ -37,6 +43,7 @@ export default function reducer(state = new ReducerRecord(), action) {
       return state
         .set('loading', false)
         .set('user', payload.user)
+        .set('token', payload.token)
         .set('error', null);
 
     case SIGN_UP_ERROR:
@@ -53,11 +60,12 @@ export default function reducer(state = new ReducerRecord(), action) {
   }
 }
 
-// Action creator
-export function signUp(email, password) {
+/**
+ * Action creators
+ */
+export function signUp() {
   return {
     type: SIGN_UP_REQUEST,
-    payload: { email, password },
   };
 }
 
@@ -68,46 +76,32 @@ export function signIn() {
 }
 
 
-export function signOut() {
-  return {
-    type: SIGN_OUT_REQUEST,
-  };
-}
-
-// Sagas
+/**
+ * Sagas
+ */
 export const signUpSaga = function* () {
-  const auth = firebase.auth();
-
-  while (true) {
-    const action = yield take(SIGN_UP_REQUEST);
-
-    try {
-      const user = yield call([auth, auth.signInAnonymously]);
-
-      yield put({
-        type: SIGN_UP_SUCCESS,
-        payload: { user },
-      });
-    } catch (error) {
-      yield put({
-        type: SIGN_UP_ERROR,
-        error,
-      });
-    }
-  }
-};
-
-export const signInSaga = function* () {
-  const auth = firebase.auth();
+  const db = firestore;
 
   try {
-    yield call([auth, auth.signInAnonymously]);
+    const collectionRef = yield call(
+      [db, db.collection],
+      'users',
+    );
 
-    const user = yield firebase.auth().currentUser;
+    const userRef = yield call(
+      [collectionRef, collectionRef.add],
+      { name: 'test' },
+    );
+
+    yield call(
+      [AsyncStorage, AsyncStorage.setItem],
+      '@Auth:token',
+      userRef.id,
+    );
 
     yield put({
-      type: SIGN_IN_SUCCESS,
-      payload: { user },
+      type: SIGN_UP_SUCCESS,
+      payload: { token: userRef.id },
     });
 
     yield call(Actions.main);
@@ -119,7 +113,38 @@ export const signInSaga = function* () {
   }
 };
 
-export const watchStatusChange = function* () {
+
+// TODO сделать проверку существует ли токен на сервере, а не только локально
+export const signInSaga = function* () {
+  const storage = AsyncStorage;
+
+  try {
+    const token = yield call(
+      [storage, storage.getItem],
+      '@Auth:token',
+    );
+
+    if (token === null) {
+      yield put({
+        type: SIGN_UP_REQUEST,
+      });
+    } else {
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { token },
+      });
+
+      yield call(Actions.main);
+    }
+  } catch (error) {
+    yield put({
+      type: SIGN_IN_ERROR,
+      error,
+    });
+  }
+};
+
+/* export const watchStatusChange = function* () {
   const auth = firebase.auth();
   // TODO change this saga effect
   try {
@@ -130,26 +155,12 @@ export const watchStatusChange = function* () {
       payload: { user },
     });
   }
-};
-
-export const signOutSaga = function* () {
-  const auth = firebase.auth();
-
-  try {
-    yield call([auth, auth.signOut]);
-    yield put({
-      type: SIGN_OUT_SUCCESS,
-    });
-  } catch (_) {
-
-  }
-};
+}; */
 
 export const saga = function* () {
   yield all([
-    signUpSaga(),
-    watchStatusChange(),
+    // watchStatusChange(),
+    takeEvery(SIGN_UP_REQUEST, signUpSaga),
     takeEvery(SIGN_IN_REQUEST, signInSaga),
-    takeEvery(SIGN_OUT_REQUEST, signOutSaga),
   ]);
 };

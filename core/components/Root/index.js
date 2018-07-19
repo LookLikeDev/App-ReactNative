@@ -5,6 +5,7 @@ import {
   Stack,
   Tabs,
 } from 'react-native-router-flux';
+import SplashScreen from '../Screens/SplashScreen';
 import MainScreen from '../Screens/MainScreen';
 import FavoritesScreen from '../Screens/FavoritesScreen';
 import PhotoScreen from '../Screens/PhotoScreen';
@@ -23,6 +24,13 @@ export default class Root extends React.Component {
     return (
       <Router>
         <Stack key="root" hideNavBar>
+          <Scene
+            key="splashScreen"
+            component={SplashScreen}
+            title="Splash Screen"
+            icon={() => <TabIcon type="main" />}
+            hideNavBar
+          />
           <Tabs key="tabs" showLabel={false}>
             <Scene
               key="main"

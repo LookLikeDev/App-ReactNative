@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
 
 export const appName = 'look-like-dev';
 export const firebaseConfig = {
@@ -8,6 +9,10 @@ export const firebaseConfig = {
   projectId: 'look-like-dev',
   storageBucket: 'look-like-dev.appspot.com',
   messagingSenderId: '306895689483',
+  timestampsInSnapshots: true,
 };
 
 firebase.initializeApp(firebaseConfig);
+
+export const firestore = firebase.firestore();
+firestore.settings({ timestampsInSnapshots: true });
