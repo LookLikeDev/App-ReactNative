@@ -1,4 +1,5 @@
 import { Dimensions, Platform, StatusBar } from 'react-native';
+import { OrderedMap, Map } from 'immutable';
 
 export function isIphoneX() {
   const dimen = Dimensions.get('window');
@@ -22,4 +23,13 @@ export function getStatusBarHeight(safe) {
     ios: ifIphoneX(safe ? 44 : 30, 20),
     android: StatusBar.currentHeight,
   });
+}
+
+export function arrToMap(arr, DataRecord = Map) {
+  return arr.reduce((acc, item) => acc.set(item.id, new DataRecord(item)), new OrderedMap({}));
+}
+
+export function mapToArr(obj) {
+  return obj.valueSeq().toArray();
+  // return Object.keys(obj).map(id => obj[id]);
 }
