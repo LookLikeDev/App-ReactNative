@@ -18,8 +18,10 @@ const styles = StyleSheet.create({
     resizeMode: Image.resizeMode.cover,
   },
   text: {
+    fontFamily: 'SF-UI-Text-Semibold',
     color: '#000000',
     fontSize: 11,
+    lineHeight: 16,
     marginHorizontal: 20,
     marginBottom: 12,
   },
@@ -34,7 +36,9 @@ const styles = StyleSheet.create({
 export default class LooksList extends React.Component {
   static propTypes = {
     image: PropTypes.string.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }).isRequired,
   };
 
   render() {

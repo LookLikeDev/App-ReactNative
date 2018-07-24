@@ -1,24 +1,24 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import firebase from 'firebase';
-import { moduleName, fetchList } from '../../../ducks/looks';
+import PropTypes from 'prop-types';
 import {
-  View, FlatList, Button, Text,
+  View, FlatList,
 } from 'react-native';
-import { appName, firestore } from '../../../config';
 import LookItem from './LookItem';
-import store from '../../../redux';
+import LooksLoadedText from './LooksLoadedText';
 
-
-// TODO I promise to refactor this code.
 class LooksList extends React.Component {
-  state = {
-    data: [],
-    disabled: true,
-    loading: false,
+  static propTypes = {
+    loading: PropTypes.bool.isRequired,
+    loaded: PropTypes.bool.isRequired,
+    fetchList: PropTypes.func.isRequired,
+    entities: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+    })).isRequired,
   };
-
-  lastVisible = null;
 
   componentDidMount() {
     this.getUsers();
@@ -34,7 +34,7 @@ class LooksList extends React.Component {
 
   keyExtractor = item => item.id;
 
-  renderItem = ({ item: { id, user, image } }) => (
+  renderItem = ({ item: { user, image } }) => (
     <LookItem
       user={user}
       image={image}
@@ -42,32 +42,22 @@ class LooksList extends React.Component {
   );
 
   render() {
+    const { loaded, entities } = this.props;
+
     return (
-      <View>
-        <Text>
-          {this.props.loaded && 'loaded'}
-        </Text>
-        <Text>
-          {this.props.loading && 'Loading'}
-        </Text>
+      <View style={{ flex: 1 }}>
         <FlatList
-          data={this.props.entities}
+          data={entities}
           extraData={this.props}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           onEndReached={this.getUsers}
           onEndReachedThreshold={0.1}
+          ListFooterComponent={(loaded ? LooksLoadedText : null)}
         />
       </View>
     );
   }
 }
 
-// TODO create selectors for entities
-export default connect(state => ({
-  loading: state[moduleName].loading,
-  loaded: state[moduleName].loaded,
-  entities: state[moduleName].entities.toArray(),
-}), {
-  fetchList,
-})(LooksList);
+export default LooksList;

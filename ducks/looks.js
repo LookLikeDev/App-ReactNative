@@ -53,8 +53,6 @@ export default function reducer(looksState = new ReducerRecord(), action) {
         .set('loading', true)
         .set('loaded', true);
 
-    // .mergeIn(['entities'], arrToMap(payload, LookRecord));
-
     default:
       return looksState;
   }
