@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 export const appName = 'look-like-dev';
 export const firebaseConfig = {
