@@ -1,48 +1,67 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
-  Button, Image, View, Alert,
+  Dimensions, Image, ScrollView, View,
 } from 'react-native';
-import { ImagePicker, Permissions } from 'expo';
+import ImagePicker from 'react-native-image-picker';
+import Header from '../Header';
+import Button from '../Button';
+
+const options = {
+  title: 'Выберите LOOK',
+  mediaType: 'photo',
+};
+
+const dimensions = Dimensions.get('window');
+const imageHeight = Math.round((dimensions.width * 4) / 3);
+const imageWidth = dimensions.width;
 
 export default class PhotoScreen extends React.Component {
+  static propTypes = {
+    // from <Scene />
+    title: PropTypes.string.isRequired,
+  };
+
   state = {
     image: null,
   };
 
-  pickImage = async () => {
-    const results = await Promise.all([
-      Permissions.askAsync(Permissions.CAMERA),
-      Permissions.askAsync(Permissions.CAMERA_ROLL),
-    ]);
+  showPicker = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
 
-    if (results.some(({ status }) => { console.log(status); return status !== 'granted'; })) {
-      Alert.alert('No access to CAMERA');
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      base64: true,
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        console.log('-- Success ---', response);
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({ image: response });
+      }
     });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
   };
 
   render() {
     const { image } = this.state;
+    const { title } = this.props;
 
+    // TODO refactor styles
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this.pickImage}
-        />
-        {image
-        && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+        <Header title={title} />
+        <View style={{ flex: 1, alignSelf: 'stretch' }}>
+          <ScrollView contentContainerStyle={{ alignSelf: 'stretch' }}>
+            <View style={{ marginBottom: 20 }}>
+              {image
+              && <Image source={{ uri: image.uri }} style={{ marginBottom: 16, width: imageWidth, height: imageHeight }} />}
+              <Button title={!image ? 'Создать LOOK' : 'Опубликовать LOOK'} onPress={this.showPicker} />
+            </View>
+          </ScrollView>
+        </View>
       </View>
     );
   }

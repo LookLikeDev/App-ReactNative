@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     fontFamily: 'SF-Pro-Display-Black',
     fontSize: 32,
     lineHeight: 40,
-    fontWeight: 'bold',
     paddingHorizontal: 20,
   },
 });
