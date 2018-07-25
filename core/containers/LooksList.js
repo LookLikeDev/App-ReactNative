@@ -5,6 +5,7 @@ import LooksList from '../components/Looks/LooksList';
 const mapStateToProps = state => ({
   loading: state[moduleName].loading,
   loaded: state[moduleName].loaded,
+  token: state.auth.token,
   entities: state[moduleName].entities.toArray(),
 });
 

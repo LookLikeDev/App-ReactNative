@@ -12,6 +12,7 @@ export const ReducerRecord = Record({
   loading: false,
   loaded: false,
   lastElement: null,
+  image: null,
 });
 
 const LookRecord = Record({
@@ -29,6 +30,7 @@ export const FETCH_LIST_LAST_ELEMENT = `${appName}/${moduleName}/FETCH_LIST_LAST
 export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
+export const ADD_NEW_IMAGE = `${appName}/${moduleName}/ADD_NEW_IMAGE`;
 
 /**
  * Reducer
@@ -41,17 +43,20 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState.set('loading', true);
 
     case FETCH_LIST_LAST_ELEMENT:
-      return looksState.set('lastElement', payload);
+      return looksState.set('lastElement', payload.lastElement);
 
     case FETCH_LIST_SUCCESS:
       return looksState
         .set('loading', false)
-        .update('entities', entities => entities.merge(arrToMap(payload, LookRecord)));
+        .update('entities', entities => entities.merge(arrToMap(payload.entities, LookRecord)));
 
     case FETCH_LIST_LOADED_ALL:
       return looksState
         .set('loading', true)
         .set('loaded', true);
+
+    case ADD_NEW_IMAGE:
+      return looksState.set('image', payload.image);
 
     default:
       return looksState;
@@ -67,22 +72,37 @@ export function fetchList() {
   };
 }
 
+export function addNewImage(image) {
+  return {
+    type: ADD_NEW_IMAGE,
+    payload: { image },
+  };
+}
+
 /**
  * Sagas
  */
-function* getData(item) {
+const getData = function* (item) {
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
 
-  const imageRef = yield call([storageRef, storageRef.child], item.data().picture_file);
-  const url = yield call([imageRef, imageRef.getDownloadURL]);
+  try {
+    const imageRef = yield call([storageRef, storageRef.child], item.data().picture_file);
+    const url = yield call([imageRef, imageRef.getDownloadURL]);
 
-  return {
-    id: item.id,
-    user: data.user,
-    image: url,
-  };
-}
+    return {
+      id: item.id,
+      user: data.user,
+      image: url,
+    };
+  } catch (error) {
+    return {
+      id: item.id,
+      user: data.user,
+      image: null,
+    };
+  }
+};
 
 export const fetchListSaga = function* () {
   const db = firestore;
@@ -90,32 +110,26 @@ export const fetchListSaga = function* () {
 
   try {
     let collection = yield db.collection('looks').limit(5);
-
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
         [collection, collection.startAfter],
         state[moduleName].lastElement,
       );
     }
-
     const querySnapshot = yield call([collection, collection.get]);
-
     if (querySnapshot.docs.length === 0) {
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
     }
-
     yield put({
       type: FETCH_LIST_LAST_ELEMENT,
-      payload: querySnapshot.docs[querySnapshot.docs.length - 1],
+      payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
     });
-
     const items = yield all(querySnapshot.docs.map(getData));
-
     yield put({
       type: FETCH_LIST_SUCCESS,
-      payload: items,
+      payload: { entities: items },
     });
   } catch (error) {
     yield put({
@@ -127,6 +141,7 @@ export const fetchListSaga = function* () {
 
 export const saga = function* () {
   yield all([
+    // takeEvery(ADD_NEW_IMAGE, fetchListSaga),
     takeEvery(FETCH_LIST_REQUEST, fetchListSaga),
   ]);
 };
