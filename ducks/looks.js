@@ -6,7 +6,7 @@ import {
   all, put, call, take, takeEvery, select,
 } from 'redux-saga/effects';
 import { Alert } from 'react-native';
-import { Actions } from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux';
 import { appName, firestore } from '../config';
 import { arrToMap, getFileExtensionByString } from '../core/utils';
 
@@ -132,23 +132,29 @@ export const fetchListSaga = function* () {
 
   try {
     let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
+
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
         [collection, collection.startAfter],
         state[moduleName].lastElement,
       );
     }
+
     const querySnapshot = yield call([collection, collection.get]);
+
     if (querySnapshot.docs.length === 0) {
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
     }
+
     yield put({
       type: FETCH_LIST_LAST_ELEMENT,
       payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
     });
+
     const items = yield all(querySnapshot.docs.map(getData));
+
     yield put({
       type: FETCH_LIST_SUCCESS,
       payload: { entities: items },
@@ -222,14 +228,14 @@ export const uploadImageSaga = function* ({ payload: { userId, image, formValues
       type: IMAGE_UPLOAD_SUCCESS,
     });
 
-    Alert.alert(
+    /*Alert.alert(
       'Лук опубликован',
       null,
       [
-        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); }},
+        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); } },
       ],
       { cancelable: false },
-    );
+    );*/
   }
 };
 

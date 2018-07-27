@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, StyleSheet } from 'react-native';
-import { getStatusBarHeight } from '../../utils';
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: getStatusBarHeight(true),
     marginBottom: 12,
   },
   title: {

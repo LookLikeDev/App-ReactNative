@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux';
-import Button from '../Button';
+import Button from '../Common/Button';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);

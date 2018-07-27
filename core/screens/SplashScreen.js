@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   View, Text,
 } from 'react-native';
-import { moduleName, signIn } from '../../ducks/auth';
+import { moduleName, signIn } from '../../ducks/user';
 
 // TODO don't forget to delete this component
 class SplashScreen extends React.Component {
