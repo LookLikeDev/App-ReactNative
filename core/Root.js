@@ -6,6 +6,7 @@ import {
   Stack,
   Tabs,
 } from 'react-native-router-flux';
+import NavBar from './components/NavBar';
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './screens/MainScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
@@ -25,14 +26,13 @@ export default class Root extends React.Component {
     return (
       <React.Fragment>
         <StatusBar barStyle="dark-content" />
-        <Router sceneStyle={{ backgroundColor: '#FFFFFF' }}>
-          <Stack key="root" hideNavBar>
+        <Router sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
+          <Stack key="root" modal hideNavBar>
             <Scene
               key="splashScreen"
               component={SplashScreen}
               title="Splash Screen"
               icon={({ focused }) => <TabIcon type="main" selected={focused} />}
-              hideNavBar
             />
             <Tabs key="tabs" showLabel={false} activeTintColor="#000000">
               <Scene
@@ -40,14 +40,12 @@ export default class Root extends React.Component {
                 component={MainScreen}
                 title="Look Like"
                 icon={({ focused }) => <TabIcon type="main" selected={focused} />}
-                hideNavBar
               />
               <Scene
                 key="favorites"
                 component={FavoritesScreen}
                 title="Избранное"
                 icon={({ focused }) => <TabIcon type="favorites" count={25} selected={focused} />}
-                hideNavBar
               />
               <Stack>
                 <Scene
@@ -55,7 +53,6 @@ export default class Root extends React.Component {
                   component={PhotoScreen}
                   title="Мой LOOK"
                   icon={({ focused }) => <TabIcon type="camera" selected={focused} />}
-                  hideNavBar
                 />
                 <Scene
                   key="markItems"
@@ -81,7 +78,6 @@ export default class Root extends React.Component {
                 component={LooksScreen}
                 title="Мои луки"
                 icon={({ focused }) => <TabIcon type="looks" selected={focused} />}
-                hideNavBar
               />
               <Stack>
                 <Scene
@@ -89,7 +85,6 @@ export default class Root extends React.Component {
                   component={DiscountsListScreen}
                   title="Мои скидки"
                   icon={({ focused }) => <TabIcon type="discounts" selected={focused} />}
-                  hideNavBar
                 />
                 <Scene
                   key="discountsDetail"

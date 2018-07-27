@@ -9,8 +9,8 @@ import {
   View,
   Switch,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import Button from '../Button';
+import Button from '../Common/Button';
+import Input from '../Common/Input';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,16 +30,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     marginBottom: 20,
   },
-  inputGroup: {
-    height: 56,
-    marginLeft: 20,
-    paddingRight: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    borderBottomWidth: 1,
-    borderColor: '#BCBBC1',
-  },
   switchGroup: {
     paddingVertical: 16,
     marginHorizontal: 20,
@@ -47,28 +37,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  inputLabel: {
-    fontFamily: 'SF-UI-Text-Regular',
-    fontSize: 16,
-    lineHeight: 16,
-    color: '#A1A1A1',
-    paddingRight: 6,
-  },
-  inputText: {
-    flex: 1,
-    fontFamily: 'SF-UI-Text-Regular',
-    fontSize: 16,
-    color: '#000000',
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-  },
   switchLabel: {
     fontFamily: 'SF-Pro-Display-Semibold',
     fontSize: 16,
     color: '#000000',
-  },
-  orange: {
-    color: '#FC4600',
   },
   submit: {
     marginBottom: 24,
@@ -97,8 +69,6 @@ export default class LookPublishForm extends React.Component {
     console.log('submitting form', values);
     uploadImage(userId, image, values);
   };
-
-  renderInput = ({ style, input: { onChange, ...restInput } }) => <TextInput onChangeText={onChange} {...restInput} style={style} />;
 
   renderSwitch = ({
     style, input: {
@@ -132,24 +102,9 @@ export default class LookPublishForm extends React.Component {
         <Text style={[styles.text, styles.subTitle]}>
           «Эта информация будет отображаться вместе с вашим луком»
         </Text>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>
-            Имя:
-          </Text>
-          <Field name="name" component={this.renderInput} style={styles.inputText} />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>
-            Дата рождения:
-          </Text>
-          <Field name="birthday" component={this.renderInput} style={styles.inputText} />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>
-            Магазин:
-          </Text>
-          <Field name="shopName" component={this.renderInput} style={[styles.inputText, styles.orange]} />
-        </View>
+        <Field name="name" labelText="Имя" component={Input} />
+        <Field name="birthday" labelText="Дата рождения" component={Input} />
+        <Field name="shopName" labelText="Магазин" component={Input} inputTextOrange />
         <Text style={[styles.text, styles.description]}>
           Точное указание магазина является необходимым условием для получения скидки
         </Text>
