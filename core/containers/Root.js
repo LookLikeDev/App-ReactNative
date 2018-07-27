@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Root from '../components/Root';
+import Root from '../Root';
 
 const RootContainer = connect()(Root);
 

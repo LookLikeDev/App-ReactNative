@@ -6,7 +6,7 @@ import { getStatusBarHeight } from '../../utils';
 const styles = StyleSheet.create({
   header: {
     paddingTop: getStatusBarHeight(true),
-    marginBottom: 8,
+    marginBottom: 12,
   },
   title: {
     fontFamily: 'SF-Pro-Display-Black',

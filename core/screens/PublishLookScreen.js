@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import Header from '../../containers/Header';
+import Header from '../containers/Header';
+import LookPublishForm from '../containers/LookPublishForm';
 
-export default class DiscountsDetailScreen extends React.Component {
+export default class PublishLookScreen extends React.Component {
   static propTypes = {
-    // from react-native-router-flux and <Scene />
+    // from <Scene />
     title: PropTypes.string.isRequired,
   };
 
@@ -15,6 +16,7 @@ export default class DiscountsDetailScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
+        <LookPublishForm />
       </View>
     );
   }

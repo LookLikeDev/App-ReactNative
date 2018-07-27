@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   View, Text,
 } from 'react-native';
-import { moduleName, signIn } from '../../../ducks/auth';
+import { moduleName, signIn } from '../../ducks/auth';
 
 // TODO don't forget to delete this component
 class SplashScreen extends React.Component {
@@ -12,11 +12,11 @@ class SplashScreen extends React.Component {
     // from connect
     signIn: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
-    token: PropTypes.string,
+    id: PropTypes.string,
   };
 
   static defaultProps = {
-    token: 'something want wrong',
+    id: 'something want wrong',
   };
 
   componentDidMount() {
@@ -26,7 +26,7 @@ class SplashScreen extends React.Component {
   }
 
   render() {
-    const { loading, token } = this.props;
+    const { loading, id } = this.props;
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>
@@ -35,7 +35,7 @@ class SplashScreen extends React.Component {
         <Text>
           User Token:
           {' '}
-          { token }
+          { id }
         </Text>
       </View>
     );
@@ -44,7 +44,7 @@ class SplashScreen extends React.Component {
 
 export default connect(state => ({
   loading: state[moduleName].loading,
-  token: state[moduleName].token,
+  id: state[moduleName].id,
 }), {
   signIn,
 })(SplashScreen);

@@ -1,16 +1,22 @@
-import { Record, OrderedMap } from 'immutable';
 import firebase from 'firebase';
+import uuid from 'uuid/v1';
+import { Record, OrderedMap } from 'immutable';
+import { eventChannel, END } from 'redux-saga';
 import {
-  all, put, call, takeEvery, select,
+  all, put, call, take, takeEvery, select,
 } from 'redux-saga/effects';
+import { Alert } from 'react-native';
+import { Actions } from 'react-native-router-flux'
 import { appName, firestore } from '../config';
-import { arrToMap } from '../core/utils';
+import { arrToMap, getFileExtensionByString } from '../core/utils';
 
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   error: null,
   loading: false,
   loaded: false,
+  uploading: false,
+  uploaded: false,
   lastElement: null,
   image: null,
 });
@@ -30,7 +36,10 @@ export const FETCH_LIST_LAST_ELEMENT = `${appName}/${moduleName}/FETCH_LIST_LAST
 export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
-export const ADD_NEW_IMAGE = `${appName}/${moduleName}/ADD_NEW_IMAGE`;
+export const IMAGE_ADD = `${appName}/${moduleName}/IMAGE_ADD`;
+export const IMAGE_UPLOAD = `${appName}/${moduleName}/IMAGE_UPLOAD`;
+export const IMAGE_UPLOAD_START = `${appName}/${moduleName}/IMAGE_UPLOAD_START`;
+export const IMAGE_UPLOAD_SUCCESS = `${appName}/${moduleName}/IMAGE_UPLOAD_SUCCESS`;
 
 /**
  * Reducer
@@ -55,9 +64,16 @@ export default function reducer(looksState = new ReducerRecord(), action) {
         .set('loading', true)
         .set('loaded', true);
 
-    case ADD_NEW_IMAGE:
+    case IMAGE_ADD:
       return looksState.set('image', payload.image);
 
+    case IMAGE_UPLOAD_START:
+      return looksState.set('uploading', true);
+
+    case IMAGE_UPLOAD_SUCCESS:
+      return looksState
+        .set('uploading', false)
+        .set('uploaded', true);
     default:
       return looksState;
   }
@@ -72,13 +88,19 @@ export function fetchList() {
   };
 }
 
-export function addNewImage(image) {
+export function addImage(image) {
   return {
-    type: ADD_NEW_IMAGE,
+    type: IMAGE_ADD,
     payload: { image },
   };
 }
 
+export function uploadImage(userId, image, formValues) {
+  return {
+    type: IMAGE_UPLOAD,
+    payload: { userId, image, formValues },
+  };
+}
 /**
  * Sagas
  */
@@ -109,7 +131,7 @@ export const fetchListSaga = function* () {
   const state = yield select();
 
   try {
-    let collection = yield db.collection('looks').limit(5);
+    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
         [collection, collection.startAfter],
@@ -139,9 +161,81 @@ export const fetchListSaga = function* () {
   }
 };
 
+// TODO check and refactor
+function createFileUploadingChannel([imageFullPath, image]) {
+  return eventChannel((emitter) => {
+    const uploadTask = firebase.storage().ref().child(imageFullPath)
+      .putString(image.data, 'base64', { contentType: 'image/jpeg' });
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      emitter(progress);
+    }, (error) => {
+      console.log('--- ERROR --- createFileUploadingChannel ---', error);
+      emitter(END);
+    }, () => {
+      emitter(END);
+    });
+    return () => { uploadTask.cancel(); };
+  });
+}
+
+// TODO check and refactor, add clear image data after success uploading
+export const uploadImageSaga = function* ({ payload: { userId, image, formValues } }) {
+  const looksCollection = firestore.collection('looks');
+  const uuidImage = uuid();
+  const fileExtension = getFileExtensionByString(image.uri);
+  const imageFullPath = `looks/${uuidImage}.${fileExtension}`;
+
+  const channelFileUpload = yield call(createFileUploadingChannel, [imageFullPath, image]);
+
+  yield put({
+    type: IMAGE_UPLOAD_START,
+  });
+
+  try {
+    while (true) {
+      // take(END) will cause the saga to terminate by jumping to the finally block
+      const task = yield take(channelFileUpload);
+      console.log(`progress: ${task}`);
+    }
+  } catch (error) {
+    console.log('--- ERROR --- uploadImageSaga ---', error);
+  } finally {
+    yield call(
+      [looksCollection, looksCollection.add],
+      {
+        user: {
+          id: userId,
+          name: formValues.name,
+          birthday: formValues.birthday,
+        },
+        shop: {
+          name: formValues.shopName,
+        },
+        picture_file: imageFullPath,
+        date_published: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+    );
+
+    yield put({
+      type: IMAGE_UPLOAD_SUCCESS,
+    });
+
+    Alert.alert(
+      'Лук опубликован',
+      null,
+      [
+        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); }},
+      ],
+      { cancelable: false },
+    );
+  }
+};
+
 export const saga = function* () {
   yield all([
-    // takeEvery(ADD_NEW_IMAGE, fetchListSaga),
     takeEvery(FETCH_LIST_REQUEST, fetchListSaga),
+    takeEvery(IMAGE_UPLOAD, uploadImageSaga),
   ]);
 };

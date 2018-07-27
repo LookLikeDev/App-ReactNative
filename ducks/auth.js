@@ -10,7 +10,7 @@ export const ReducerRecord = Record({
   user: null,
   error: null,
   loading: false,
-  token: null,
+  id: null,
 });
 
 /**
@@ -43,7 +43,7 @@ export default function reducer(state = new ReducerRecord(), action) {
       return state
         .set('loading', false)
         .set('user', payload.user)
-        .set('token', payload.token)
+        .set('id', payload.token)
         .set('error', null);
 
     case SIGN_UP_ERROR:

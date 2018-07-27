@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import { moduleName, fetchList } from '../../ducks/looks';
+import { moduleName as authModule } from '../../ducks/auth';
+import { fetchList, moduleName as looksModule } from '../../ducks/looks';
 import LooksList from '../components/Looks/LooksList';
 
 const mapStateToProps = state => ({
-  loading: state[moduleName].loading,
-  loaded: state[moduleName].loaded,
-  token: state.auth.token,
-  entities: state[moduleName].entities.toArray(),
+  loading: state[looksModule].loading,
+  loaded: state[looksModule].loaded,
+  id: state[authModule].id,
+  entities: state[looksModule].entities.toArray(),
 });
 
 const mapDispatchToProps = {
