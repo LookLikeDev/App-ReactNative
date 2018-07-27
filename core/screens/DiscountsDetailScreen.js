@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import Header from '../../containers/Header';
+import Header from '../containers/Header';
 
-export default class PreferencesScreen extends React.Component {
+export default class DiscountsDetailScreen extends React.Component {
   static propTypes = {
-    // from <Scene />
+    // from react-native-router-flux and <Scene />
     title: PropTypes.string.isRequired,
   };
 

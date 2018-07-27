@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Button } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import Header from '../../containers/Header';
+import Header from '../containers/Header';
 
-export default class ShareItemScreen extends React.Component {
+export default class FavoritesScreen extends React.Component {
   static propTypes = {
     // from <Scene />
     title: PropTypes.string.isRequired,
@@ -16,7 +16,7 @@ export default class ShareItemScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <Button onPress={Actions.main} title="Перейти на экран 'Главный экран'" />
+        <Button onPress={Actions.lookDetail} title="Перейти на экран 'Комментарии'" />
       </View>
     );
   }

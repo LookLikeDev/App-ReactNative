@@ -49,7 +49,7 @@ export default class LooksList extends React.Component {
         <Text style={styles.text}>
           {user.name.toUpperCase()}
         </Text>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image style={styles.image} source={image && { uri: image }} />
       </View>
     );
   }

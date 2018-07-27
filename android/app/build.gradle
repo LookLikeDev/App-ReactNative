@@ -95,6 +95,7 @@ apply from: 'expo.gradle'
 
 
 dependencies {
+    compile project(':react-native-image-picker')
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
   compile 'com.android.support:multidex:1.0.1'

@@ -1,6 +1,14 @@
 import { Dimensions, Platform, StatusBar } from 'react-native';
 import { OrderedMap, Map } from 'immutable';
 
+/**
+ * @param {string} fileNameWithExtension
+ * @returns {string | undefined}
+ */
+export function getFileExtensionByString(fileNameWithExtension) {
+  return fileNameWithExtension.split('.').pop();
+}
+
 export function isIphoneX() {
   const dimen = Dimensions.get('window');
   return (
