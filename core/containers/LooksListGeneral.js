@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { moduleName as userModule } from '../../ducks/user';
-import { fetchList, moduleName as looksModule } from '../../ducks/looks';
+import { fetchList, moduleName as looksModule } from '../../ducks/looksGeneral';
 import LooksList from '../components/Looks/LooksList';
 
 const mapStateToProps = state => ({

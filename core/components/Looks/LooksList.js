@@ -8,9 +8,9 @@ import LooksLoadedText from './LooksLoadedText';
 
 class LooksList extends React.Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
-    fetchList: PropTypes.func.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
@@ -18,6 +18,7 @@ class LooksList extends React.Component {
         name: PropTypes.string.isRequired,
       }),
     })).isRequired,
+    fetchList: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -25,10 +26,10 @@ class LooksList extends React.Component {
   }
 
   getUsers = () => {
-    const { loading, loaded, fetchList } = this.props;
+    const { id, loading, loaded, fetchList } = this.props;
 
     if (!loading && !loaded) {
-      fetchList();
+      fetchList(id);
     }
   };
 
@@ -45,7 +46,7 @@ class LooksList extends React.Component {
     const { loaded, entities } = this.props;
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, alignSelf: 'stretch' }}>
         <FlatList
           data={entities}
           extraData={this.props}
