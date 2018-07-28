@@ -10,6 +10,9 @@ import sfProDisplayBlack from './assets/fonts/SF-Pro-Display-Black.ttf';
 import sfProDisplayBold from './assets/fonts/SF-Pro-Display-Bold.ttf';
 import sfProDisplaySemiBold from './assets/fonts/SF-Pro-Display-Semibold.ttf';
 
+// TODO just do it;
+console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+
 export default class App extends React.Component {
   state = {
     isReady: false,

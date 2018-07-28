@@ -10,6 +10,7 @@ import { Actions } from 'react-native-router-flux';
 import { appName, firestore } from '../config';
 import { arrToMap, getFileExtensionByString } from '../core/utils';
 
+// TODO slice published methods to new duck
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   error: null,
@@ -30,12 +31,13 @@ const LookRecord = Record({
 /**
  * Consts
  */
-export const moduleName = 'looks';
+export const moduleName = 'looksGeneral';
 export const FETCH_LIST_REQUEST = `${appName}/${moduleName}/FETCH_LIST_REQUEST`;
 export const FETCH_LIST_LAST_ELEMENT = `${appName}/${moduleName}/FETCH_LIST_LAST_ELEMENT`;
 export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
+
 export const IMAGE_ADD = `${appName}/${moduleName}/IMAGE_ADD`;
 export const IMAGE_UPLOAD = `${appName}/${moduleName}/IMAGE_UPLOAD`;
 export const IMAGE_UPLOAD_START = `${appName}/${moduleName}/IMAGE_UPLOAD_START`;
@@ -208,6 +210,7 @@ export const uploadImageSaga = function* ({ payload: { userId, image, formValues
   } catch (error) {
     console.log('--- ERROR --- uploadImageSaga ---', error);
   } finally {
+    // TODO fix required fields [birthday, name, shop, ...]
     yield call(
       [looksCollection, looksCollection.add],
       {
@@ -228,14 +231,14 @@ export const uploadImageSaga = function* ({ payload: { userId, image, formValues
       type: IMAGE_UPLOAD_SUCCESS,
     });
 
-    /*Alert.alert(
+    Alert.alert(
       'Лук опубликован',
       null,
       [
         { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); } },
       ],
       { cancelable: false },
-    );*/
+    );
   }
 };
 
