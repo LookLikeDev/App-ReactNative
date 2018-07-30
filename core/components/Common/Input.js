@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Button extends React.Component {
+export default class Input extends React.Component {
   static propTypes = {
     labelText: PropTypes.string.isRequired,
     inputTextOrange: PropTypes.bool,
@@ -59,7 +59,10 @@ export default class Button extends React.Component {
   );
 
   render() {
-    const { labelText, inputTextOrange, handleChange, input: { onChange, ...restInput } } = this.props;
+    const {
+      labelText, inputTextOrange, handleChange, input: { onChange, ...restInput },
+    } = this.props;
+
     return (
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>

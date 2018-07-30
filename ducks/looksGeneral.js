@@ -43,6 +43,8 @@ export const IMAGE_UPLOAD = `${appName}/${moduleName}/IMAGE_UPLOAD`;
 export const IMAGE_UPLOAD_START = `${appName}/${moduleName}/IMAGE_UPLOAD_START`;
 export const IMAGE_UPLOAD_SUCCESS = `${appName}/${moduleName}/IMAGE_UPLOAD_SUCCESS`;
 
+export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
+
 /**
  * Reducer
  */
@@ -103,6 +105,14 @@ export function uploadImage(userId, image, formValues) {
     payload: { userId, image, formValues },
   };
 }
+
+export function like(lookId, userId) {
+  return {
+    type: LOOK_LIKE_REQUEST,
+    payload: { lookId, userId },
+  };
+}
+
 /**
  * Sagas
  */

@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import {
   View, Text,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { moduleName, signIn } from '../../ducks/user';
+import Button from '../components/Common/Button';
 
 // TODO don't forget to delete this component
 class SplashScreen extends React.Component {
@@ -37,6 +39,7 @@ class SplashScreen extends React.Component {
           {' '}
           { id }
         </Text>
+        <Button title="На главную" onPress={Actions.main} />
       </View>
     );
   }
