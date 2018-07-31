@@ -1,8 +1,8 @@
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import LookPublishForm from '../components/Looks/LookPublishForm';
-import { moduleName as userModule } from '../../ducks/user';
-import { uploadImage, moduleName as looksModule } from '../../ducks/looksGeneral';
+import LookPublishForm from '../../components/Looks/LookPublishForm';
+import { moduleName as userModule } from '../../../ducks/user';
+import { uploadImage, moduleName as looksModule } from '../../../ducks/looksGeneral';
 
 const mapStateToProps = state => ({
   userId: state[userModule].id,

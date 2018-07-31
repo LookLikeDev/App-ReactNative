@@ -70,7 +70,6 @@ export default class PreferencesForm extends React.Component {
     const { updateUserInfo } = this.props;
 
     updateUserInfo(values);
-    console.log('submitting form', values);
   };
 
   renderSwitch = ({

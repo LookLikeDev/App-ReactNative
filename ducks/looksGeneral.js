@@ -43,6 +43,8 @@ export const IMAGE_UPLOAD = `${appName}/${moduleName}/IMAGE_UPLOAD`;
 export const IMAGE_UPLOAD_START = `${appName}/${moduleName}/IMAGE_UPLOAD_START`;
 export const IMAGE_UPLOAD_SUCCESS = `${appName}/${moduleName}/IMAGE_UPLOAD_SUCCESS`;
 
+export const ITEM_REMOVE = `${appName}/${moduleName}/ITEM_REMOVE`;
+
 /**
  * Reducer
  */
@@ -76,6 +78,10 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState
         .set('uploading', false)
         .set('uploaded', true);
+
+    case ITEM_REMOVE:
+      return looksState.deleteIn(['entities', payload.id]);
+
     default:
       return looksState;
   }
@@ -103,6 +109,14 @@ export function uploadImage(userId, image, formValues) {
     payload: { userId, image, formValues },
   };
 }
+
+export function itemRemove(id) {
+  return {
+    type: ITEM_REMOVE,
+    payload: { id },
+  };
+}
+
 /**
  * Sagas
  */

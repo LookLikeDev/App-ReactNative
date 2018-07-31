@@ -42,9 +42,9 @@ export default class LookCamera extends React.Component {
     if (image === null) {
       ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
-          console.log('User cancelled image picker');
+          // console.log('User cancelled image picker');
         } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
+          // console.log('ImagePicker Error: ', response.error);
         } else {
           addImage(response);
         }

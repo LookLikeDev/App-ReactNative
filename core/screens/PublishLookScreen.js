@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../containers/Header';
-import LookPublishForm from '../containers/LookPublishForm';
+import LookPublishForm from '../containers/Looks/LookPublishForm';
 
 export default class PublishLookScreen extends React.Component {
   static propTypes = {

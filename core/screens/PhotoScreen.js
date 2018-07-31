@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import Header from '../components/Header/index';
-import LookCamera from '../containers/LookCamera';
+import Header from '../components/Header';
+import LookCamera from '../containers/Looks/LookCamera';
 
 export default class PhotoScreen extends React.Component {
   static propTypes = {
