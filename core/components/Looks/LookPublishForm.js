@@ -66,7 +66,7 @@ export default class LookPublishForm extends React.Component {
 
   onSubmit = (values) => {
     const { image, userId, uploadImage } = this.props;
-    console.log('submitting form', values);
+
     uploadImage(userId, image, values);
   };
 

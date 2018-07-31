@@ -43,7 +43,7 @@ export const IMAGE_UPLOAD = `${appName}/${moduleName}/IMAGE_UPLOAD`;
 export const IMAGE_UPLOAD_START = `${appName}/${moduleName}/IMAGE_UPLOAD_START`;
 export const IMAGE_UPLOAD_SUCCESS = `${appName}/${moduleName}/IMAGE_UPLOAD_SUCCESS`;
 
-export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
+export const ITEM_REMOVE = `${appName}/${moduleName}/ITEM_REMOVE`;
 
 /**
  * Reducer
@@ -78,6 +78,10 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState
         .set('uploading', false)
         .set('uploaded', true);
+
+    case ITEM_REMOVE:
+      return looksState.deleteIn(['entities', payload.id]);
+
     default:
       return looksState;
   }
@@ -106,10 +110,10 @@ export function uploadImage(userId, image, formValues) {
   };
 }
 
-export function like(lookId, userId) {
+export function itemRemove(id) {
   return {
-    type: LOOK_LIKE_REQUEST,
-    payload: { lookId, userId },
+    type: ITEM_REMOVE,
+    payload: { id },
   };
 }
 

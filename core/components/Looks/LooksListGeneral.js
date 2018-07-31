@@ -6,9 +6,9 @@ import {
 import LookItem from './LookItem';
 import LooksLoadedText from './LooksLoadedText';
 
-class LooksList extends React.Component {
+class LooksListGeneral extends React.Component {
   static propTypes = {
-    id: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
@@ -19,51 +19,56 @@ class LooksList extends React.Component {
       }),
     })).isRequired,
     fetchList: PropTypes.func.isRequired,
+    itemRemove: PropTypes.func.isRequired,
+    like: PropTypes.func.isRequired,
+    dislike: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    this.getUsers();
+    this.handleGetUsers();
   }
-
-  getUsers = () => {
-    const {
-      id, loading, loaded, fetchList,
-    } = this.props;
-
-    if (!loading && !loaded) {
-      fetchList(id);
-    }
-  };
 
   keyExtractor = item => item.id;
 
-  renderItem = ({ item: { user, image } }) => (
-    <LookItem
-      user={user}
-      image={image}
-    />
-  );
+  handleGetUsers = () => {
+    const { loading, loaded, fetchList } = this.props;
 
-  renderSeparator = () => (
-    <View style={{
-      marginHorizontal: 20,
-      height: 1,
-      backgroundColor: '#BCBBC1',
-      zIndex: 1,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-    }}
-    />
-  );
+    if (!loading && !loaded) fetchList();
+  };
+
+  handleLike = (id) => {
+    const { itemRemove, like, userId } = this.props;
+
+    like(id, userId);
+    itemRemove(id);
+  };
+
+  handleDislike = (id) => {
+    const { itemRemove, dislike, userId } = this.props;
+
+    dislike(id, userId);
+    itemRemove(id);
+  };
+
+  renderItem = ({ item: { id, user, image } }) => {
+    const { userId } = this.props;
+
+    return (
+      <LookItem
+        id={id}
+        userId={userId}
+        user={user}
+        image={image}
+        onPressLike={this.handleLike}
+        onPressDislike={this.handleDislike}
+      />
+    );
+  };
 
   renderFooter = () => {
     const { loading, loaded } = this.props;
 
-    if (loaded) {
-      return <LooksLoadedText />;
-    }
+    if (loaded) return <LooksLoadedText />;
 
     if (loading) {
       return (
@@ -86,7 +91,7 @@ class LooksList extends React.Component {
           extraData={this.props}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          onEndReached={this.getUsers}
+          onEndReached={this.handleGetUsers}
           onEndReachedThreshold={0.1}
           ListFooterComponent={this.renderFooter}
         />
@@ -95,4 +100,4 @@ class LooksList extends React.Component {
   }
 }
 
-export default LooksList;
+export default LooksListGeneral;

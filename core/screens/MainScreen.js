@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../containers/Header';
-import LooksListGeneral from '../containers/LooksListGeneral';
+import LooksListGeneral from '../containers/Looks/LooksListGeneral';
 
 export default class MainScreen extends React.Component {
   static propTypes = {

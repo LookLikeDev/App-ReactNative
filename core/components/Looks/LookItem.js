@@ -21,10 +21,6 @@ const styles = StyleSheet.create({
     height: imageHeight,
     resizeMode: Image.resizeMode.cover,
   },
-  hide: {
-    opacity: 0,
-    height: 0,
-  },
   text: {
     fontFamily: 'SF-UI-Text-Semibold',
     color: '#000000',
@@ -81,14 +77,19 @@ const styles = StyleSheet.create({
 
 export default class LooksList extends React.Component {
   static propTypes = {
+    // From connect
+    id: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     user: PropTypes.shape({
       name: PropTypes.string.isRequired,
     }).isRequired,
+    onPressLike: PropTypes.func,
+    onPressDislike: PropTypes.func,
   };
 
-  state = {
-    hide: false,
+  static defaultProps = {
+    onPressLike: false,
+    onPressDislike: false,
   };
 
   componentWillUpdate() {
@@ -101,19 +102,34 @@ export default class LooksList extends React.Component {
     LayoutAnimation.configureNext(config);
   }
 
+  handleLike = () => {
+    const { onPressLike, id } = this.props;
+
+    onPressLike(id);
+  };
+
+  handleDislike = () => {
+    const { onPressDislike, id } = this.props;
+
+    onPressDislike(id);
+  };
+
   render() {
-    const { image, user } = this.props;
-    const containerStyle = this.state.hide ? styles.hide : styles.container;
+    const {
+      image, user, onPressLike, onPressDislike,
+    } = this.props;
 
     return (
       <React.Fragment>
-        <View style={containerStyle}>
+        <View style={styles.container}>
           <View style={styles.separator} />
           <Text style={styles.text}>
             {user.name.toUpperCase()}
           </Text>
           <Image style={styles.image} source={image && { uri: image }} />
-          <TouchableOpacity style={styles.dislike} onPress={() => this.setState({ hide: true })}>
+          {onPressLike
+          && (
+          <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
             <SvgUri
               style={styles.dislikeSvg}
               width="32"
@@ -122,7 +138,10 @@ export default class LooksList extends React.Component {
               source={like}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.like} onPress={() => this.setState({ hide: true })}>
+          )}
+          {onPressDislike
+          && (
+          <TouchableOpacity style={styles.like} onPress={this.handleLike}>
             <SvgUri
               style={styles.likeSvg}
               width="32"
@@ -131,6 +150,7 @@ export default class LooksList extends React.Component {
               source={like}
             />
           </TouchableOpacity>
+          )}
         </View>
       </React.Fragment>
     );

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { moduleName, addImage } from '../../ducks/looksGeneral';
-import LookCamera from '../components/Looks/LookCamera';
+import { moduleName, addImage } from '../../../ducks/looksGeneral';
+import LookCamera from '../../components/Looks/LookCamera';
 
 const mapStateToProps = state => ({
   image: state[moduleName].image,
