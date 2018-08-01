@@ -9,6 +9,8 @@ const mapStateToProps = state => ({
   loading: state[looksModule].loading,
   loaded: state[looksModule].loaded,
   userId: state[userModule].id,
+  likedLooks: state[userModule].user.liked_looks,
+  dislikedLooks: state[userModule].user.disliked_looks,
   entities: state[looksModule].entities.toArray(),
 });
 

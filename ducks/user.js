@@ -106,17 +106,17 @@ export function updateUserInfo(formValues) {
   };
 }
 
-export function like(lookId, userId) {
+export function like(item, userId) {
   return {
     type: USER_LIKE_REQUEST,
-    payload: { lookId, userId },
+    payload: { item, userId },
   };
 }
 
-export function dislike(lookId, userId) {
+export function dislike(item, userId) {
   return {
     type: USER_DISLIKE_REQUEST,
-    payload: { lookId, userId },
+    payload: { item, userId },
   };
 }
 
@@ -191,7 +191,7 @@ export const updateUserInfoSaga = function* (action) {
   }
 };
 
-export const likeSaga = function* ({ payload: { lookId, userId } }) {
+export const likeSaga = function* ({ payload: { item, userId } }) {
   const userRef = yield firestore.collection('users').doc(userId);
   const userData = yield select();
   const count = yield userData[moduleName].user.counter_looks_voted;
@@ -199,7 +199,9 @@ export const likeSaga = function* ({ payload: { lookId, userId } }) {
   try {
     yield call([userRef, userRef.update],
       {
-        [`liked_looks.${lookId}`]: true,
+        [`liked_looks.${item.id}`]: {
+          reference: item.reference,
+        },
         counter_looks_voted: count,
       });
 
@@ -217,11 +219,15 @@ export const likeSaga = function* ({ payload: { lookId, userId } }) {
   }
 };
 
-export const dislikeSaga = function* ({ payload: { lookId, userId } }) {
+export const dislikeSaga = function* ({ payload: { item, userId } }) {
   const userRef = yield firestore.collection('users').doc(userId);
 
   try {
-    yield call([userRef, userRef.update], { [`disliked_looks.${lookId}`]: true });
+    yield call([userRef, userRef.update], {
+      [`disliked_looks.${item.id}`]: {
+        reference: item.reference,
+      },
+    });
     const userSnapshot = yield call([userRef, userRef.get]);
 
     yield put({

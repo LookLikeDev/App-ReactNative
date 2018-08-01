@@ -26,6 +26,7 @@ const LookRecord = Record({
   id: null,
   user: null,
   image: null,
+  reference: null,
 });
 
 /**
@@ -90,9 +91,10 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 /**
  * Action creators
  */
-export function fetchList() {
+export function fetchList(votedItems) {
   return {
     type: FETCH_LIST_REQUEST,
+    payload: { votedItems },
   };
 }
 
@@ -110,16 +112,17 @@ export function uploadImage(userId, image, formValues) {
   };
 }
 
-export function itemRemove(id) {
+export function itemRemove(item) {
   return {
     type: ITEM_REMOVE,
-    payload: { id },
+    payload: { id: item.id },
   };
 }
 
 /**
  * Sagas
  */
+// TODO change to static url
 const getData = function* (item) {
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
@@ -132,17 +135,19 @@ const getData = function* (item) {
       id: item.id,
       user: data.user,
       image: url,
+      reference: item.ref,
     };
   } catch (error) {
     return {
       id: item.id,
       user: data.user,
       image: null,
+      reference: item.ref,
     };
   }
 };
 
-export const fetchListSaga = function* () {
+export const fetchListSaga = function* ({ payload: { votedItems } }) {
   const db = firestore;
   const state = yield select();
 
@@ -162,6 +167,7 @@ export const fetchListSaga = function* () {
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
+      return true;
     }
 
     yield put({
@@ -169,13 +175,31 @@ export const fetchListSaga = function* () {
       payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
     });
 
-    const items = yield all(querySnapshot.docs.map(getData));
+    // console.log(querySnapshot.docs);
 
-    yield put({
-      type: FETCH_LIST_SUCCESS,
-      payload: { entities: items },
-    });
+    let items = querySnapshot.docs;
+
+    if (votedItems !== null) {
+      items = yield all(querySnapshot.docs.filter(
+        item => !Object.prototype.hasOwnProperty.call(votedItems, item.id),
+      ));
+    }
+
+    items = yield all(items.map(getData));
+
+    if (items.length === 0) {
+      yield put({
+        type: FETCH_LIST_REQUEST,
+        payload: { votedItems },
+      });
+    } else {
+      yield put({
+        type: FETCH_LIST_SUCCESS,
+        payload: { entities: items },
+      });
+    }
   } catch (error) {
+    console.log('error', error);
     yield put({
       type: FETCH_LIST_ERROR,
       error,
