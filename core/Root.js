@@ -1,10 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
+  Modal,
   Scene,
   Stack,
   Tabs,
   Router,
+  Reducer,
 } from 'react-native-router-flux';
+
+import { resetVotedCounter } from '../ducks/user';
+
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './screens/MainScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
@@ -18,21 +25,39 @@ import DiscountsListScreen from './screens/DiscountsListScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
 
-import TabIcon from './components/TabIcon';
+import TabIcon from './containers/TabIcon';
 import NavBar from './components/NavBar';
 
-export default class Root extends React.Component {
+const ReduxRouter = connect()(({ dispatch, children, ...props }) => (
+  <Router
+    {...props}
+    createReducer={params => (state, action) => {
+      dispatch(action);
+      return Reducer(params)(state, action);
+    }}
+  >
+    {children}
+  </Router>
+));
+
+class Root extends React.Component {
+  static propTypes = {
+    // from connect
+    resetCounter: PropTypes.func.isRequired,
+  };
+
   render() {
+    const { resetCounter } = this.props;
     return (
-      <Router sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
-        <Stack key="root" modal hideNavBar>
+      <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
+        <Modal hideNavBar>
           <Scene
             key="splashScreen"
             component={SplashScreen}
             title="Splash Screen"
             icon={({ focused }) => <TabIcon type="main" selected={focused} />}
           />
-          <Tabs key="tabs" showLabel={false} activeTintColor="#000000">
+          <Tabs key="tabs" showLabel={false}>
             <Scene
               key="main"
               component={MainScreen}
@@ -43,6 +68,7 @@ export default class Root extends React.Component {
               key="favorites"
               component={FavoritesScreen}
               title="Избранное"
+              onEnter={resetCounter}
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
             <Stack>
@@ -104,8 +130,10 @@ export default class Root extends React.Component {
             title="Настройки"
             hideNavBar={false}
           />
-        </Stack>
-      </Router>
+        </Modal>
+      </ReduxRouter>
     );
   }
 }
+
+export default connect(null, { resetCounter: resetVotedCounter })(Root);

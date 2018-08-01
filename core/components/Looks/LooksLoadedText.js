@@ -6,6 +6,7 @@ import {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 26,
+    marginTop: 8,
   },
   title: {
     fontFamily: 'SF-UI-Text-Semibold',

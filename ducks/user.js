@@ -40,6 +40,9 @@ export const USER_LIKE_SUCCESS = `${appName}/${moduleName}/USER_LIKE_SUCCESS`;
 export const USER_DISLIKE_REQUEST = `${appName}/${moduleName}/USER_DISLIKE_REQUEST`;
 export const USER_DISLIKE_SUCCESS = `${appName}/${moduleName}/USER_DISLIKE_SUCCESS`;
 
+export const USER_VOTED_REQUEST = `${appName}/${moduleName}/USER_VOTED_REQUEST`;
+export const USER_VOTED_SUCCESS = `${appName}/${moduleName}/USER_VOTED_SUCCESS`;
+
 /**
  * Reducer
  */
@@ -79,6 +82,10 @@ export default function reducer(userState = new ReducerRecord(), action) {
         .set('user', new UserRecord(payload.user))
         .set('id', payload.id);
 
+    case USER_VOTED_REQUEST:
+    case USER_VOTED_SUCCESS:
+      return userState.setIn(['user', 'counter_looks_voted'], 0);
+
     default:
       return userState;
   }
@@ -117,6 +124,12 @@ export function dislike(item, userId) {
   return {
     type: USER_DISLIKE_REQUEST,
     payload: { item, userId },
+  };
+}
+
+export function resetVotedCounter() {
+  return {
+    type: USER_VOTED_REQUEST,
   };
 }
 
@@ -169,6 +182,7 @@ export const signInSaga = function* () {
       });
 
       yield call(Actions.main);
+      // yield call(Actions.favorites);
     }
   } catch (error) {
     yield put({
@@ -242,6 +256,24 @@ export const dislikeSaga = function* ({ payload: { item, userId } }) {
   }
 };
 
+export const resetVotedCounterSaga = function* () {
+  const store = yield select();
+  const userId = yield store[moduleName].id;
+  const userRef = yield firestore.collection('users').doc(userId);
+
+  try {
+    yield call([userRef, userRef.update], {
+      counter_looks_voted: 0,
+    });
+
+    yield put({
+      type: USER_VOTED_SUCCESS,
+    });
+  } catch (error) {
+    console.log('ERROR', error);
+  }
+};
+
 export const saga = function* () {
   yield all([
     // watchStatusChange(),
@@ -250,5 +282,6 @@ export const saga = function* () {
     takeEvery(USER_INFO_UPDATE, updateUserInfoSaga),
     takeEvery(USER_LIKE_REQUEST, likeSaga),
     takeEvery(USER_DISLIKE_REQUEST, dislikeSaga),
+    takeEvery(USER_VOTED_REQUEST, resetVotedCounterSaga),
   ]);
 };

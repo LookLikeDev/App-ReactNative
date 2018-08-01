@@ -1,15 +1,14 @@
-import { Reducer, ActionConst } from 'react-native-router-flux';
+import { ActionConst } from 'react-native-router-flux';
+// todo refactore this
+const initialState = {
+  scene: {},
+};
 
-const defaultReducer = Reducer();
-
-export default function reducer(state, action) {
-  console.log('Reducing action: ', action.type);
-
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ActionConst.FOCUS:
-      return defaultReducer(state, action);
-
+      return { ...state, scene: action.scene };
     default:
-      return defaultReducer(state, action);
+      return state;
   }
 }

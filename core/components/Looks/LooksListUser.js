@@ -75,7 +75,7 @@ export default class LooksListUser extends React.Component {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           onEndReached={this.handleGetUsers}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.4}
           ListFooterComponent={this.renderFooter}
         />
       </View>
