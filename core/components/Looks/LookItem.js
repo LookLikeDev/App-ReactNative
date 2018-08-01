@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
 import {
-  View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, LayoutAnimation,
+  View, Text, StyleSheet, Image, Dimensions, TouchableOpacity,
 } from 'react-native';
 import like from '../../../assets/icons/look/like.svg';
 
@@ -75,13 +75,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LooksList extends React.Component {
+export default class LooksItem extends React.Component {
   static propTypes = {
     // From connect
-    id: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      name: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    data: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      reference: PropTypes.objectOf(PropTypes.object).isRequired,
     }).isRequired,
     onPressLike: PropTypes.func,
     onPressDislike: PropTypes.func,
@@ -92,31 +96,21 @@ export default class LooksList extends React.Component {
     onPressDislike: false,
   };
 
-  componentWillUpdate() {
-    const config = {
-      duration: 300,
-      update: {
-        type: 'linear',
-      },
-    };
-    LayoutAnimation.configureNext(config);
-  }
-
   handleLike = () => {
-    const { onPressLike, id } = this.props;
+    const { onPressLike, data } = this.props;
 
-    onPressLike(id);
+    onPressLike(data);
   };
 
   handleDislike = () => {
-    const { onPressDislike, id } = this.props;
+    const { onPressDislike, data } = this.props;
 
-    onPressDislike(id);
+    onPressDislike(data);
   };
 
   render() {
     const {
-      image, user, onPressLike, onPressDislike,
+      data: { image, user }, onPressLike, onPressDislike,
     } = this.props;
 
     return (

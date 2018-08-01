@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View, FlatList, ActivityIndicator,
+  View, FlatList, ActivityIndicator, LayoutAnimation,
 } from 'react-native';
 import LookItem from './LookItem';
 import LooksLoadedText from './LooksLoadedText';
@@ -17,48 +17,66 @@ class LooksListGeneral extends React.Component {
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
+      reference: PropTypes.objectOf(PropTypes.object).isRequired,
     })).isRequired,
     fetchList: PropTypes.func.isRequired,
+    likedLooks: PropTypes.objectOf(PropTypes.object),
+    dislikedLooks: PropTypes.objectOf(PropTypes.object),
     itemRemove: PropTypes.func.isRequired,
     like: PropTypes.func.isRequired,
     dislike: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    likedLooks: null,
+    dislikedLooks: null,
   };
 
   componentDidMount() {
     this.handleGetUsers();
   }
 
+  componentWillUpdate() {
+    const config = {
+      duration: 300,
+      update: {
+        type: 'linear',
+      },
+    };
+    LayoutAnimation.configureNext(config);
+  }
+
   keyExtractor = item => item.id;
 
   handleGetUsers = () => {
-    const { loading, loaded, fetchList } = this.props;
+    const {
+      loading, loaded, fetchList, likedLooks, dislikedLooks,
+    } = this.props;
 
-    if (!loading && !loaded) fetchList();
+    if (!loading && !loaded) fetchList({ ...likedLooks, ...dislikedLooks });
   };
 
-  handleLike = (id) => {
+  handleLike = (item) => {
     const { itemRemove, like, userId } = this.props;
 
-    like(id, userId);
-    itemRemove(id);
+    like(item, userId);
+    itemRemove(item);
   };
 
-  handleDislike = (id) => {
+  handleDislike = (item) => {
     const { itemRemove, dislike, userId } = this.props;
 
-    dislike(id, userId);
-    itemRemove(id);
+    dislike(item, userId);
+    itemRemove(item);
   };
 
-  renderItem = ({ item: { id, user, image } }) => {
+  renderItem = ({ item }) => {
     const { userId } = this.props;
 
     return (
       <LookItem
-        id={id}
+        data={item}
         userId={userId}
-        user={user}
-        image={image}
         onPressLike={this.handleLike}
         onPressDislike={this.handleDislike}
       />
@@ -72,7 +90,7 @@ class LooksListGeneral extends React.Component {
 
     if (loading) {
       return (
-        <View style={{ marginBottom: 26 }}>
+        <View style={{ marginBottom: 26, marginTop: 8 }}>
           <ActivityIndicator animating size="large" />
         </View>
       );

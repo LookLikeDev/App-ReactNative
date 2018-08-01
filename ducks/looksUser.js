@@ -98,40 +98,37 @@ export const fetchListSaga = function* (action) {
   const db = firestore;
   const state = yield select();
   const { userId } = action.payload;
-  console.log(userId);
 
   try {
     let collection = yield db.collection('looks').where('user.id', '==', userId).orderBy('date_published', 'desc').limit(5);
-    console.log(1);
+
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
         [collection, collection.startAfter],
         state[moduleName].lastElement,
       );
     }
-    console.log(2);
+
     const querySnapshot = yield call([collection, collection.get]);
-    console.log(3);
+
     if (querySnapshot.docs.length === 0) {
-      console.log(4);
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
     }
-    console.log(5);
+
     yield put({
       type: FETCH_LIST_LAST_ELEMENT,
       payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
     });
-    console.log(6);
+
     const items = yield all(querySnapshot.docs.map(getData));
-    console.log(7);
+
     yield put({
       type: FETCH_LIST_SUCCESS,
       payload: { entities: items },
     });
   } catch (error) {
-    console.log('---- ERROR -----', error);
     yield put({
       type: FETCH_LIST_ERROR,
       error,
