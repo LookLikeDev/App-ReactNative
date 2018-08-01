@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   header: {
@@ -23,14 +23,11 @@ export default class Header extends React.Component {
     const { title } = this.props;
 
     return (
-      <React.Fragment>
-        <StatusBar barStyle="dark-content" />
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            {title.toUpperCase()}
-          </Text>
-        </View>
-      </React.Fragment>
+      <View style={styles.header}>
+        <Text style={styles.title}>
+          {title.toUpperCase()}
+        </Text>
+      </View>
     );
   }
 }

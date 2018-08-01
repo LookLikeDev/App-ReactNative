@@ -19,22 +19,15 @@ class LooksListGeneral extends React.Component {
       }),
       reference: PropTypes.objectOf(PropTypes.object).isRequired,
     })).isRequired,
-    fetchList: PropTypes.func.isRequired,
     likedLooks: PropTypes.objectOf(PropTypes.object),
-    dislikedLooks: PropTypes.objectOf(PropTypes.object),
-    itemRemove: PropTypes.func.isRequired,
-    like: PropTypes.func.isRequired,
-    dislike: PropTypes.func.isRequired,
-  };
-
-  static defaultProps = {
-    likedLooks: null,
-    dislikedLooks: null,
+    fetchList: PropTypes.func.isRequired,
+    resetVotedCounter: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    const { entities } = this.props;
+    const { entities, resetVotedCounter } = this.props;
 
+    resetVotedCounter();
     if (entities.length === 0) this.handleGetUsers();
   }
 
@@ -52,24 +45,10 @@ class LooksListGeneral extends React.Component {
 
   handleGetUsers = () => {
     const {
-      loading, loaded, fetchList, likedLooks, dislikedLooks,
+      loading, loaded, fetchList, likedLooks,
     } = this.props;
 
-    if (!loading && !loaded) fetchList({ ...likedLooks, ...dislikedLooks });
-  };
-
-  handleLike = (item) => {
-    const { itemRemove, like, userId } = this.props;
-
-    like(item, userId);
-    itemRemove(item);
-  };
-
-  handleDislike = (item) => {
-    const { itemRemove, dislike, userId } = this.props;
-
-    dislike(item, userId);
-    itemRemove(item);
+    if (!loading && !loaded) fetchList(likedLooks);
   };
 
   renderItem = ({ item }) => {
@@ -79,8 +58,6 @@ class LooksListGeneral extends React.Component {
       <LookItem
         data={item}
         userId={userId}
-        onPressLike={this.handleLike}
-        onPressDislike={this.handleDislike}
       />
     );
   };

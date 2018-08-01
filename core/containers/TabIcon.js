@@ -1,7 +1,9 @@
 import { connect } from 'react-redux';
 import { moduleName } from '../../ducks/user';
-import Badge from '../components/TabIcon/Badge';
+import TabIcon from '../components/TabIcon';
 
-export default connect(state => ({
+const mapStateToProps = state => ({
   count: state[moduleName].user.counter_looks_voted,
-}))(Badge);
+});
+
+export default connect(mapStateToProps)(TabIcon);

@@ -3,7 +3,7 @@ import { Record, OrderedMap } from 'immutable';
 import {
   all, put, call, takeEvery, select,
 } from 'redux-saga/effects';
-import { appName, firestore } from '../config';
+import { appName } from '../config';
 import { arrToMap } from '../core/utils';
 
 export const ReducerRecord = Record({
@@ -23,9 +23,8 @@ const LookRecord = Record({
 /**
  * Consts
  */
-export const moduleName = 'looksUser';
+export const moduleName = 'favorites';
 export const FETCH_LIST_REQUEST = `${appName}/${moduleName}/FETCH_LIST_REQUEST`;
-export const FETCH_LIST_LAST_ELEMENT = `${appName}/${moduleName}/FETCH_LIST_LAST_ELEMENT`;
 export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
@@ -39,9 +38,6 @@ export default function reducer(looksState = new ReducerRecord(), action) {
   switch (type) {
     case FETCH_LIST_REQUEST:
       return looksState.set('loading', true);
-
-    case FETCH_LIST_LAST_ELEMENT:
-      return looksState.set('lastElement', payload.lastElement);
 
     case FETCH_LIST_SUCCESS:
       return looksState
@@ -61,16 +57,17 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 /**
  * Action creators
  */
-export function fetchList(userId) {
+export function fetchList(likedItems) {
   return {
     type: FETCH_LIST_REQUEST,
-    payload: { userId },
+    payload: { likedItems },
   };
 }
 
 /**
  * Sagas
  */
+// TODO delete this junk and add static picture link
 const getData = function* (item) {
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
@@ -93,41 +90,47 @@ const getData = function* (item) {
   }
 };
 
+const getSnapshot = function* (item) {
+  return yield item.reference.get();
+};
+
 export const fetchListSaga = function* (action) {
-  const db = firestore;
+  const { likedItems } = action.payload;
   const state = yield select();
-  const { userId } = action.payload;
+  const data = state[moduleName].entities;
+  let count = 0;
 
   try {
-    let collection = yield db.collection('looks').where('user.id', '==', userId).orderBy('date_published', 'desc').limit(5);
+    if (likedItems === null) {
+      yield put({ type: FETCH_LIST_LOADED_ALL });
 
-    if (state[moduleName].lastElement !== null) {
-      collection = yield call(
-        [collection, collection.startAfter],
-        state[moduleName].lastElement,
-      );
+      return true;
     }
 
-    const querySnapshot = yield call([collection, collection.get]);
+    let items = yield Object.values(likedItems);
 
-    if (querySnapshot.docs.length === 0) {
+    items = yield all(items.filter((item) => {
+      if (data.get(item.reference.id) || count >= 5) return false;
+
+      count += 1;
+
+      return true;
+    }));
+
+    if (items.length > 0) {
+      let favorites = yield all(items.map(getSnapshot));
+
+      favorites = yield all(favorites.map(getData));
+
       yield put({
-        type: FETCH_LIST_LOADED_ALL,
+        type: FETCH_LIST_SUCCESS,
+        payload: { entities: favorites },
       });
+    } else {
+      yield put({ type: FETCH_LIST_LOADED_ALL });
     }
-
-    yield put({
-      type: FETCH_LIST_LAST_ELEMENT,
-      payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
-    });
-
-    const items = yield all(querySnapshot.docs.map(getData));
-
-    yield put({
-      type: FETCH_LIST_SUCCESS,
-      payload: { entities: items },
-    });
   } catch (error) {
+    console.log('error', error);
     yield put({
       type: FETCH_LIST_ERROR,
       error,
