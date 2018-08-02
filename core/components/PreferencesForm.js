@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   submit: {
+    marginHorizontal: 20,
     marginBottom: 24,
   },
 });

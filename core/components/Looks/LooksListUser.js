@@ -35,15 +35,13 @@ export default class LooksListUser extends React.Component {
     if (!loading && !loaded) fetchList(userId);
   };
 
-  renderItem = ({ item: { id, user, image } }) => {
+  renderItem = ({ item }) => {
     const { userId } = this.props;
 
     return (
       <LookItem
-        id={id}
+        data={item}
         userId={userId}
-        user={user}
-        image={image}
       />
     );
   };
@@ -55,7 +53,7 @@ export default class LooksListUser extends React.Component {
 
     if (loading) {
       return (
-        <View style={{ marginBottom: 26 }}>
+        <View style={{ marginBottom: 26, marginTop: 8 }}>
           <ActivityIndicator animating size="large" />
         </View>
       );

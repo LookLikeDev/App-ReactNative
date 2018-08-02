@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'stretch',
     height: 56,
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
     paddingHorizontal: 32,
     borderRadius: 12,
     backgroundColor: '#FC4600',
@@ -34,6 +34,11 @@ export default class Button extends React.Component {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
+    type: PropTypes.string,
+  };
+
+  static defaultProps = {
+    type: 'default',
   };
 
   state = {

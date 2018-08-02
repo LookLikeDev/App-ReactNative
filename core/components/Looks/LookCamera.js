@@ -1,14 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import uuid from 'uuid/v1';
 import {
   Dimensions,
   View,
   ScrollView,
   Image,
+  TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux';
 import Button from '../Common/Button';
+import LookLabels from './LookLabels';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -17,13 +21,35 @@ const imageWidth = dimensions.width;
 const options = {
   title: 'Выберите LOOK',
   mediaType: 'photo',
+  maxWidth: 1080,
   storageOptions: {
     cameraRoll: true,
   },
-  // TODO есть плавающая ошибка
-  // при выборе 0.5 и сохранении некоторых фотографий в base64 в firebase изображение не открывается
-  quality: 0.6,
+  quality: 0.5,
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0000FF',
+    position: 'relative',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  touch: {
+    position: 'relative',
+  },
+});
 
 export default class LookCamera extends React.Component {
   static propTypes = {
@@ -36,17 +62,21 @@ export default class LookCamera extends React.Component {
     addImage: PropTypes.func.isRequired,
   };
 
+  state = {
+    marks: [],
+  };
+
   showPicker = () => {
     const { image, addImage } = this.props;
 
     if (image === null) {
       ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
-          // console.log('User cancelled image picker');
+          console.log('User cancelled image picker');
         } else if (response.error) {
-          // console.log('ImagePicker Error: ', response.error);
+          console.log('ImagePicker Error: ', response.error);
         } else {
-          addImage(response);
+          addImage(response.uri);
         }
       });
     } else {
@@ -54,17 +84,46 @@ export default class LookCamera extends React.Component {
     }
   };
 
+  handleTap = (event) => {
+    const { locationX, locationY } = event.nativeEvent;
+
+    this.setState(prevState => ({
+      marks: [
+        ...prevState.marks,
+        {
+          id: uuid(),
+          locationX,
+          locationY,
+          imageWidth,
+          imageHeight,
+        },
+      ],
+    }));
+  };
+
   render() {
     const { image } = this.props;
+    const { marks } = this.state;
 
     return (
       <View style={{ flex: 1, alignSelf: 'stretch' }}>
         <ScrollView contentContainerStyle={{ alignSelf: 'stretch' }}>
           <View style={{ marginBottom: 20 }}>
             {image
-            && <Image source={{ uri: image.uri }} style={{ marginBottom: 16, width: imageWidth, height: imageHeight }} />}
-            <Button title={!image ? 'Создать LOOK' : 'Опубликовать LOOK'} onPress={this.showPicker} />
+            && (
+            <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
+              <Image
+                source={{ uri: image }}
+                style={{ marginBottom: 16, width: imageWidth, height: imageHeight }}
+              />
+              <LookLabels items={marks} areaWidth={imageWidth} />
+            </TouchableOpacity>
+            )
+            }
           </View>
+          <Button title="RESET MARKS" onPress={() => { this.setState({ marks: [] }); }} />
+          <Button title="FORM FORM FORM" onPress={() => Actions.markItems({ HELLO_MR_GORDON: true })} />
+          <Button title={!image ? 'Создать LOOK' : 'Опубликовать LOOK'} onPress={this.showPicker} />
         </ScrollView>
       </View>
     );

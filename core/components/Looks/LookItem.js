@@ -108,6 +108,7 @@ export default class LooksItem extends React.Component {
     onPressDislike(data);
   };
 
+  // TODO refactor likes and dislikes, like component
   render() {
     const {
       data: { image, user }, onPressLike, onPressDislike,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Button } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { View } from 'react-native';
+import LookMarkItemsForm from '../containers/Looks/LookMarkItemsForm';
 import Header from '../containers/Header';
 
 export default class MarkItemsScreen extends React.Component {
@@ -12,12 +12,12 @@ export default class MarkItemsScreen extends React.Component {
 
   render() {
     const { title } = this.props;
+    console.log(this.props);
 
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <Button onPress={Actions.describeItem} title="Перейти на экран 'Описать вещь'" />
-        <Button onPress={Actions.shareItem} title="Перейти на экран 'Опубликовать вещь'" />
+        <LookMarkItemsForm />
       </View>
     );
   }

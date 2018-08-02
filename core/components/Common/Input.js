@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 export default class Input extends React.Component {
   static propTypes = {
     labelText: PropTypes.string.isRequired,
+    keyboardType: PropTypes.string,
     inputTextOrange: PropTypes.bool,
     handleChange: PropTypes.func,
   };
@@ -48,21 +49,15 @@ export default class Input extends React.Component {
   static defaultProps = {
     inputTextOrange: false,
     handleChange: false,
+    keyboardType: 'default',
   };
-
-  renderInput = ({ style, input: { onChange, ...restInput } }) => (
-    <TextInput
-      onChangeText={onChange}
-      {...restInput}
-      style={style}
-    />
-  );
 
   render() {
     const {
-      labelText, inputTextOrange, handleChange, input: { onChange, ...restInput },
+      labelText, inputTextOrange, handleChange, keyboardType, input: { onChange, value, ...restInput },
     } = this.props;
 
+    console.log('WTF', restInput);
     return (
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>
@@ -72,8 +67,10 @@ export default class Input extends React.Component {
         <TextInput
           onChangeText={onChange}
           onEndEditing={handleChange}
-          {...restInput}
+          keyboardType={keyboardType}
+          value={value}
           style={[styles.inputText, inputTextOrange && styles.orange]}
+          {...restInput}
         />
       </View>
     );

@@ -123,6 +123,8 @@ export const fetchListSaga = function* (action) {
 
     const items = yield all(querySnapshot.docs.map(getData));
 
+    console.log(items);
+
     yield put({
       type: FETCH_LIST_SUCCESS,
       payload: { entities: items },
