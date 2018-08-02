@@ -13,8 +13,6 @@ export default class FavoritesScreen extends React.Component {
   render() {
     const { title } = this.props;
 
-    console.log(this.props);
-
     return (
       <View onEnter={(some) => console.log('SCENE', some)} style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />

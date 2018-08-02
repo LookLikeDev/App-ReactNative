@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginBottom: 24,
+    marginHorizontal: 20,
   },
 });
 
@@ -53,12 +54,7 @@ export default class LookPublishForm extends React.Component {
     uploading: PropTypes.bool.isRequired,
     uploaded: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
-    image: PropTypes.shape({
-      uri: PropTypes.string,
-      data: PropTypes.string,
-      origURL: PropTypes.string,
-      fileName: PropTypes.string,
-    }).isRequired,
+    image: PropTypes.string.isRequired,
     uploadImage: PropTypes.func.isRequired,
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
@@ -87,7 +83,7 @@ export default class LookPublishForm extends React.Component {
       );
     }
 
-    if (false) {
+    if (uploaded) {
       return (
         <View>
           <Text>

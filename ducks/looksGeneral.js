@@ -70,7 +70,7 @@ export default function reducer(looksState = new ReducerRecord(), action) {
         .set('loaded', true);
 
     case IMAGE_ADD:
-      return looksState.set('image', payload.image);
+      return looksState.set('image', payload.imageUri);
 
     case IMAGE_UPLOAD_START:
       return looksState.set('uploading', true);
@@ -98,17 +98,17 @@ export function fetchList(votedItems) {
   };
 }
 
-export function addImage(image) {
+export function addImage(imageUri) {
   return {
     type: IMAGE_ADD,
-    payload: { image },
+    payload: { imageUri },
   };
 }
 
-export function uploadImage(userId, image, formValues) {
+export function uploadImage(userId, imageUri, formValues) {
   return {
     type: IMAGE_UPLOAD,
-    payload: { userId, image, formValues },
+    payload: { userId, imageUri, formValues },
   };
 }
 
@@ -208,10 +208,9 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
 };
 
 // TODO check and refactor
-function createFileUploadingChannel([imageFullPath, image]) {
+function createFileUploadingChannel([imageFullPath, imageBlob]) {
   return eventChannel((emitter) => {
-    const uploadTask = firebase.storage().ref().child(imageFullPath)
-      .putString(image.data, 'base64', { contentType: 'image/jpeg' });
+    const uploadTask = firebase.storage().ref().child(imageFullPath).put(imageBlob);
 
     uploadTask.on('state_changed', (snapshot) => {
       const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
@@ -227,13 +226,16 @@ function createFileUploadingChannel([imageFullPath, image]) {
 }
 
 // TODO check and refactor, add clear image data after success uploading
-export const uploadImageSaga = function* ({ payload: { userId, image, formValues } }) {
+export const uploadImageSaga = function* ({ payload: { userId, imageUri, formValues } }) {
   const looksCollection = firestore.collection('looks');
   const uuidImage = uuid();
-  const fileExtension = getFileExtensionByString(image.uri);
+  const fileExtension = getFileExtensionByString(imageUri);
   const imageFullPath = `looks/${uuidImage}.${fileExtension}`;
 
-  const channelFileUpload = yield call(createFileUploadingChannel, [imageFullPath, image]);
+  const imageFile = yield fetch(imageUri);
+  const imageBlob = yield imageFile.blob();
+
+  const channelFileUpload = yield call(createFileUploadingChannel, [imageFullPath, imageBlob]);
 
   yield put({
     type: IMAGE_UPLOAD_START,

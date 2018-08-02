@@ -60,8 +60,7 @@ export default class NavBar extends React.Component {
     </View>
   );
 
-  renderRight = () => {
-    const isPreferences = Actions.currentScene === 'preferences';
+  renderRight = (isPreferences) => {
     return (
       <TouchableOpacity onPress={isPreferences ? Actions.pop : Actions.preferences}>
         <SvgUri
@@ -75,6 +74,7 @@ export default class NavBar extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     const { scene: { index } } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
 
@@ -82,7 +82,7 @@ export default class NavBar extends React.Component {
       <View style={[styles.container, (!index || isPreferences) && styles.solo]}>
         { this.renderLeft() }
         {/* { this.renderMiddle() } */}
-        { this.renderRight() }
+        { this.renderRight(isPreferences) }
       </View>
     );
   }
