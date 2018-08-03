@@ -6,7 +6,6 @@ import {
 import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
 
-// TODO slice published methods to new duck
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   error: null,

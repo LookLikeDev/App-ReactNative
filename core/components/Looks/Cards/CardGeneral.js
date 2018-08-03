@@ -105,7 +105,6 @@ export default class LooksItem extends React.Component {
     onPressDislike(data);
   };
 
-  // TODO refactor likes and dislikes, like component
   render() {
     const { data: { user, picture_uri: uri } } = this.props;
 
