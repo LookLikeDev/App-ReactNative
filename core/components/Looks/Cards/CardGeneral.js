@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
 import {
-  View, Text, StyleSheet, Image, Dimensions, TouchableOpacity,
+  View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, LayoutAnimation,
 } from 'react-native';
-import like from '../../../assets/icons/look/like.svg';
+import like from '../../../../assets/icons/look/like.svg';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -13,13 +13,8 @@ const imageWidth = dimensions.width;
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    paddingTop: 8,
     marginBottom: 28,
-  },
-  image: {
-    width: imageWidth,
-    height: imageHeight,
-    resizeMode: Image.resizeMode.cover,
+    zIndex: 2,
   },
   text: {
     fontFamily: 'SF-UI-Text-Semibold',
@@ -29,15 +24,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 12,
   },
-  separator: {
-    position: 'absolute',
-    marginHorizontal: 20,
-    height: 1,
-    backgroundColor: '#BCBBC1',
-    zIndex: 1,
-    bottom: -28,
-    left: 0,
-    right: 0,
+  imageWrap: {
+    position: 'relative',
+    width: imageWidth,
+    height: imageHeight,
+  },
+  image: {
+    width: imageWidth,
+    height: imageHeight,
+    resizeMode: Image.resizeMode.cover,
   },
   like: {
     flex: 1,
@@ -77,15 +72,13 @@ const styles = StyleSheet.create({
 
 export default class LooksItem extends React.Component {
   static propTypes = {
-    // From connect
-    userId: PropTypes.string.isRequired,
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
-      picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
-      reference: PropTypes.objectOf(PropTypes.object).isRequired,
+      items: PropTypes.arrayOf(PropTypes.object),
+      picture_uri: PropTypes.string.isRequired,
     }).isRequired,
     onPressLike: PropTypes.func,
     onPressDislike: PropTypes.func,
@@ -95,6 +88,10 @@ export default class LooksItem extends React.Component {
     onPressLike: false,
     onPressDislike: false,
   };
+
+  componentWillUnmount() { // triggered on like's click (we will remove the item)
+    LayoutAnimation.easeInEaseOut();
+  }
 
   handleLike = () => {
     const { onPressLike, data } = this.props;
@@ -110,45 +107,35 @@ export default class LooksItem extends React.Component {
 
   // TODO refactor likes and dislikes, like component
   render() {
-    const {
-      data, data: { user, picture_uri: uri }, onPressLike, onPressDislike,
-    } = this.props;
-    console.log(data);
+    const { data: { user, picture_uri: uri } } = this.props;
 
     return (
-      <React.Fragment>
-        <View style={styles.container}>
-          <View style={styles.separator} />
-          <Text style={styles.text}>
-            {user.name.toUpperCase()}
-          </Text>
+      <View style={styles.container}>
+        <Text style={styles.text}>
+          {user.name.toUpperCase()}
+        </Text>
+        <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
-          {onPressLike
-          && (
-          <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
-            <SvgUri
-              style={styles.dislikeSvg}
-              width="32"
-              height="32"
-              fill="#FFFFFF"
-              source={like}
-            />
-          </TouchableOpacity>
-          )}
-          {onPressDislike
-          && (
-          <TouchableOpacity style={styles.like} onPress={this.handleLike}>
-            <SvgUri
-              style={styles.likeSvg}
-              width="32"
-              height="32"
-              fill="#FFFFFF"
-              source={like}
-            />
-          </TouchableOpacity>
-          )}
         </View>
-      </React.Fragment>
+        <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
+          <SvgUri
+            style={styles.dislikeSvg}
+            width="32"
+            height="32"
+            fill="#FFFFFF"
+            source={like}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.like} onPress={this.handleLike}>
+          <SvgUri
+            style={styles.likeSvg}
+            width="32"
+            height="32"
+            fill="#FFFFFF"
+            source={like}
+          />
+        </TouchableOpacity>
+      </View>
     );
   }
 }

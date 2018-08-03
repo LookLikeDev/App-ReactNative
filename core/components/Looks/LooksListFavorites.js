@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  View, FlatList, ActivityIndicator, LayoutAnimation,
-} from 'react-native';
-import LookItem from './LookItem';
+import { View, FlatList, ActivityIndicator } from 'react-native';
+import CardFavorite from './Cards/CardFavorite';
 import LooksLoadedText from './LooksLoadedText';
+import Separator from '../Common/Separator';
 
 class LooksListGeneral extends React.Component {
   static propTypes = {
@@ -19,7 +18,7 @@ class LooksListGeneral extends React.Component {
       }),
       reference: PropTypes.objectOf(PropTypes.object).isRequired,
     })).isRequired,
-    likedLooks: PropTypes.objectOf(PropTypes.object),
+    likedLooks: PropTypes.objectOf(PropTypes.object).isRequired,
     fetchList: PropTypes.func.isRequired,
     resetVotedCounter: PropTypes.func.isRequired,
   };
@@ -29,16 +28,6 @@ class LooksListGeneral extends React.Component {
 
     resetVotedCounter();
     if (entities.length === 0) this.handleGetUsers();
-  }
-
-  componentWillUpdate() {
-    const config = {
-      duration: 300,
-      update: {
-        type: 'linear',
-      },
-    };
-    LayoutAnimation.configureNext(config);
   }
 
   keyExtractor = item => item.id;
@@ -55,7 +44,7 @@ class LooksListGeneral extends React.Component {
     const { userId } = this.props;
 
     return (
-      <LookItem
+      <CardFavorite
         data={item}
         userId={userId}
       />
@@ -69,7 +58,7 @@ class LooksListGeneral extends React.Component {
 
     if (loading) {
       return (
-        <View style={{ marginBottom: 26, marginTop: 8 }}>
+        <View style={{ marginBottom: 26 }}>
           <ActivityIndicator animating size="large" />
         </View>
       );
@@ -91,6 +80,8 @@ class LooksListGeneral extends React.Component {
           onEndReached={this.handleGetUsers}
           onEndReachedThreshold={0.4}
           ListFooterComponent={this.renderFooter}
+          ListHeaderComponent={Separator}
+          ItemSeparatorComponent={Separator}
         />
       </View>
     );

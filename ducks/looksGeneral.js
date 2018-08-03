@@ -12,10 +12,7 @@ export const ReducerRecord = Record({
   error: null,
   loading: false,
   loaded: false,
-  uploading: false,
-  uploaded: false,
   lastElement: null,
-  image: null,
 });
 
 const LookRecord = Record({

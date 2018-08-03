@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import {
   View, FlatList, ActivityIndicator,
 } from 'react-native';
-import LookItem from './LookItem';
+import CardUser from './Cards/CardUser';
 import LooksLoadedText from './LooksLoadedText';
+import Separator from '../Common/Separator';
 
 export default class LooksListUser extends React.Component {
   static propTypes = {
@@ -13,10 +14,11 @@ export default class LooksListUser extends React.Component {
     loaded: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
+      items: PropTypes.arrayOf(PropTypes.object),
+      picture_uri: PropTypes.string.isRequired,
     })).isRequired,
     fetchList: PropTypes.func.isRequired,
   };
@@ -35,16 +37,9 @@ export default class LooksListUser extends React.Component {
     if (!loading && !loaded) fetchList(userId);
   };
 
-  renderItem = ({ item }) => {
-    const { userId } = this.props;
-
-    return (
-      <LookItem
-        data={item}
-        userId={userId}
-      />
-    );
-  };
+  renderItem = ({ item }) => (
+    <CardUser data={item} />
+  );
 
   renderFooter = () => {
     const { loading, loaded } = this.props;
@@ -53,7 +48,7 @@ export default class LooksListUser extends React.Component {
 
     if (loading) {
       return (
-        <View style={{ marginBottom: 26, marginTop: 8 }}>
+        <View style={{ marginBottom: 26 }}>
           <ActivityIndicator animating size="large" />
         </View>
       );
@@ -75,6 +70,8 @@ export default class LooksListUser extends React.Component {
           onEndReached={this.handleGetUsers}
           onEndReachedThreshold={0.4}
           ListFooterComponent={this.renderFooter}
+          ListHeaderComponent={Separator}
+          ItemSeparatorComponent={Separator}
         />
       </View>
     );

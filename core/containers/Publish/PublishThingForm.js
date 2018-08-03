@@ -1,6 +1,6 @@
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import LookMarkThingForm from '../../components/Looks/LookMarkThingForm';
+import PublishThingForm from '../../components/Publish/PublishThingForm';
 import { saveThing, removeThing, moduleName } from '../../../ducks/publish';
 
 const mapStateToProps = (state, ownProps) => {
@@ -26,4 +26,4 @@ const mapDispatchToProps = {
 // TODO create selectors for entities
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'markItems',
-})(LookMarkThingForm));
+})(PublishThingForm));

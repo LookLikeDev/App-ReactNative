@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import LookMarkThingForm from '../containers/Looks/LookMarkThingForm';
+import PublishThingForm from '../containers/Publish/PublishThingForm';
 import Header from '../containers/Header';
 
 export default class MarkItemsScreen extends React.Component {
@@ -17,7 +17,7 @@ export default class MarkItemsScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <LookMarkThingForm thingId={thingId} />
+        <PublishThingForm thingId={thingId} />
       </View>
     );
   }

@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LookLabels extends React.Component {
+export default class PublishThings extends React.Component {
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({

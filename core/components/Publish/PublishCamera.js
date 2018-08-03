@@ -12,7 +12,7 @@ import {
 import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux';
 import Button from '../Common/Button';
-import LookLabels from './LookLabels';
+import PublishThings from './PublishThings';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LookCamera extends React.Component {
+export default class PublishCamera extends React.Component {
   static propTypes = {
     image: PropTypes.shape({
       uri: PropTypes.string,
@@ -114,7 +114,7 @@ export default class LookCamera extends React.Component {
                 source={{ uri: image }}
                 style={{ marginBottom: 16, width: imageWidth, height: imageHeight }}
               />
-              <LookLabels items={things} areaWidth={imageWidth} removeThing={removeThing} />
+              <PublishThings items={things} areaWidth={imageWidth} removeThing={removeThing} />
             </TouchableOpacity>
             )
             }
