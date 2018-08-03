@@ -138,6 +138,8 @@ export default class LookLabels extends React.Component {
   renderPrice = value => (
     <Text style={styles.price}>
       {value}
+      {' '}
+      руб.
     </Text>
   );
 

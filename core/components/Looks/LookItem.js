@@ -81,7 +81,7 @@ export default class LooksItem extends React.Component {
     userId: PropTypes.string.isRequired,
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
+      picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
@@ -111,8 +111,9 @@ export default class LooksItem extends React.Component {
   // TODO refactor likes and dislikes, like component
   render() {
     const {
-      data: { image, user }, onPressLike, onPressDislike,
+      data, data: { user, picture_uri: uri }, onPressLike, onPressDislike,
     } = this.props;
+    console.log(data);
 
     return (
       <React.Fragment>
@@ -121,7 +122,7 @@ export default class LooksItem extends React.Component {
           <Text style={styles.text}>
             {user.name.toUpperCase()}
           </Text>
-          <Image style={styles.image} source={image && { uri: image }} />
+          <Image style={styles.image} source={uri && { uri }} />
           {onPressLike
           && (
           <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
