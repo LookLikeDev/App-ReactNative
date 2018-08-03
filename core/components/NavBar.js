@@ -32,13 +32,19 @@ export default class NavBar extends React.Component {
     scene: PropTypes.shape({
       index: PropTypes.number.isRequired,
     }).isRequired,
+    hideBackButton: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    hideBackButton: false,
   };
 
   renderLeft = () => {
-    const { scene: { index } } = this.props;
+    const { hideBackButton, scene: { index } } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
+    const isHideLeftButton = !index || isPreferences || hideBackButton;
 
-    if (!index || isPreferences) return null;
+    if (isHideLeftButton) return null;
 
     return (
       <TouchableOpacity onPress={Actions.pop}>
@@ -74,12 +80,13 @@ export default class NavBar extends React.Component {
   };
 
   render() {
-    console.log(this.props);
-    const { scene: { index } } = this.props;
+    // console.log(this.props);
+    const { hideBackButton, scene: { index } } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
+    const isHideLeftButton = !index || isPreferences || hideBackButton;
 
     return (
-      <View style={[styles.container, (!index || isPreferences) && styles.solo]}>
+      <View style={[styles.container, isHideLeftButton && styles.solo]}>
         { this.renderLeft() }
         {/* { this.renderMiddle() } */}
         { this.renderRight(isPreferences) }

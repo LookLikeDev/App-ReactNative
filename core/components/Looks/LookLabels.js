@@ -4,7 +4,10 @@ import SvgUri from 'react-native-svg-uri';
 import {
   View, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import labelSvg from '../../../assets/icons/look/label.svg';
+import editSvg from '../../../assets/icons/look/edit.svg';
+import removeSvg from '../../../assets/icons/look/remove.svg';
 
 const styles = StyleSheet.create({
   label: {
@@ -78,6 +81,28 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 13,
   },
+  edit: {
+    position: 'absolute',
+    right: -4,
+    bottom: -14,
+    height: 28,
+    width: 28,
+    borderRadius: 28 / 2,
+    backgroundColor: '#00C835',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  remove: {
+    position: 'absolute',
+    right: 32,
+    bottom: -14,
+    height: 28,
+    width: 28,
+    borderRadius: 28 / 2,
+    backgroundColor: '#FC4600',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default class LookLabels extends React.Component {
@@ -85,26 +110,49 @@ export default class LookLabels extends React.Component {
     items: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        locationX: PropTypes.number.isRequired,
-        locationY: PropTypes.number.isRequired,
+        position: PropTypes.shape({
+          x: PropTypes.number.isRequired,
+          y: PropTypes.number.isRequired,
+        }).isRequired,
+        name: PropTypes.string.isRequired,
+        brand: PropTypes.string,
+        price: PropTypes.number,
       }),
     ),
     areaWidth: PropTypes.number.isRequired,
+    removeThing: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {
-    items: null,
-  };
+  renderName = value => (
+    <Text style={styles.text}>
+      {value}
+    </Text>
+  );
 
-  // TODO refactor likes and dislikes, like component
+  renderBrand = value => (
+    <Text style={styles.brand}>
+      {value}
+    </Text>
+  );
+
+  renderPrice = value => (
+    <Text style={styles.price}>
+      {value}
+    </Text>
+  );
+
   render() {
     const { items, areaWidth } = this.props;
 
     return (
       <React.Fragment>
         {items.map((item) => {
-          const { id, locationX, locationY } = item;
-          const isLeft = locationX > (areaWidth / 2);
+          const { removeThing } = this.props;
+          const {
+            id, name, brand, price, position: { x, y },
+          } = item;
+
+          const isLeft = x > (areaWidth / 2);
 
           const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
           const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
@@ -112,8 +160,8 @@ export default class LookLabels extends React.Component {
           return (
             <TouchableOpacity
               key={id}
-              style={[styles.label, { left: locationX, top: locationY }]}
-              onPress={() => console.log('mark mark mark mark')}
+              style={[styles.label, { left: x, top: y }]}
+              // onPress={() => console.log('mark mark mark mark')}
             >
               <SvgUri
                 width="16"
@@ -123,15 +171,25 @@ export default class LookLabels extends React.Component {
               />
               <View style={styleHint}>
                 <View style={styleTriangle} />
-                <Text style={styles.text}>
-                  Платье с принтом
-                </Text>
-                <Text style={styles.brand}>
-                  «Zara»
-                </Text>
-                <Text style={styles.price}>
-                  12 600 руб.
-                </Text>
+                {name && this.renderName(name)}
+                {brand && this.renderBrand(brand)}
+                {price && this.renderPrice(price)}
+                <TouchableOpacity onPress={() => Actions.markItems({ thingId: id })} style={styles.edit}>
+                  <SvgUri
+                    width="14"
+                    height="14"
+                    fill="#FFFFFF"
+                    source={editSvg}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeThing(id)} style={styles.remove}>
+                  <SvgUri
+                    width="14"
+                    height="14"
+                    fill="#FFFFFF"
+                    source={removeSvg}
+                  />
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           );

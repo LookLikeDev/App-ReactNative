@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { like, dislike, moduleName as userModule } from '../../../ducks/user';
 import {
-  fetchList, itemRemove, moduleName as looksModule,
+  fetchList, removeItem, moduleName as looksModule,
 } from '../../../ducks/looksGeneral';
 import LooksListGeneral from '../../components/Looks/LooksListGeneral';
 
@@ -16,7 +16,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchList,
-  itemRemove,
+  removeItem,
   like,
   dislike,
 };

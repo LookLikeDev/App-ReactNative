@@ -22,7 +22,7 @@ class LooksListGeneral extends React.Component {
     fetchList: PropTypes.func.isRequired,
     likedLooks: PropTypes.objectOf(PropTypes.object),
     dislikedLooks: PropTypes.objectOf(PropTypes.object),
-    itemRemove: PropTypes.func.isRequired,
+    removeItem: PropTypes.func.isRequired,
     like: PropTypes.func.isRequired,
     dislike: PropTypes.func.isRequired,
   };
@@ -59,17 +59,17 @@ class LooksListGeneral extends React.Component {
   };
 
   handleLike = (item) => {
-    const { itemRemove, like, userId } = this.props;
+    const { removeItem, like, userId } = this.props;
 
     like(item, userId);
-    itemRemove(item);
+    removeItem(item);
   };
 
   handleDislike = (item) => {
-    const { itemRemove, dislike, userId } = this.props;
+    const { removeItem, dislike, userId } = this.props;
 
     dislike(item, userId);
-    itemRemove(item);
+    removeItem(item);
   };
 
   renderItem = ({ item }) => {

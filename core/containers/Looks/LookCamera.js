@@ -1,13 +1,16 @@
 import { connect } from 'react-redux';
-import { moduleName, addImage } from '../../../ducks/looksGeneral';
+import { moduleName, addImage, addThing, removeThing } from '../../../ducks/publish';
 import LookCamera from '../../components/Looks/LookCamera';
 
 const mapStateToProps = state => ({
   image: state[moduleName].image,
+  things: state[moduleName].things.toArray(),
 });
 
 const mapDispatchToProps = {
   addImage,
+  addThing,
+  removeThing,
 };
 
 // TODO create selectors for entities

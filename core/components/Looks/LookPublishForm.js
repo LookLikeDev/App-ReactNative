@@ -55,15 +55,15 @@ export default class LookPublishForm extends React.Component {
     uploaded: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    uploadImage: PropTypes.func.isRequired,
+    saveLook: PropTypes.func.isRequired,
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
   };
 
   onSubmit = (values) => {
-    const { image, userId, uploadImage } = this.props;
+    const { image, userId, saveLook } = this.props;
 
-    uploadImage(userId, image, values);
+    saveLook(userId, image, values);
   };
 
   renderSwitch = ({
