@@ -1,5 +1,5 @@
 import { ActionConst } from 'react-native-router-flux';
-// todo refactore this
+
 const initialState = {
   scene: {},
 };

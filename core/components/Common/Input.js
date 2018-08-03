@@ -57,7 +57,7 @@ export default class Input extends React.Component {
       labelText, inputTextOrange, handleChange, keyboardType, input: { onChange, value, ...restInput },
     } = this.props;
 
-    console.log('WTF', restInput);
+    // console.log('WTF', restInput);
     return (
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>

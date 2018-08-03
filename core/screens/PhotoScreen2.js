@@ -20,7 +20,7 @@ export default class CameraExample extends React.Component {
       assetType: 'Photos',
     });
 
-    console.log(cameraRoll);
+    // console.log(cameraRoll);
     this.setState({
       hasCameraPermission: results.every(({ status }) => status === 'granted'),
       image: cameraRoll.edges[0].node.image,

@@ -22,6 +22,7 @@ const options = {
   title: 'Выберите LOOK',
   mediaType: 'photo',
   maxWidth: 1080,
+  noData: true, // {true} disable base64 encoded image data
   storageOptions: {
     cameraRoll: true,
   },
@@ -59,11 +60,10 @@ export default class LookCamera extends React.Component {
       origURL: PropTypes.string,
       fileName: PropTypes.string,
     }).isRequired,
+    things: PropTypes.arrayOf(PropTypes.object).isRequired,
+    addThing: PropTypes.func.isRequired,
     addImage: PropTypes.func.isRequired,
-  };
-
-  state = {
-    marks: [],
+    removeThing: PropTypes.func.isRequired,
   };
 
   showPicker = () => {
@@ -72,9 +72,9 @@ export default class LookCamera extends React.Component {
     if (image === null) {
       ImagePicker.showImagePicker(options, (response) => {
         if (response.didCancel) {
-          console.log('User cancelled image picker');
+          // console.log('User cancelled image picker');
         } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
+          // console.log('ImagePicker Error: ', response.error);
         } else {
           addImage(response.uri);
         }
@@ -85,25 +85,23 @@ export default class LookCamera extends React.Component {
   };
 
   handleTap = (event) => {
+    const { addThing } = this.props;
     const { locationX, locationY } = event.nativeEvent;
+    const thingId = uuid();
 
-    this.setState(prevState => ({
-      marks: [
-        ...prevState.marks,
-        {
-          id: uuid(),
-          locationX,
-          locationY,
-          imageWidth,
-          imageHeight,
-        },
-      ],
-    }));
+    addThing({
+      id: thingId,
+      position: {
+        x: locationX,
+        y: locationY,
+      },
+    });
+
+    Actions.markItems({ hideBackButton: true, thingId });
   };
 
   render() {
-    const { image } = this.props;
-    const { marks } = this.state;
+    const { image, things, removeThing } = this.props;
 
     return (
       <View style={{ flex: 1, alignSelf: 'stretch' }}>
@@ -116,13 +114,11 @@ export default class LookCamera extends React.Component {
                 source={{ uri: image }}
                 style={{ marginBottom: 16, width: imageWidth, height: imageHeight }}
               />
-              <LookLabels items={marks} areaWidth={imageWidth} />
+              <LookLabels items={things} areaWidth={imageWidth} removeThing={removeThing} />
             </TouchableOpacity>
             )
             }
           </View>
-          <Button title="RESET MARKS" onPress={() => { this.setState({ marks: [] }); }} />
-          <Button title="FORM FORM FORM" onPress={() => Actions.markItems({ HELLO_MR_GORDON: true })} />
           <Button title={!image ? 'Создать LOOK' : 'Опубликовать LOOK'} onPress={this.showPicker} />
         </ScrollView>
       </View>

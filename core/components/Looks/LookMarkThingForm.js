@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Actions } from 'react-native-router-flux';
 import { Field } from 'redux-form';
 import {
   StyleSheet,
@@ -8,6 +9,7 @@ import {
 } from 'react-native';
 import Button from '../Common/Button';
 import Input from '../Common/Input';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -34,16 +36,26 @@ const styles = StyleSheet.create({
 
 export default class LookPublishForm extends React.Component {
   static propTypes = {
+    // from connect
+    thingId: PropTypes.string.isRequired,
+    saveThing: PropTypes.func.isRequired,
+    removeThing: PropTypes.func.isRequired,
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
   };
 
   onSave = (values) => {
-    console.log('form values', values);
+    const { thingId, saveThing } = this.props;
+
+    saveThing({ id: thingId, ...values });
+    Actions.pop();
   };
 
-  onCancel = (values) => {
-    console.log('form values', values);
+  onCancel = () => {
+    const { thingId, removeThing } = this.props;
+
+    removeThing(thingId);
+    Actions.pop();
   };
 
   render() {
@@ -57,8 +69,8 @@ export default class LookPublishForm extends React.Component {
           <Field name="price" labelText="Цена" keyboardType="number-pad" component={Input} />
         </View>
         <View style={styles.submit}>
-          <Button title="Отменить" type="" onPress={handleSubmit(this.onSave)} />
-          <Button title="Сохранить" onPress={handleSubmit(this.onCancel)} />
+          <Button title="Отменить" onPress={this.onCancel} />
+          <Button title="Сохранить" onPress={handleSubmit(this.onSave)} />
         </View>
       </ScrollView>
     );
