@@ -22,7 +22,7 @@
       "resizeMode": "contain"
     },
     "assetBundlePatterns": [
-      "./assets/**"
+      "assets/**"
     ],
     "orientation": "portrait",
     "name": "App-ReactNative",

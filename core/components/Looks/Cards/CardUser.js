@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, StyleSheet, Image, Dimensions,
 } from 'react-native';
+import UserThingsList from './UserThingsList';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -34,11 +35,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LooksItem extends React.Component {
+export default class CardUser extends React.Component {
   static propTypes = {
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
       items: PropTypes.arrayOf(PropTypes.object),
@@ -47,7 +51,7 @@ export default class LooksItem extends React.Component {
   };
 
   render() {
-    const { data: { user, picture_uri: uri } } = this.props;
+    const { data: { user, items, picture_uri: uri } } = this.props;
 
     return (
       <View style={styles.container}>
@@ -56,6 +60,7 @@ export default class LooksItem extends React.Component {
         </Text>
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
+          <UserThingsList items={items} />
         </View>
       </View>
     );

@@ -34,12 +34,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LooksItem extends React.Component {
+export default class CardFavorite extends React.Component {
   static propTypes = {
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
       reference: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -51,9 +54,11 @@ export default class LooksItem extends React.Component {
 
     return (
       <View style={styles.container}>
+        {user && (
         <Text style={styles.text}>
           {user.name.toUpperCase()}
         </Text>
+        )}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
         </View>

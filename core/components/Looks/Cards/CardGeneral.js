@@ -70,11 +70,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LooksItem extends React.Component {
+export default class CardGeneral extends React.Component {
   static propTypes = {
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
       items: PropTypes.arrayOf(PropTypes.object),
