@@ -12,7 +12,7 @@ class LooksListGeneral extends React.Component {
     loaded: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
+      picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
@@ -40,16 +40,7 @@ class LooksListGeneral extends React.Component {
     if (!loading && !loaded) fetchList(likedLooks);
   };
 
-  renderItem = ({ item }) => {
-    const { userId } = this.props;
-
-    return (
-      <CardFavorite
-        data={item}
-        userId={userId}
-      />
-    );
-  };
+  renderItem = ({ item }) => <CardFavorite data={item} />;
 
   renderFooter = () => {
     const { loading, loaded } = this.props;

@@ -15,8 +15,8 @@ import Button from '../Common/Button';
 import PublishThings from './PublishThings';
 
 const dimensions = Dimensions.get('window');
-const imageHeight = Math.round((dimensions.width * 4) / 3);
-const imageWidth = dimensions.width;
+const wrapHeight = Math.round((dimensions.width * 4) / 3);
+const wrapWidth = dimensions.width;
 
 const options = {
   title: 'Выберите LOOK',
@@ -89,11 +89,14 @@ export default class PublishCamera extends React.Component {
     const { locationX, locationY } = event.nativeEvent;
     const thingId = uuid();
 
+    // The values must be saved in percentages. To correctly display on different devices.
+    const x = Math.round(locationX / (wrapWidth / 100));
+    const y = Math.round(locationY / (wrapHeight / 100));
+
     addThing({
       id: thingId,
       position: {
-        x: locationX,
-        y: locationY,
+        x, y,
       },
     });
 
@@ -112,9 +115,9 @@ export default class PublishCamera extends React.Component {
             <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
               <Image
                 source={{ uri: image }}
-                style={{ marginBottom: 16, width: imageWidth, height: imageHeight }}
+                style={{ marginBottom: 16, width: wrapWidth, height: wrapHeight }}
               />
-              <PublishThings items={things} areaWidth={imageWidth} removeThing={removeThing} />
+              <PublishThings items={things} removeThing={removeThing} />
             </TouchableOpacity>
             )
             }

@@ -6,7 +6,7 @@ import { saveThing, removeThing, moduleName } from '../../../ducks/publish';
 const mapStateToProps = (state, ownProps) => {
   const thing = state[moduleName].things.get(ownProps.thingId);
 
-  if (!thing) return null;
+  if (!thing) return {};
 
   return {
     thingId: ownProps.thingId,
