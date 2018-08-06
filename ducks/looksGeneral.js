@@ -6,23 +6,21 @@ import {
 import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
 
-// TODO slice published methods to new duck
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   error: null,
   loading: false,
   loaded: false,
-  uploading: false,
-  uploaded: false,
   lastElement: null,
-  image: null,
 });
 
 const LookRecord = Record({
   id: null,
   user: null,
-  image: null,
+  shop: null,
   reference: null,
+  picture_uri: null,
+  date_published: null,
 });
 
 /**
@@ -99,16 +97,16 @@ const getData = function* (item) {
 
     return {
       id: item.id,
-      user: data.user,
-      image: url,
       reference: item.ref,
+      picture_uri: url,
+      ...data,
     };
   } catch (error) {
     return {
       id: item.id,
-      user: data.user,
-      image: null,
       reference: item.ref,
+      picture_uri: null,
+      ...data,
     };
   }
 };

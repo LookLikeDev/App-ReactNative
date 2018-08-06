@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../containers/Header';
-import LookPublishForm from '../containers/Looks/LookPublishForm';
+import PublishForm from '../containers/Publish/PublishForm';
 
 export default class PublishLookScreen extends React.Component {
   static propTypes = {
@@ -16,7 +16,7 @@ export default class PublishLookScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <LookPublishForm />
+        <PublishForm />
       </View>
     );
   }

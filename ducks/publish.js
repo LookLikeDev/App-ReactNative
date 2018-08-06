@@ -10,7 +10,6 @@ import { Actions } from 'react-native-router-flux';
 import { appName, firestore } from '../config';
 import { getFileExtensionByString } from '../core/utils';
 
-// TODO slice published methods to new duck
 export const ReducerRecord = Record({
   error: null,
   uploading: false,

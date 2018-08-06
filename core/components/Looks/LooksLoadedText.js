@@ -6,7 +6,6 @@ import {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 26,
-    marginTop: 8,
   },
   title: {
     fontFamily: 'SF-UI-Text-Semibold',
@@ -25,17 +24,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LooksLoadedText extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Больше луков нет
-        </Text>
-        <Text style={styles.description}>
-          Самое время вдохновиться новыми луками
-        </Text>
-      </View>
-    );
-  }
+export default function LooksLoadedText() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>
+        Больше луков нет
+      </Text>
+      <Text style={styles.description}>
+        Самое время вдохновиться новыми луками
+      </Text>
+    </View>
+  );
 }

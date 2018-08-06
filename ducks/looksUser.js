@@ -17,7 +17,11 @@ export const ReducerRecord = Record({
 const LookRecord = Record({
   id: null,
   user: null,
-  image: null,
+  shop: null,
+  items: null,
+  reference: null,
+  picture_uri: null,
+  date_published: null,
 });
 
 /**
@@ -81,14 +85,14 @@ const getData = function* (item) {
 
     return {
       id: item.id,
-      user: data.user,
-      image: url,
+      picture_uri: url,
+      ...data,
     };
   } catch (error) {
     return {
       id: item.id,
-      user: data.user,
-      image: null,
+      picture_uri: null,
+      ...data,
     };
   }
 };

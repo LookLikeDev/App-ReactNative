@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
 import { Actions } from 'react-native-router-flux';
 import { Constants } from 'expo';
-import {
-  View, Text, StyleSheet, TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import iconBack from '../../assets/icons/navbar/back.svg';
 import iconClose from '../../assets/icons/navbar/close.svg';
 import iconPreferences from '../../assets/icons/navbar/preferences.svg';
@@ -28,7 +26,6 @@ const styles = StyleSheet.create({
 export default class NavBar extends React.Component {
   static propTypes = {
     // from react-native-router-flux
-    title: PropTypes.string.isRequired,
     scene: PropTypes.shape({
       index: PropTypes.number.isRequired,
     }).isRequired,
@@ -58,14 +55,6 @@ export default class NavBar extends React.Component {
     );
   };
 
-  renderMiddle = () => (
-    <View>
-      <Text>
-        { this.props.title }
-      </Text>
-    </View>
-  );
-
   renderRight = (isPreferences) => {
     return (
       <TouchableOpacity onPress={isPreferences ? Actions.pop : Actions.preferences}>
@@ -80,7 +69,6 @@ export default class NavBar extends React.Component {
   };
 
   render() {
-    // console.log(this.props);
     const { hideBackButton, scene: { index } } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
     const isHideLeftButton = !index || isPreferences || hideBackButton;
@@ -88,7 +76,6 @@ export default class NavBar extends React.Component {
     return (
       <View style={[styles.container, isHideLeftButton && styles.solo]}>
         { this.renderLeft() }
-        {/* { this.renderMiddle() } */}
         { this.renderRight(isPreferences) }
       </View>
     );

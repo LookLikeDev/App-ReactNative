@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
-import { moduleName, addImage, addThing, removeThing } from '../../../ducks/publish';
-import LookCamera from '../../components/Looks/LookCamera';
+import {
+  moduleName, addImage, addThing, removeThing,
+} from '../../../ducks/publish';
+import PublishCamera from '../../components/Publish/PublishCamera';
 
 const mapStateToProps = state => ({
   image: state[moduleName].image,
@@ -14,4 +16,4 @@ const mapDispatchToProps = {
 };
 
 // TODO create selectors for entities
-export default connect(mapStateToProps, mapDispatchToProps)(LookCamera);
+export default connect(mapStateToProps, mapDispatchToProps)(PublishCamera);

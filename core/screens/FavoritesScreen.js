@@ -13,6 +13,7 @@ export default class FavoritesScreen extends React.Component {
   render() {
     const { title } = this.props;
 
+    // TODO добавить загрузку луков если счетчик голосов больше 0 и до этого луки уже загружались
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />

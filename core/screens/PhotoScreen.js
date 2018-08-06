@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../components/Header';
-import LookCamera from '../containers/Looks/LookCamera';
+import PublishCamera from '../containers/Publish/PublishCamera';
 
 export default class PhotoScreen extends React.Component {
   static propTypes = {
@@ -17,7 +17,7 @@ export default class PhotoScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <LookCamera />
+        <PublishCamera />
       </View>
     );
   }

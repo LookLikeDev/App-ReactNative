@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LookPublishForm extends React.Component {
+export default class PublishForm extends React.Component {
   static propTypes = {
     // from connect
     uploading: PropTypes.bool.isRequired,

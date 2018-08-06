@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LookPublishForm extends React.Component {
+export default class PublishThingForm extends React.Component {
   static propTypes = {
     // from connect
     thingId: PropTypes.string.isRequired,

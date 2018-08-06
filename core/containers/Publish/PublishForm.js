@@ -1,6 +1,6 @@
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import LookPublishForm from '../../components/Looks/LookPublishForm';
+import PublishForm from '../../components/Publish/PublishForm';
 import { moduleName as userModule } from '../../../ducks/user';
 import { saveLook, moduleName as publishModule } from '../../../ducks/publish';
 
@@ -22,4 +22,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     shopName: null,
     publishAnonymous: false,
   },
-})(LookPublishForm));
+})(PublishForm));

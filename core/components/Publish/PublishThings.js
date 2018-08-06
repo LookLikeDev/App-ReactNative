@@ -2,12 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import labelSvg from '../../../assets/icons/look/label.svg';
 import editSvg from '../../../assets/icons/look/edit.svg';
 import removeSvg from '../../../assets/icons/look/remove.svg';
+
+const dimensions = Dimensions.get('window');
+const wrapHeight = Math.round((dimensions.width * 4) / 3);
+const wrapWidth = dimensions.width;
 
 const styles = StyleSheet.create({
   label: {
@@ -18,6 +22,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FC4600',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 2,
   },
   hint: {
     borderRadius: 8,
@@ -26,6 +31,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 160,
     backgroundColor: '#FFFFFF',
+    zIndex: 2,
   },
   hintLeft: {
     top: 0,
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class LookLabels extends React.Component {
+export default class PublishThings extends React.Component {
   static propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -119,7 +125,6 @@ export default class LookLabels extends React.Component {
         price: PropTypes.number,
       }),
     ),
-    areaWidth: PropTypes.number.isRequired,
     removeThing: PropTypes.func.isRequired,
   };
 
@@ -138,62 +143,76 @@ export default class LookLabels extends React.Component {
   renderPrice = value => (
     <Text style={styles.price}>
       {value}
+      {' '}
+      руб.
     </Text>
   );
 
+  renderItem = (item) => {
+    const { removeThing } = this.props;
+    const {
+      id, name, brand, price, position: { x, y },
+    } = item;
+
+    // The values are stored in percentages and need to be converted to a device.
+    const locationX = Math.round(x * (wrapWidth / 100));
+    const locationY = Math.round(y * (wrapHeight / 100));
+
+    const isLeft = x > (100 / 2);
+
+    const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
+    const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
+
+    return (
+      <View
+        key={id}
+        style={[styles.label, { left: locationX, top: locationY }]}
+        // onPress={() => console.log('mark mark mark mark')}
+      >
+        <SvgUri
+          width="16"
+          height="16"
+          fill="#FFFFFF"
+          source={labelSvg}
+        />
+        {name
+        && (
+          <View style={styleHint}>
+            <View style={styleTriangle} />
+            {name && this.renderName(name)}
+            {brand && this.renderBrand(brand)}
+            {price && this.renderPrice(price)}
+            <TouchableOpacity
+              onPress={() => Actions.markItems({ thingId: id })}
+              style={styles.edit}
+            >
+              <SvgUri
+                width="14"
+                height="14"
+                fill="#FFFFFF"
+                source={editSvg}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => removeThing(id)} style={styles.remove}>
+              <SvgUri
+                width="14"
+                height="14"
+                fill="#FFFFFF"
+                source={removeSvg}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   render() {
-    const { items, areaWidth } = this.props;
+    const { items } = this.props;
 
     return (
       <React.Fragment>
-        {items.map((item) => {
-          const { removeThing } = this.props;
-          const {
-            id, name, brand, price, position: { x, y },
-          } = item;
-
-          const isLeft = x > (areaWidth / 2);
-
-          const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
-          const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
-
-          return (
-            <TouchableOpacity
-              key={id}
-              style={[styles.label, { left: x, top: y }]}
-              // onPress={() => console.log('mark mark mark mark')}
-            >
-              <SvgUri
-                width="16"
-                height="16"
-                fill="#FFFFFF"
-                source={labelSvg}
-              />
-              <View style={styleHint}>
-                <View style={styleTriangle} />
-                {name && this.renderName(name)}
-                {brand && this.renderBrand(brand)}
-                {price && this.renderPrice(price)}
-                <TouchableOpacity onPress={() => Actions.markItems({ thingId: id })} style={styles.edit}>
-                  <SvgUri
-                    width="14"
-                    height="14"
-                    fill="#FFFFFF"
-                    source={editSvg}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeThing(id)} style={styles.remove}>
-                  <SvgUri
-                    width="14"
-                    height="14"
-                    fill="#FFFFFF"
-                    source={removeSvg}
-                  />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+        {items.map(item => this.renderItem(item))}
       </React.Fragment>
     );
   }

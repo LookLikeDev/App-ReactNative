@@ -17,7 +17,10 @@ export const ReducerRecord = Record({
 const LookRecord = Record({
   id: null,
   user: null,
-  image: null,
+  shop: null,
+  reference: null,
+  picture_uri: null,
+  date_published: null,
 });
 
 /**
@@ -78,14 +81,14 @@ const getData = function* (item) {
 
     return {
       id: item.id,
-      user: data.user,
-      image: url,
+      picture_uri: url,
+      ...data,
     };
   } catch (error) {
     return {
       id: item.id,
-      user: data.user,
-      image: null,
+      picture_uri: null,
+      ...data,
     };
   }
 };
@@ -100,41 +103,41 @@ export const fetchListSaga = function* (action) {
   const data = state[moduleName].entities;
   let count = 0;
 
-  try {
-    if (likedItems === null) {
-      yield put({ type: FETCH_LIST_LOADED_ALL });
-
-      return true;
-    }
-
-    let items = yield Object.values(likedItems);
-
-    items = yield all(items.filter((item) => {
-      if (data.get(item.reference.id) || count >= 5) return false;
-
-      count += 1;
-
-      return true;
-    }));
-
-    if (items.length > 0) {
-      let favorites = yield all(items.map(getSnapshot));
-
-      favorites = yield all(favorites.map(getData));
-
-      yield put({
-        type: FETCH_LIST_SUCCESS,
-        payload: { entities: favorites },
-      });
-    } else {
-      yield put({ type: FETCH_LIST_LOADED_ALL });
-    }
-  } catch (error) {
-    console.log('error', error);
+  if (likedItems === null) {
     yield put({
-      type: FETCH_LIST_ERROR,
-      error,
+      type: FETCH_LIST_LOADED_ALL,
     });
+  } else {
+    try {
+      let items = yield all(Object.values(likedItems));
+
+      items = yield all(items.filter((item) => {
+        if (data.get(item.reference.id) || count >= 5) return false;
+
+        count += 1;
+
+        return true;
+      }));
+
+      if (items.length > 0) {
+        let favorites = yield all(items.map(getSnapshot));
+
+        favorites = yield all(favorites.map(getData));
+
+        yield put({
+          type: FETCH_LIST_SUCCESS,
+          payload: { entities: favorites },
+        });
+      } else {
+        yield put({ type: FETCH_LIST_LOADED_ALL });
+      }
+    } catch (error) {
+      console.log('error', error);
+      yield put({
+        type: FETCH_LIST_ERROR,
+        error,
+      });
+    }
   }
 };
 
