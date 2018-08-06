@@ -7,9 +7,9 @@ import Separator from '../Common/Separator';
 
 class LooksListGeneral extends React.Component {
   static propTypes = {
-    userId: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
+    voting: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       picture_uri: PropTypes.string.isRequired,
@@ -40,7 +40,7 @@ class LooksListGeneral extends React.Component {
     if (!loading && !loaded) fetchList(likedLooks);
   };
 
-  renderItem = ({ item }) => <CardFavorite data={item} />;
+  renderItem = ({ item }) => <CardFavorite voting={this.props.voting} data={item} />;
 
   renderFooter = () => {
     const { loading, loaded } = this.props;

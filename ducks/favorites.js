@@ -3,7 +3,7 @@ import { Record, OrderedMap } from 'immutable';
 import {
   all, put, call, takeEvery, select,
 } from 'redux-saga/effects';
-import { appName } from '../config';
+import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
 
 export const ReducerRecord = Record({
@@ -12,12 +12,14 @@ export const ReducerRecord = Record({
   loading: false,
   loaded: false,
   lastElement: null,
+  voting: false,
 });
 
 const LookRecord = Record({
   id: null,
   user: null,
   shop: null,
+  items: null,
   reference: null,
   picture_uri: null,
   date_published: null,
@@ -31,6 +33,9 @@ export const FETCH_LIST_REQUEST = `${appName}/${moduleName}/FETCH_LIST_REQUEST`;
 export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
+
+export const ADD_VOTE_REQUEST = `${appName}/${moduleName}/ADD_VOTE_REQUEST`;
+export const ADD_VOTE_SUCCESS = `${appName}/${moduleName}/ADD_VOTE_SUCCESS`;
 
 /**
  * Reducer
@@ -52,6 +57,12 @@ export default function reducer(looksState = new ReducerRecord(), action) {
         .set('loading', true)
         .set('loaded', true);
 
+    case ADD_VOTE_REQUEST:
+      return looksState.set('voting', true);
+
+    case ADD_VOTE_SUCCESS:
+      return looksState.set('voting', false);
+
     default:
       return looksState;
   }
@@ -64,6 +75,13 @@ export function fetchList(likedItems) {
   return {
     type: FETCH_LIST_REQUEST,
     payload: { likedItems },
+  };
+}
+
+export function addVote(thingId, lookId, isLike) {
+  return {
+    type: ADD_VOTE_REQUEST,
+    payload: { thingId, lookId, isLike },
   };
 }
 
@@ -123,7 +141,7 @@ export const fetchListSaga = function* (action) {
         let favorites = yield all(items.map(getSnapshot));
 
         favorites = yield all(favorites.map(getData));
-
+        console.log(favorites);
         yield put({
           type: FETCH_LIST_SUCCESS,
           payload: { entities: favorites },
@@ -141,8 +159,40 @@ export const fetchListSaga = function* (action) {
   }
 };
 
+export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) {
+  const lookRef = yield firestore.collection('looks').doc(lookId);
+  const store = yield select();
+  const lookThingsList = yield store[moduleName].getIn(['entities', lookId, 'items']);
+
+  try {
+    const newItemsList = yield lookThingsList.map((item) => {
+      if (item.id !== thingId) return item;
+
+      if (isLike) {
+        return {
+          ...item,
+          counter_likes: item.counter_likes > 0 ? item.counter_likes + 1 : 1,
+        };
+      }
+      return {
+        ...item,
+        counter_dislikes: item.counter_dislikes > 0 ? item.counter_dislikes + 1 : 1,
+      };
+    });
+
+    yield call([lookRef, lookRef.update], { items: newItemsList });
+
+    yield put({
+      type: ADD_VOTE_SUCCESS,
+    });
+  } catch (error) {
+    console.log('ERROR', error);
+  }
+};
+
 export const saga = function* () {
   yield all([
     takeEvery(FETCH_LIST_REQUEST, fetchListSaga),
+    takeEvery(ADD_VOTE_REQUEST, addVoteSaga),
   ]);
 };

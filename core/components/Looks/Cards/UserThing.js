@@ -50,28 +50,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class UserThingsList extends React.Component {
+export default class UserThing extends React.Component {
   static propTypes = {
-    items: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        counter_likes: PropTypes.number,
-        is_discount_reached: PropTypes.bool,
-        position: PropTypes.shape({
-          x: PropTypes.number.isRequired,
-          y: PropTypes.number.isRequired,
-        }).isRequired,
-      }),
-    ),
+    counter_likes: PropTypes.number,
+    is_discount_reached: PropTypes.bool,
+    position: PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
-    items: [],
+    counter_likes: 0,
+    is_discount_reached: false,
   };
 
-  renderHint = (item) => {
-    const { counter_likes: counterLikes = 0 } = item;
+  renderHint = () => {
+    const { counter_likes: counterLikes = 0 } = this.props;
     return (
       <View style={styles.hint}>
         <Text style={styles.text}>
@@ -83,27 +78,35 @@ export default class UserThingsList extends React.Component {
     );
   };
 
-  renderItem = (item) => {
-    const { position: { x }, is_discount_reached: isDiscount = false } = item;
+  render() {
+    const {
+      position: { x, y },
+      is_discount_reached: isDiscount = false,
+    } = this.props;
+
+    const locationX = Math.round(x * (wrapWidth / 100));
+    const locationY = Math.round(y * (wrapHeight / 100));
 
     const isLeft = x > (100 / 2);
 
     if (isDiscount) {
       return (
-        <View style={styles.percentIcon}>
-          <SvgUri
-            width="16"
-            height="16"
-            fill="#FFFFFF"
-            source={percentSvg}
-          />
+        <View style={[styles.label, { left: locationX, top: locationY }]}>
+          <View style={styles.percentIcon}>
+            <SvgUri
+              width="16"
+              height="16"
+              fill="#FFFFFF"
+              source={percentSvg}
+            />
+          </View>
         </View>
       );
     }
 
     return (
-      <React.Fragment>
-        {isLeft && this.renderHint(item)}
+      <View style={[styles.label, { left: locationX, top: locationY }]}>
+        {isLeft && this.renderHint()}
         <View style={styles.icon}>
           <SvgUri
             width="16"
@@ -112,32 +115,8 @@ export default class UserThingsList extends React.Component {
             source={labelSvg}
           />
         </View>
-        {!isLeft && this.renderHint(item)}
-      </React.Fragment>
-    );
-  };
-
-  render() {
-    const { items } = this.props;
-
-    return (
-      <React.Fragment>
-        {items.map((item) => {
-          const { id, position: { x, y } } = item;
-
-          const locationX = Math.round(x * (wrapWidth / 100));
-          const locationY = Math.round(y * (wrapHeight / 100));
-
-          return (
-            <View
-              key={id}
-              style={[styles.label, { left: locationX, top: locationY }]}
-            >
-              {this.renderItem(item)}
-            </View>
-          );
-        })}
-      </React.Fragment>
+        {!isLeft && this.renderHint()}
+      </View>
     );
   }
 }
