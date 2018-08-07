@@ -140,7 +140,7 @@ export default class FavoriteThing extends React.Component {
     addVote: PropTypes.func.isRequired,
     thingVote: PropTypes.func.isRequired,
     isVoted: PropTypes.bool,
-    isLike: PropTypes
+    isLike: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -151,15 +151,29 @@ export default class FavoriteThing extends React.Component {
 
   state = {
     isOpen: false,
+    isShowLike: true,
+    isShowDislike: true,
   };
 
   handleVote = (isLike) => {
     const {
-      id, lookId, userId, voting, addVote, thingVote,
+      id, lookId, userId, voting, isVoted, addVote, thingVote,
     } = this.props;
 
-    addVote(id, lookId, isLike);
-    thingVote(id, lookId, userId, isLike);
+    if (!voting && !isVoted) {
+      addVote(id, lookId, isLike);
+      thingVote(id, lookId, userId, isLike);
+
+      if (isLike) {
+        this.setState({
+          isShowDislike: false,
+        });
+      } else {
+        this.setState({
+          isShowLike: false,
+        });
+      }
+    }
   };
 
   renderIcon = () => {
@@ -206,18 +220,78 @@ export default class FavoriteThing extends React.Component {
     </Text>
   );
 
+  renderLike = () => {
+    const { isVoted, isLike } = this.props;
+
+    if (isVoted && !isLike) return null;
+
+    if (isVoted && isLike) {
+      return (
+        <View style={styles.like}>
+          <SvgUri
+            width="14"
+            height="14"
+            fill="#FFFFFF"
+            source={likeSvg}
+          />
+        </View>
+      );
+    }
+
+    return (
+      <TouchableOpacity onPress={() => this.handleVote(true)} style={styles.like}>
+        <SvgUri
+          width="14"
+          height="14"
+          fill="#FFFFFF"
+          source={likeSvg}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  renderDislike = () => {
+    const { isVoted, isLike } = this.props;
+
+    if (isVoted && isLike) return null;
+
+    if (isVoted && !isLike) {
+      return (
+        <View style={styles.dislike}>
+          <SvgUri
+            width="14"
+            height="14"
+            fill="#FFFFFF"
+            source={likeSvg}
+          />
+        </View>
+      );
+    }
+
+    return (
+      <TouchableOpacity onPress={() => this.handleVote(false)} style={styles.dislike}>
+        <SvgUri
+          width="14"
+          height="14"
+          fill="#FFFFFF"
+          source={likeSvg}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   render() {
     const {
       name, brand, price, position: { x, y },
     } = this.props;
-    const { isOpen } = this.state;
+    const { isOpen, isShowLike, isShowDislike } = this.state;
 
     const locationX = Math.round(x * (wrapWidth / 100));
     const locationY = Math.round(y * (wrapHeight / 100));
 
     const isLeft = x > (100 / 2);
 
-    const styleWrap = [isOpen ? styles.cancel : styles.label, { left: locationX, top: locationY }];
+    const styleWrap = [isOpen ? styles.cancel : styles.label, { left: locationX - 18, top: locationY - 18 }];
     const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
     const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
 
@@ -232,22 +306,8 @@ export default class FavoriteThing extends React.Component {
             {name && this.renderName(name)}
             {brand && this.renderBrand(brand)}
             {price && this.renderPrice(price)}
-            <TouchableOpacity onPress={() => this.handleVote(true)} style={styles.like}>
-              <SvgUri
-                width="14"
-                height="14"
-                fill="#FFFFFF"
-                source={likeSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.handleVote(false)} style={styles.dislike}>
-              <SvgUri
-                width="14"
-                height="14"
-                fill="#FFFFFF"
-                source={likeSvg}
-              />
-            </TouchableOpacity>
+            {isShowLike && this.renderLike()}
+            {isShowDislike && this.renderDislike()}
           </View>
         )}
       </View>

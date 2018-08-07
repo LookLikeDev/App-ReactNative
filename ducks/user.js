@@ -37,7 +37,6 @@ export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 
 export const USER_INFO_UPDATE = `${appName}/${moduleName}/USER_INFO_UPDATE`;
 
-
 // LIKE LOOK
 export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
 export const LOOK_LIKE_SUCCESS = `${appName}/${moduleName}/LOOK_LIKE_SUCCESS`;
@@ -82,7 +81,6 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case SIGN_OUT_SUCCESS:
       return new ReducerRecord();
 
-      // MOVE TO FAVORITES
     case LOOK_LIKE_REQUEST:
       return userState
         .updateIn(['user', 'counter_looks_voted'], count => count + 1);
@@ -99,7 +97,7 @@ export default function reducer(userState = new ReducerRecord(), action) {
 
     case THING_VOTE_LIKE_SUCCESS:
     case THING_VOTE_DISLIKE_SUCCESS:
-      return userState.setIn(['user', 'counter_items_voted'], payload.count);
+      return userState.set('user', new UserRecord(payload.user));
 
     default:
       return userState;
@@ -128,8 +126,6 @@ export function updateUserInfo(formValues) {
   };
 }
 
-
-// MOVE TO FAVORITES
 export function lookLike(item, userId) {
   return {
     type: LOOK_LIKE_REQUEST,
@@ -184,8 +180,8 @@ export const signUpSaga = function* () {
   }
 };
 
-// TODO сделать проверку существует ли id на сервере, а не только локально
 export const signInSaga = function* () {
+  // TODO сделать проверку существует ли id на сервере, а не только локально
   const storage = AsyncStorage;
 
   try {
@@ -218,8 +214,8 @@ export const signInSaga = function* () {
   }
 };
 
-// TODO добавить уведомление что данные и правда корректно сохранились
 export const updateUserInfoSaga = function* (action) {
+  // TODO добавить уведомление что данные и правда корректно сохранились
   const { formValues } = action.payload;
   const store = yield select();
 
@@ -231,8 +227,6 @@ export const updateUserInfoSaga = function* (action) {
   }
 };
 
-
-// MOVE TO FAVORITES
 export const likeSaga = function* ({ payload: { item, userId } }) {
   const userRef = yield firestore.collection('users').doc(userId);
   const userData = yield select();
@@ -302,11 +296,10 @@ export const resetVotedCounterSaga = function* () {
   }
 };
 
-export const thingVoteSaga = function* ({
-  payload: {
+export const thingVoteSaga = function* ({ payload }) {
+  const {
     thingId, lookId, userId, isLiked,
-  },
-}) {
+  } = payload;
   const userRef = yield firestore.collection('users').doc(userId);
   const store = yield select();
   const userData = yield store[moduleName].user;
@@ -318,15 +311,18 @@ export const thingVoteSaga = function* ({
         counter_items_voted: count,
         [`liked_looks.${lookId}.items.${thingId}`]: { isLiked },
       });
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
     if (isLiked) {
       yield put({
         type: THING_VOTE_LIKE_SUCCESS,
-        payload: { count },
+        payload: { user: userSnapshot.data() },
       });
     } else {
       yield put({
         type: THING_VOTE_DISLIKE_SUCCESS,
-        payload: { count },
+        payload: { user: userSnapshot.data() },
       });
     }
   } catch (error) {

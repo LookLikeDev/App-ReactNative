@@ -170,7 +170,7 @@ export default class PublishThings extends React.Component {
     return (
       <View
         key={id}
-        style={[styles.label, { left: locationX, top: locationY }]}
+        style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}
         // onPress={() => console.log('mark mark mark mark')}
       >
         <SvgUri

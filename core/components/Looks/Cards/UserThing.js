@@ -105,7 +105,7 @@ export default class UserThing extends React.Component {
     }
 
     return (
-      <View style={[styles.label, { left: locationX, top: locationY }]}>
+      <View style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}>
         {isLeft && this.renderHint()}
         <View style={styles.icon}>
           <SvgUri

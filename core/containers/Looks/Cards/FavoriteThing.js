@@ -4,12 +4,20 @@ import { thingVote, moduleName as userModule } from '../../../../ducks/user';
 import FavoriteThing from '../../../components/Looks/Cards/FavoriteThing';
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log('HAS IN', state[userModule].user.liked_looks[ownProps.lookId].items[ownProps.id].isLiked);
+  let isVoted = false;
+  const isLike = Object.values(state[userModule].getIn(['user', 'liked_looks'])).some((item) => {
+    if (item.items && item.items[ownProps.id]) {
+      isVoted = true;
+      return item.items[ownProps.id].isLiked;
+    }
+    return false;
+  });
 
   return {
     voting: state[looksModule].voting,
     userId: state[userModule].id,
-    // isVoted: state[userModule].user.liked_looks[ownProps.lookId].items[ownProps.id].isLiked,
+    isVoted,
+    isLike,
   };
 };
 
