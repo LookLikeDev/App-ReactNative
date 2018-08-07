@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, StyleSheet, Image, Dimensions,
 } from 'react-native';
+import FavoriteThing from '../../../containers/Looks/Cards/FavoriteThing';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -50,7 +51,7 @@ export default class CardFavorite extends React.Component {
   };
 
   render() {
-    const { data: { user, picture_uri: uri } } = this.props;
+    const { data: { id, user, items, picture_uri: uri } } = this.props;
 
     return (
       <View style={styles.container}>
@@ -61,6 +62,7 @@ export default class CardFavorite extends React.Component {
         )}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
+          {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} {...item} />)}
         </View>
       </View>
     );

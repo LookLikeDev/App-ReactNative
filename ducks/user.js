@@ -11,6 +11,7 @@ const UserRecord = Record({
   liked_looks: null,
   disliked_looks: null,
   counter_looks_voted: 0,
+  counter_items_voted: 0,
 });
 
 export const ReducerRecord = Record({
@@ -20,6 +21,7 @@ export const ReducerRecord = Record({
   loading: false,
   uploading: false,
 });
+
 /**
  * Consts
  */
@@ -35,13 +37,20 @@ export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 
 export const USER_INFO_UPDATE = `${appName}/${moduleName}/USER_INFO_UPDATE`;
 
-export const USER_LIKE_REQUEST = `${appName}/${moduleName}/USER_LIKE_REQUEST`;
-export const USER_LIKE_SUCCESS = `${appName}/${moduleName}/USER_LIKE_SUCCESS`;
-export const USER_DISLIKE_REQUEST = `${appName}/${moduleName}/USER_DISLIKE_REQUEST`;
-export const USER_DISLIKE_SUCCESS = `${appName}/${moduleName}/USER_DISLIKE_SUCCESS`;
+// LIKE LOOK
+export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
+export const LOOK_LIKE_SUCCESS = `${appName}/${moduleName}/LOOK_LIKE_SUCCESS`;
+export const LOOK_DISLIKE_REQUEST = `${appName}/${moduleName}/LOOK_DISLIKE_REQUEST`;
+export const LOOK_DISLIKE_SUCCESS = `${appName}/${moduleName}/LOOK_DISLIKE_SUCCESS`;
 
-export const USER_VOTED_REQUEST = `${appName}/${moduleName}/USER_VOTED_REQUEST`;
-export const USER_VOTED_SUCCESS = `${appName}/${moduleName}/USER_VOTED_SUCCESS`;
+// RESET LIKE COUNT
+export const USER_VOTED_RESET_REQUEST = `${appName}/${moduleName}/USER_VOTED_RESET_REQUEST`;
+export const USER_VOTED_RESET_SUCCESS = `${appName}/${moduleName}/USER_VOTED_RESET_SUCCESS`;
+
+// LIKE THING
+export const THING_VOTE_REQUEST = `${appName}/${moduleName}/THING_VOTE_REQUEST`;
+export const THING_VOTE_LIKE_SUCCESS = `${appName}/${moduleName}/THING_VOTE_LIKE_SUCCESS`;
+export const THING_VOTE_DISLIKE_SUCCESS = `${appName}/${moduleName}/THING_VOTE_DISLIKE_SUCCESS`;
 
 /**
  * Reducer
@@ -72,19 +81,23 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case SIGN_OUT_SUCCESS:
       return new ReducerRecord();
 
-    case USER_LIKE_REQUEST:
+    case LOOK_LIKE_REQUEST:
       return userState
         .updateIn(['user', 'counter_looks_voted'], count => count + 1);
 
-    case USER_LIKE_SUCCESS:
-    case USER_DISLIKE_SUCCESS:
+    case LOOK_LIKE_SUCCESS:
+    case LOOK_DISLIKE_SUCCESS:
       return userState
         .set('user', new UserRecord(payload.user))
         .set('id', payload.id);
 
-    case USER_VOTED_REQUEST:
-    case USER_VOTED_SUCCESS:
+    case USER_VOTED_RESET_REQUEST:
+    case USER_VOTED_RESET_SUCCESS:
       return userState.setIn(['user', 'counter_looks_voted'], 0);
+
+    case THING_VOTE_LIKE_SUCCESS:
+    case THING_VOTE_DISLIKE_SUCCESS:
+      return userState.set('user', new UserRecord(payload.user));
 
     default:
       return userState;
@@ -113,23 +126,32 @@ export function updateUserInfo(formValues) {
   };
 }
 
-export function like(item, userId) {
+export function lookLike(item, userId) {
   return {
-    type: USER_LIKE_REQUEST,
+    type: LOOK_LIKE_REQUEST,
     payload: { item, userId },
   };
 }
 
-export function dislike(item, userId) {
+export function lookDislike(item, userId) {
   return {
-    type: USER_DISLIKE_REQUEST,
+    type: LOOK_DISLIKE_REQUEST,
     payload: { item, userId },
   };
 }
 
 export function resetVotedCounter() {
   return {
-    type: USER_VOTED_REQUEST,
+    type: USER_VOTED_RESET_REQUEST,
+  };
+}
+
+export function thingVote(thingId, lookId, userId, isLiked) {
+  return {
+    type: THING_VOTE_REQUEST,
+    payload: {
+      thingId, lookId, userId, isLiked,
+    },
   };
 }
 
@@ -158,8 +180,8 @@ export const signUpSaga = function* () {
   }
 };
 
-// TODO сделать проверку существует ли id на сервере, а не только локально
 export const signInSaga = function* () {
+  // TODO сделать проверку существует ли id на сервере, а не только локально
   const storage = AsyncStorage;
 
   try {
@@ -192,8 +214,8 @@ export const signInSaga = function* () {
   }
 };
 
-// TODO добавить уведомление что данные и правда корректно сохранились
 export const updateUserInfoSaga = function* (action) {
+  // TODO добавить уведомление что данные и правда корректно сохранились
   const { formValues } = action.payload;
   const store = yield select();
 
@@ -222,7 +244,7 @@ export const likeSaga = function* ({ payload: { item, userId } }) {
     const userSnapshot = yield call([userRef, userRef.get]);
 
     yield put({
-      type: USER_LIKE_SUCCESS,
+      type: LOOK_LIKE_SUCCESS,
       payload: {
         id: userSnapshot.id,
         user: userSnapshot.data(),
@@ -245,7 +267,7 @@ export const dislikeSaga = function* ({ payload: { item, userId } }) {
     const userSnapshot = yield call([userRef, userRef.get]);
 
     yield put({
-      type: USER_DISLIKE_SUCCESS,
+      type: LOOK_DISLIKE_SUCCESS,
       payload: {
         id: userSnapshot.id,
         user: userSnapshot.data(),
@@ -267,21 +289,56 @@ export const resetVotedCounterSaga = function* () {
     });
 
     yield put({
-      type: USER_VOTED_SUCCESS,
+      type: USER_VOTED_RESET_SUCCESS,
     });
   } catch (error) {
     console.log('ERROR', error);
   }
 };
 
+export const thingVoteSaga = function* ({ payload }) {
+  const {
+    thingId, lookId, userId, isLiked,
+  } = payload;
+  const userRef = yield firestore.collection('users').doc(userId);
+  const store = yield select();
+  const userData = yield store[moduleName].user;
+  const count = userData.counter_items_voted > 0 ? userData.counter_items_voted + 1 : 1;
+
+  try {
+    yield call([userRef, userRef.update],
+      {
+        counter_items_voted: count,
+        [`liked_looks.${lookId}.items.${thingId}`]: { isLiked },
+      });
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    if (isLiked) {
+      yield put({
+        type: THING_VOTE_LIKE_SUCCESS,
+        payload: { user: userSnapshot.data() },
+      });
+    } else {
+      yield put({
+        type: THING_VOTE_DISLIKE_SUCCESS,
+        payload: { user: userSnapshot.data() },
+      });
+    }
+  } catch (error) {
+    console.log('error');
+  }
+};
+
 export const saga = function* () {
   yield all([
-    // watchStatusChange(),
     takeEvery(SIGN_UP_REQUEST, signUpSaga),
     takeEvery(SIGN_IN_REQUEST, signInSaga),
     takeEvery(USER_INFO_UPDATE, updateUserInfoSaga),
-    takeEvery(USER_LIKE_REQUEST, likeSaga),
-    takeEvery(USER_DISLIKE_REQUEST, dislikeSaga),
-    takeEvery(USER_VOTED_REQUEST, resetVotedCounterSaga),
+    // MOVE TO FAVORITES
+    takeEvery(LOOK_LIKE_REQUEST, likeSaga),
+    takeEvery(LOOK_DISLIKE_REQUEST, dislikeSaga),
+    takeEvery(USER_VOTED_RESET_REQUEST, resetVotedCounterSaga),
+    takeEvery(THING_VOTE_REQUEST, thingVoteSaga),
   ]);
 };

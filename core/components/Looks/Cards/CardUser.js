@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, StyleSheet, Image, Dimensions,
 } from 'react-native';
-import UserThingsList from './UserThingsList';
+import UserThing from './UserThing';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -60,7 +60,7 @@ export default class CardUser extends React.Component {
         </Text>
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
-          <UserThingsList items={items} />
+          {items && items.length && items.map(item => <UserThing key={item.id} {...item} />)}
         </View>
       </View>
     );

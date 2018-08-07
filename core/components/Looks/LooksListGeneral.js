@@ -22,8 +22,8 @@ class LooksListGeneral extends React.Component {
     likedLooks: PropTypes.objectOf(PropTypes.object),
     dislikedLooks: PropTypes.objectOf(PropTypes.object),
     removeItem: PropTypes.func.isRequired,
-    like: PropTypes.func.isRequired,
-    dislike: PropTypes.func.isRequired,
+    lookLike: PropTypes.func.isRequired,
+    lookDislike: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -48,16 +48,16 @@ class LooksListGeneral extends React.Component {
   };
 
   handleLike = (item) => {
-    const { removeItem, like, userId } = this.props;
+    const { removeItem, lookLike, userId } = this.props;
 
-    like(item, userId);
+    lookLike(item, userId);
     removeItem(item);
   };
 
   handleDislike = (item) => {
-    const { removeItem, dislike, userId } = this.props;
+    const { removeItem, lookDislike, userId } = this.props;
 
-    dislike(item, userId);
+    lookDislike(item, userId);
     removeItem(item);
   };
 

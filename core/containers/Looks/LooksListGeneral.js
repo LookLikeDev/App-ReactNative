@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { like, dislike, moduleName as userModule } from '../../../ducks/user';
+import { lookLike, lookDislike, moduleName as userModule } from '../../../ducks/user';
 import {
   fetchList, removeItem, moduleName as looksModule,
 } from '../../../ducks/looksGeneral';
@@ -17,8 +17,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   fetchList,
   removeItem,
-  like,
-  dislike,
+  lookLike,
+  lookDislike,
 };
 
 // TODO create selectors for entities

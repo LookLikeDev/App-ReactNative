@@ -128,6 +128,10 @@ export default class PublishThings extends React.Component {
     removeThing: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    items: [],
+  };
+
   renderName = value => (
     <Text style={styles.text}>
       {value}
@@ -166,7 +170,7 @@ export default class PublishThings extends React.Component {
     return (
       <View
         key={id}
-        style={[styles.label, { left: locationX, top: locationY }]}
+        style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}
         // onPress={() => console.log('mark mark mark mark')}
       >
         <SvgUri
