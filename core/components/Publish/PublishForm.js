@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   switchLabel: {
-    fontFamily: 'SF-Pro-Display-Semibold',
+    fontFamily: 'SF-Pro-Display-SemiBold',
     fontSize: 16,
     color: '#000000',
   },

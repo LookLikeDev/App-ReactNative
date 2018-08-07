@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   count: {
-    fontFamily: 'SF-Pro-Display-Semibold',
+    fontFamily: 'SF-Pro-Display-SemiBold',
     color: 'white',
     fontSize: 14,
     lineHeight: 26,

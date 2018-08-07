@@ -30,7 +30,7 @@ export default class App extends React.Component {
     'SF-UI-Text-Bold': sfUiTextBold,
     'SF-Pro-Display-Black': sfProDisplayBlack,
     'SF-Pro-Display-Bold': sfProDisplayBold,
-    'SF-Pro-Display-Semibold': sfProDisplaySemiBold,
+    'SF-Pro-Display-SemiBold': sfProDisplaySemiBold,
   });
 
   render() {

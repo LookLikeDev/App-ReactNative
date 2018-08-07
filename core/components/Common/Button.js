@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E33C00',
   },
   text: {
-    fontFamily: 'SF-Pro-Display-Semibold',
+    fontFamily: 'SF-Pro-Display-SemiBold',
     fontSize: 20,
     lineHeight: 24,
     color: '#FFFFFF',
