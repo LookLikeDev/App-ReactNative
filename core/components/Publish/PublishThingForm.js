@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Button from '../Common/Button';
-import Input from '../Common/Input';
+import Input from '../Common/InputField';
 
 
 const styles = StyleSheet.create({

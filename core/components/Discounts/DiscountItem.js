@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -77,54 +78,66 @@ const styles = StyleSheet.create({
 });
 
 export default class DiscountItem extends React.Component {
+  static propTypes = {
+    data: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      look_id: PropTypes.string,
+      is_applied: PropTypes.bool.isRequired,
+      value: PropTypes.number.isRequired,
+      date_issued: PropTypes.object.isRequired,
+      date_expiration: PropTypes.object.isRequired,
+      user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      item: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+      shop: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+    }).isRequired,
+  };
+
   render() {
+    const {
+      data: {
+        value, shop, item, date_expiration: dateExpiration, is_applied: isApplied,
+      },
+    } = this.props;
+
+    const dateEnd = dateExpiration.toDate();
+    const dateEndDays = dateExpiration.toDate().getDay();
+    const dateNow = new Date();
+    const dateNowDays = dateNow.getDay();
+    console.log('DATE END', dateEndDays);
+    console.log('DATE NOW', dateNowDays);
+
+    const isDisabled = (dateEnd.getTime() < dateNow.getTime()) || isApplied;
+
     return (
-      <React.Fragment>
-        {/* EXAMPLE ACTIVE */}
-        <View style={styles.item}>
-          <View style={styles.percentWrap}>
-            <Text style={styles.percentText}>
-              30%
-            </Text>
-          </View>
-          <View style={styles.info}>
-            <View style={styles.date}>
-              <Text style={styles.dateText}>
-                {('до 12.08.2018').toUpperCase()}
-              </Text>
-            </View>
-            <Text style={styles.shop}>
-              Zara «ТЦ Ультра / Уфа»
-            </Text>
-            <Text style={styles.desk}>
-              На топ с вырезом халтер
-            </Text>
-          </View>
-          <View />
+      <View style={styles.item}>
+        <View style={[styles.percentWrap, isDisabled && styles.percentWrapDisabled]}>
+          <Text style={[styles.percentText, isDisabled && styles.percentTextDisabled]}>
+            {value && `${value}%`}
+          </Text>
         </View>
-        {/* EXAMPLE DISABLED */}
-        <View style={styles.item}>
-          <View style={[styles.percentWrap, styles.percentWrapDisabled]}>
-            <Text style={[styles.percentText, styles.percentTextDisabled]}>
-              30%
+        <View style={styles.info}>
+          <View style={[styles.date, isDisabled && styles.dateDisabled]}>
+            <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
+              до
+              {' '}
+              {dateEnd.toLocaleDateString('ru-RU')}
             </Text>
           </View>
-          <View style={styles.info}>
-            <View style={[styles.date, styles.dateDisabled]}>
-              <Text style={[styles.dateText, styles.dateTextDisabled]}>
-                до 12.08.2018
-              </Text>
-            </View>
-            <Text style={[styles.shop, styles.shopDisabled]}>
-              Zara «ТЦ Ультра / Уфа»
-            </Text>
-            <Text style={[styles.desk, styles.deskDisabled]}>
-              На топ с вырезом халтер
-            </Text>
-          </View>
-          <View />
+          <Text style={[styles.shop, isDisabled && styles.shopDisabled]}>
+            {shop && shop.name && shop.name}
+          </Text>
+          <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
+            {item && item.name && item.name}
+          </Text>
         </View>
-      </React.Fragment>
+        <View />
+      </View>
     );
   }
 }

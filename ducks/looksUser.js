@@ -54,7 +54,7 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 
     case FETCH_LIST_LOADED_ALL:
       return looksState
-        .set('loading', true)
+        .set('loading', false)
         .set('loaded', true);
 
     default:
@@ -75,7 +75,7 @@ export function fetchList(userId) {
 /**
  * Sagas
  */
-const getData = function* (item) {
+export const getData = function* (item) {
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
 
@@ -126,8 +126,6 @@ export const fetchListSaga = function* (action) {
     });
 
     const items = yield all(querySnapshot.docs.map(getData));
-
-    // console.log(items);
 
     yield put({
       type: FETCH_LIST_SUCCESS,

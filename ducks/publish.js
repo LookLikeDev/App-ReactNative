@@ -121,8 +121,8 @@ export function saveLook(userId, imageUri, formValues) {
 /**
  * Sagas
  */
-// TODO check and refactor
 function createFileUploadingChannel([imageFullPath, imageBlob]) {
+  // TODO check and refactor
   return eventChannel((emitter) => {
     const uploadTask = firebase.storage().ref().child(imageFullPath).put(imageBlob);
 
@@ -139,8 +139,8 @@ function createFileUploadingChannel([imageFullPath, imageBlob]) {
   });
 }
 
-// TODO check and refactor, add clear image data after success uploading
 export const uploadImageSaga = function* ({ payload: { userId, imageUri, formValues } }) {
+  // TODO check and refactor, add clear image data after success uploading
   const looksCollection = firestore.collection('looks');
   const uuidImage = uuid();
   const fileExtension = getFileExtensionByString(imageUri);

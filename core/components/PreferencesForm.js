@@ -6,10 +6,9 @@ import {
   Text,
   ScrollView,
   View,
-  Switch,
 } from 'react-native';
-import Button from './Common/Button';
-import Input from './Common/Input';
+import InputField from './Common/InputField';
+import SwitchField from './Common/SwitchField';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,18 +39,6 @@ const styles = StyleSheet.create({
     fontFamily: 'SF-UI-Text-Semibold',
     color: '#000000',
     backgroundColor: '#EBEBEB',
-  },
-  switchGroup: {
-    paddingVertical: 16,
-    marginHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  switchLabel: {
-    fontFamily: 'SF-Pro-Display-SemiBold',
-    fontSize: 16,
-    color: '#000000',
   },
   submit: {
     marginHorizontal: 20,
@@ -95,21 +82,13 @@ export default class PreferencesForm extends React.Component {
           {('личные данные').toUpperCase()}
         </Text>
         <View style={styles.dataGroup}>
-          <Field name="name" labelText="Имя" component={Input} handleChange={handleSubmit(this.onPreferencesChange)} />
-          <Field name="birthday" labelText="Дата рождения" component={Input} handleChange={handleSubmit(this.onPreferencesChange)} />
-          <Field name="is_female" labelText="Пол" component={Input} handleChange={handleSubmit(this.onPreferencesChange)} />
+          <Field name="name" labelText="Имя" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
+          <Field name="birthday" labelText="Дата рождения" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
+          <Field name="is_female" labelText="Пол" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
           <Text style={[styles.text, styles.description]}>
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
           </Text>
-          <View style={styles.switchGroup}>
-            <Text style={styles.switchLabel}>
-              Опубликовать анонимно:
-            </Text>
-            <Field name="publishAnonymous" component={this.renderSwitch} />
-          </View>
-          <View style={styles.submit}>
-            <Button title="Опубликовать LOOK" onPress={handleSubmit(this.onPreferencesChange)} />
-          </View>
+          <Field name="publishAnonymous" labelText="Опубликовать анонимно" component={SwitchField} handleChange={handleSubmit(this.onPreferencesChange)} />
         </View>
       </ScrollView>
     );

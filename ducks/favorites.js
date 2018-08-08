@@ -54,7 +54,7 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 
     case FETCH_LIST_LOADED_ALL:
       return looksState
-        .set('loading', true)
+        .set('loading', false)
         .set('loaded', true);
 
     case ADD_VOTE_REQUEST:
@@ -88,8 +88,8 @@ export function addVote(thingId, lookId, isLike) {
 /**
  * Sagas
  */
-// TODO delete this junk and add static picture link
 const getData = function* (item) {
+  // TODO delete this junk and add static picture link
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
 

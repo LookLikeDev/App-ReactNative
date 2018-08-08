@@ -5,39 +5,55 @@ import {
   View, Text,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { moduleName, signIn } from '../../ducks/user';
+import { moduleName as userModuleName, signIn } from '../../ducks/user';
+import { moduleName as discountsModuleName, fetchList } from '../../ducks/discounts';
 import Button from '../components/Common/Button';
 
 // TODO don't forget to delete this component
 class SplashScreen extends React.Component {
   static propTypes = {
     // from connect
-    signIn: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
-    id: PropTypes.string,
+    userId: PropTypes.string,
+    loadingDiscounts: PropTypes.bool.isRequired,
+    loadedDiscounts: PropTypes.bool.isRequired,
+    auth: PropTypes.func.isRequired,
+    fetchDiscountsList: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    id: 'something want wrong',
+    userId: '',
   };
 
   componentDidMount() {
-    const { signIn } = this.props;
+    const { auth } = this.props;
 
-    signIn();
+    auth();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot !== null) Actions.main();
+  }
+
+  getSnapshotBeforeUpdate() {
+    const {
+      loadingDiscounts, loadedDiscounts, fetchDiscountsList, userId,
+    } = this.props;
+
+    if (userId && !loadedDiscounts && !loadingDiscounts) fetchDiscountsList(userId);
+
+    if (userId && loadedDiscounts) return true;
+
+    return null;
   }
 
   render() {
-    const { loading, id } = this.props;
+    const { userId } = this.props;
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>
-          {loading ? 'Loading' : 'Splash Screen'}
-        </Text>
-        <Text>
           User Token:
           {' '}
-          { id }
+          { userId }
         </Text>
         <Button title="На главную" onPress={Actions.main} />
       </View>
@@ -46,8 +62,10 @@ class SplashScreen extends React.Component {
 }
 
 export default connect(state => ({
-  loading: state[moduleName].loading,
-  id: state[moduleName].id,
+  loadingDiscounts: state[discountsModuleName].loading,
+  loadedDiscounts: state[discountsModuleName].loaded,
+  userId: state[userModuleName].id,
 }), {
-  signIn,
+  auth: signIn,
+  fetchDiscountsList: fetchList,
 })(SplashScreen);

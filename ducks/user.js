@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
 import { Record } from 'immutable';
 import {
@@ -12,6 +13,7 @@ const UserRecord = Record({
   disliked_looks: null,
   counter_looks_voted: 0,
   counter_items_voted: 0,
+  date_discounts_view: null, // дата последнего просмотра страницы скидок
 });
 
 export const ReducerRecord = Record({
@@ -51,6 +53,10 @@ export const USER_VOTED_RESET_SUCCESS = `${appName}/${moduleName}/USER_VOTED_RES
 export const THING_VOTE_REQUEST = `${appName}/${moduleName}/THING_VOTE_REQUEST`;
 export const THING_VOTE_LIKE_SUCCESS = `${appName}/${moduleName}/THING_VOTE_LIKE_SUCCESS`;
 export const THING_VOTE_DISLIKE_SUCCESS = `${appName}/${moduleName}/THING_VOTE_DISLIKE_SUCCESS`;
+
+// RESET DISCOUNTS VIEW DATE
+export const USER_DISCOUNTS_VIEW_DATE_REQUEST = `${appName}/${moduleName}/USER_DISCOUNTS_VIEW_DATE_REQUEST`;
+export const USER_DISCOUNTS_VIEW_DATE_SUCCESS = `${appName}/${moduleName}/USER_DISCOUNTS_VIEW_DATE_SUCCESS`;
 
 /**
  * Reducer
@@ -99,6 +105,9 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case THING_VOTE_DISLIKE_SUCCESS:
       return userState.set('user', new UserRecord(payload.user));
 
+    case USER_DISCOUNTS_VIEW_DATE_SUCCESS:
+      return userState.set('user', new UserRecord(payload.user));
+
     default:
       return userState;
   }
@@ -140,9 +149,15 @@ export function lookDislike(item, userId) {
   };
 }
 
-export function resetVotedCounter() {
+export function resetFavoritesCounter() {
   return {
     type: USER_VOTED_RESET_REQUEST,
+  };
+}
+
+export function setDiscountsViewDate() {
+  return {
+    type: USER_DISCOUNTS_VIEW_DATE_REQUEST,
   };
 }
 
@@ -203,7 +218,7 @@ export const signInSaga = function* () {
           },
       });
 
-      yield call(Actions.main);
+      // yield call(Actions.main);
       // yield call(Actions.favorites);
     }
   } catch (error) {
@@ -279,6 +294,7 @@ export const dislikeSaga = function* ({ payload: { item, userId } }) {
 };
 
 export const resetVotedCounterSaga = function* () {
+  // TODO сделать проверку что если count === 0 то не нужно обнулять его.
   const store = yield select();
   const userId = yield store[moduleName].id;
   const userRef = yield firestore.collection('users').doc(userId);
@@ -290,6 +306,30 @@ export const resetVotedCounterSaga = function* () {
 
     yield put({
       type: USER_VOTED_RESET_SUCCESS,
+    });
+  } catch (error) {
+    console.log('ERROR', error);
+  }
+};
+
+export const setDiscountsViewDateSaga = function* () {
+  // TODO сделать проверку что если count === 0 то не нужно обнулять его.
+  const store = yield select();
+  const userId = yield store[moduleName].id;
+  const userRef = yield firestore.collection('users').doc(userId);
+
+  try {
+    yield call([userRef, userRef.update], {
+      date_discounts_view: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    yield put({
+      type: USER_DISCOUNTS_VIEW_DATE_SUCCESS,
+      payload: {
+        user: userSnapshot.data(),
+      },
     });
   } catch (error) {
     console.log('ERROR', error);
@@ -340,5 +380,6 @@ export const saga = function* () {
     takeEvery(LOOK_DISLIKE_REQUEST, dislikeSaga),
     takeEvery(USER_VOTED_RESET_REQUEST, resetVotedCounterSaga),
     takeEvery(THING_VOTE_REQUEST, thingVoteSaga),
+    takeEvery(USER_DISCOUNTS_VIEW_DATE_REQUEST, setDiscountsViewDateSaga),
   ]);
 };

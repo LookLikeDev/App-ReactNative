@@ -1,7 +1,6 @@
-import firebase from 'firebase';
 import { Record, OrderedMap } from 'immutable';
 import {
-  all, put, call, takeEvery, select,
+  all, put, call, takeEvery,
 } from 'redux-saga/effects';
 import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
@@ -38,109 +37,64 @@ export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
 /**
  * Reducer
  */
-export default function reducer(looksState = new ReducerRecord(), action) {
+export default function reducer(discountsState = new ReducerRecord(), action) {
   const { type, payload, error } = action;
 
   switch (type) {
     case FETCH_LIST_REQUEST:
-      return looksState.set('loading', true);
+      return discountsState.set('loading', true);
 
     case FETCH_LIST_SUCCESS:
-      return looksState
+      return discountsState
         .set('loading', false)
+        .set('loaded', true)
         .update('entities', entities => entities.merge(arrToMap(payload.entities, DiscountRecord)));
 
     case FETCH_LIST_LOADED_ALL:
-      return looksState
-        .set('loading', true)
+      return discountsState
+        .set('loading', false)
         .set('loaded', true);
 
     default:
-      return looksState;
+      return discountsState;
   }
 }
 
 /**
  * Action creators
  */
-export function fetchList(likedItems) {
+export function fetchList(userId) {
   return {
     type: FETCH_LIST_REQUEST,
-    payload: { likedItems },
+    payload: { userId },
   };
 }
 
 /**
  * Sagas
  */
-const getData = function* (item) {
-  // TODO delete this junk and add static picture link
-  const storageRef = firebase.storage().ref();
-  const data = yield item.data();
+export const fetchListSaga = function* ({ payload }) {
+  const { userId } = payload;
 
   try {
-    const imageRef = yield call([storageRef, storageRef.child], item.data().picture_file);
-    const url = yield call([imageRef, imageRef.getDownloadURL]);
+    const collection = yield firestore.collection('discounts').where('user.id', '==', userId).orderBy('date_issued', 'desc');
 
-    return {
-      id: item.id,
-      picture_uri: url,
-      ...data,
-    };
-  } catch (error) {
-    return {
-      id: item.id,
-      picture_uri: null,
-      ...data,
-    };
-  }
-};
+    const querySnapshot = yield call([collection, collection.get]);
 
-const getSnapshot = function* (item) {
-  return yield item.reference.get();
-};
-
-export const fetchListSaga = function* (action) {
-  const { likedItems } = action.payload;
-  const state = yield select();
-  const data = state[moduleName].entities;
-  let count = 0;
-
-  if (likedItems === null) {
-    yield put({
-      type: FETCH_LIST_LOADED_ALL,
-    });
-  } else {
-    try {
-      let items = yield all(Object.values(likedItems));
-
-      items = yield all(items.filter((item) => {
-        if (data.get(item.reference.id) || count >= 5) return false;
-
-        count += 1;
-
-        return true;
-      }));
-
-      if (items.length > 0) {
-        let favorites = yield all(items.map(getSnapshot));
-
-        favorites = yield all(favorites.map(getData));
-        console.log(favorites);
-        yield put({
-          type: FETCH_LIST_SUCCESS,
-          payload: { entities: favorites },
-        });
-      } else {
-        yield put({ type: FETCH_LIST_LOADED_ALL });
-      }
-    } catch (error) {
-      console.log('error', error);
+    if (querySnapshot.docs.length === 0) {
       yield put({
-        type: FETCH_LIST_ERROR,
-        error,
+        type: FETCH_LIST_LOADED_ALL,
+      });
+    } else {
+      const items = yield all(querySnapshot.docs.map(item => ({ id: item.id, ...item.data() })));
+
+      yield put({
+        type: FETCH_LIST_SUCCESS,
+        payload: { entities: items },
       });
     }
+  } catch (error) {
+    console.log(error);
   }
 };
 
