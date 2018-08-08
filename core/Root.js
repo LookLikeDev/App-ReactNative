@@ -10,7 +10,7 @@ import {
   Reducer,
 } from 'react-native-router-flux';
 
-import { resetVotedCounter } from '../ducks/user';
+import { resetFavoritesCounter } from '../ducks/user';
 
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './screens/MainScreen';
@@ -43,11 +43,11 @@ const ReduxRouter = connect()(({ dispatch, children, ...props }) => (
 class Root extends React.Component {
   static propTypes = {
     // from connect
-    resetCounter: PropTypes.func.isRequired,
+    resetFavoritesCounter: PropTypes.func.isRequired,
   };
 
   render() {
-    const { resetCounter } = this.props;
+    const { resetFavoritesCounter } = this.props;
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
         <Modal hideNavBar>
@@ -68,7 +68,7 @@ class Root extends React.Component {
               key="favorites"
               component={FavoritesScreen}
               title="Избранное"
-              onEnter={resetCounter}
+              onEnter={resetFavoritesCounter}
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
             <Stack>
@@ -108,7 +108,7 @@ class Root extends React.Component {
                 key="discountsList"
                 component={DiscountsListScreen}
                 title="Мои скидки"
-                icon={({ focused }) => <TabIcon type="discounts" selected={focused} />}
+                icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}
               />
               <Scene
                 key="discountsDetail"
@@ -136,4 +136,4 @@ class Root extends React.Component {
   }
 }
 
-export default connect(null, { resetCounter: resetVotedCounter })(Root);
+export default connect(null, { resetFavoritesCounter })(Root);

@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Input extends React.Component {
+export default class InputField extends React.Component {
   static propTypes = {
     labelText: PropTypes.string.isRequired,
     keyboardType: PropTypes.string,

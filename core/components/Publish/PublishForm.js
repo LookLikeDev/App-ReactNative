@@ -10,7 +10,7 @@ import {
   Switch,
 } from 'react-native';
 import Button from '../Common/Button';
-import Input from '../Common/Input';
+import Input from '../Common/InputField';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   switchLabel: {
-    fontFamily: 'SF-Pro-Display-Semibold',
+    fontFamily: 'SF-Pro-Display-SemiBold',
     fontSize: 16,
     color: '#000000',
   },

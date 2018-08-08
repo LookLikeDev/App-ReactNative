@@ -6,6 +6,7 @@ import looksGeneralReducer, { moduleName as looksGeneralModule } from '../ducks/
 import looksUserReducer, { moduleName as looksUserModule } from '../ducks/looksUser';
 import favoritesReducer, { moduleName as favoritesModule } from '../ducks/favorites';
 import publishReducer, { moduleName as publishModule } from '../ducks/publish';
+import discountsReducer, { moduleName as discountsModule } from '../ducks/discounts';
 
 export default combineReducers({
   router: routerReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   [looksUserModule]: looksUserReducer,
   [favoritesModule]: favoritesReducer,
   [publishModule]: publishReducer,
+  [discountsModule]: discountsReducer,
 });

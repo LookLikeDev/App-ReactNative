@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { resetVotedCounter, moduleName as userModule } from '../../../ducks/user';
+import { resetFavoritesCounter, moduleName as userModule } from '../../../ducks/user';
 import {
   fetchList, moduleName as looksModule,
 } from '../../../ducks/favorites';
@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchList,
-  resetVotedCounter,
+  resetFavoritesCounter,
 };
 
 // TODO create selectors for entities

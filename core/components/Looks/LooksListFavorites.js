@@ -20,13 +20,13 @@ class LooksListGeneral extends React.Component {
     })).isRequired,
     likedLooks: PropTypes.objectOf(PropTypes.object).isRequired,
     fetchList: PropTypes.func.isRequired,
-    resetVotedCounter: PropTypes.func.isRequired,
+    resetFavoritesCounter: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    const { entities, resetVotedCounter } = this.props;
+    const { entities, resetFavoritesCounter } = this.props;
 
-    resetVotedCounter();
+    resetFavoritesCounter();
     if (entities.length === 0) this.handleGetUsers();
   }
 

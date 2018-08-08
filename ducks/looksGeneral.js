@@ -56,7 +56,7 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 
     case FETCH_LIST_LOADED_ALL:
       return looksState
-        .set('loading', true)
+        .set('loading', false)
         .set('loaded', true);
 
     case ITEM_REMOVE:
@@ -87,8 +87,8 @@ export function removeItem(item) {
 /**
  * Sagas
  */
-// TODO change to static url
 const getData = function* (item) {
+  // TODO change to static url
   const storageRef = firebase.storage().ref();
   const data = yield item.data();
 
