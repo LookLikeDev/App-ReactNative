@@ -19,6 +19,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  borderLess: {
+    borderRadius: 0,
+  },
   buttonActive: {
     backgroundColor: '#E33C00',
   },
@@ -35,10 +38,12 @@ export default class Button extends React.Component {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string,
+    borderLess: PropTypes.bool,
   };
 
   static defaultProps = {
     type: 'default',
+    borderLess: false,
   };
 
   state = {
@@ -50,7 +55,7 @@ export default class Button extends React.Component {
   pressOut = () => this.setState({ active: false });
 
   render() {
-    const { onPress, title } = this.props;
+    const { onPress, title, borderLess } = this.props;
     const { active } = this.state;
 
     return (
@@ -60,7 +65,12 @@ export default class Button extends React.Component {
         onPressOut={this.pressOut}
         onPress={onPress}
       >
-        <View style={[styles.button, active && styles.buttonActive]}>
+        <View style={[
+          styles.button,
+          borderLess && styles.borderLess,
+          active && styles.buttonActive,
+        ]}
+        >
           <Text style={styles.text}>
             {title}
           </Text>

@@ -1,23 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import PublishThingForm from '../containers/Publish/PublishThingForm';
+import ShopsList from '../containers/Shops/ShopsList';
 import Header from '../containers/Header';
 
-export default class MarkItemsScreen extends React.Component {
+export default class ShopList extends React.Component {
   static propTypes = {
     // from <Scene />
     title: PropTypes.string.isRequired,
-    thingId: PropTypes.string.isRequired,
+    shop: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  };
+
+  static defaultProps = {
+    shop: {
+      id: null,
+      name: null,
+    },
   };
 
   render() {
-    const { title, thingId } = this.props;
+    const { title, shop } = this.props;
 
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <PublishThingForm thingId={thingId} />
+        <ShopsList shop={shop} />
       </View>
     );
   }

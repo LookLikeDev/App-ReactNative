@@ -106,11 +106,7 @@ export default class DiscountItem extends React.Component {
     } = this.props;
 
     const dateEnd = dateExpiration.toDate();
-    const dateEndDays = dateExpiration.toDate().getDay();
     const dateNow = new Date();
-    const dateNowDays = dateNow.getDay();
-    console.log('DATE END', dateEndDays);
-    console.log('DATE NOW', dateNowDays);
 
     const isDisabled = (dateEnd.getTime() < dateNow.getTime()) || isApplied;
 

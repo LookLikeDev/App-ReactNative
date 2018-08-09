@@ -5,6 +5,7 @@ import { saga as looksUserSaga } from '../ducks/looksUser';
 import { saga as favoritesSaga } from '../ducks/favorites';
 import { saga as publishSaga } from '../ducks/publish';
 import { saga as discountsSaga } from '../ducks/discounts';
+import { saga as shopsSaga } from '../ducks/shops';
 
 export default function* rootSaga() {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     favoritesSaga(),
     publishSaga(),
     discountsSaga(),
+    shopsSaga(),
   ]);
 }

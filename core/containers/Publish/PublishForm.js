@@ -19,7 +19,6 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'publishLook',
   initialValues: {
-    shopName: null,
     publishAnonymous: false,
   },
 })(PublishForm));

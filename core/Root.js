@@ -16,7 +16,6 @@ import SplashScreen from './screens/SplashScreen';
 import MainScreen from './screens/MainScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import PhotoScreen from './screens/PhotoScreen';
-import MarkItemsScreen from './screens/MarkItemsScreen';
 import DescribeItemScreen from './screens/DescribeItemScreen';
 import PublishLookScreen from './screens/PublishLookScreen';
 import LooksScreen from './screens/LooksScreen';
@@ -24,6 +23,7 @@ import LookDetailScreen from './screens/LookDetailScreen';
 import DiscountsListScreen from './screens/DiscountsListScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
+import ShopList from './screens/ShopList';
 
 import TabIcon from './containers/TabIcon';
 import NavBar from './components/NavBar';
@@ -71,30 +71,21 @@ class Root extends React.Component {
               onEnter={resetFavoritesCounter}
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
-            <Stack>
+            <Stack icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
               <Scene
                 key="photo"
                 component={PhotoScreen}
                 title="Мой LOOK"
-                icon={({ focused }) => <TabIcon type="camera" selected={focused} />}
-              />
-              <Scene
-                key="markItems"
-                component={MarkItemsScreen}
-                title="Отметить вещи"
-                icon={({ focused }) => <TabIcon type="camera" selected={focused} />}
               />
               <Scene
                 key="describeItem"
                 component={DescribeItemScreen}
                 title="Описать вещь"
-                icon={({ focused }) => <TabIcon type="camera" selected={focused} />}
               />
               <Scene
                 key="publishLook"
                 component={PublishLookScreen}
                 title="Публикация"
-                icon={({ focused }) => <TabIcon type="camera" selected={focused} />}
               />
             </Stack>
             <Scene
@@ -103,21 +94,25 @@ class Root extends React.Component {
               title="Мои луки"
               icon={({ focused }) => <TabIcon type="looks" selected={focused} />}
             />
-            <Stack key="discounts">
+            <Stack key="discounts" icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}>
               <Scene
                 key="discountsList"
                 component={DiscountsListScreen}
                 title="Мои скидки"
-                icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}
               />
               <Scene
                 key="discountsDetail"
                 component={DiscountsDetailScreen}
                 title="Промо-код"
-                icon={({ focused }) => <TabIcon type="discounts" selected={focused} />}
               />
             </Stack>
           </Tabs>
+          <Scene
+            key="shopList"
+            component={ShopList}
+            title="Выбор магазина"
+            hideNavBar={false}
+          />
           <Scene
             key="lookDetail"
             component={LookDetailScreen}

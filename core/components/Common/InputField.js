@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: 'SF-UI-Text-Regular',
     fontSize: 16,
-    lineHeight: 16,
     color: '#A1A1A1',
     paddingRight: 6,
   },

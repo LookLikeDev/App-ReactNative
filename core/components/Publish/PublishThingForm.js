@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Button from '../Common/Button';
-import Input from '../Common/InputField';
+import InputField from '../Common/InputField';
 
 
 const styles = StyleSheet.create({
@@ -64,9 +64,9 @@ export default class PublishThingForm extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.group}>
-          <Field name="name" labelText="Название вещи" component={Input} />
-          <Field name="brand" labelText="Бренд" component={Input} inputTextOrange />
-          <Field name="price" labelText="Цена" keyboardType="number-pad" component={Input} />
+          <Field name="name" labelText="Название вещи" component={InputField} />
+          <Field name="brand" labelText="Бренд" component={InputField} inputTextOrange />
+          <Field name="price" labelText="Цена" keyboardType="number-pad" component={InputField} />
         </View>
         <View style={styles.submit}>
           <Button title="Отменить" onPress={this.onCancel} />

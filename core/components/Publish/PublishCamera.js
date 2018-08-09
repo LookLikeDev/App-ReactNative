@@ -4,6 +4,7 @@ import uuid from 'uuid/v1';
 import {
   Dimensions,
   View,
+  Text,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -37,51 +38,65 @@ const styles = StyleSheet.create({
     backgroundColor: '#0000FF',
     position: 'relative',
   },
+  textWrap: {
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
+  },
   welcome: {
-    fontSize: 20,
+    fontFamily: 'SF-Pro-Display-SemiBold',
+    fontSize: 16,
+    lineHeight: 22,
+    margin: 8,
     textAlign: 'center',
-    margin: 10,
+    color: '#000000',
   },
   instructions: {
+    fontFamily: 'SF-UI-Text-Regular',
+    color: '#A1A1A1',
     textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 20,
   },
   touch: {
     position: 'relative',
+  },
+  buttonWrap: {
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
 });
 
 export default class PublishCamera extends React.Component {
   static propTypes = {
-    image: PropTypes.shape({
-      uri: PropTypes.string,
-      data: PropTypes.string,
-      origURL: PropTypes.string,
-      fileName: PropTypes.string,
-    }).isRequired,
+    image: PropTypes.string,
     things: PropTypes.arrayOf(PropTypes.object).isRequired,
     addThing: PropTypes.func.isRequired,
     addImage: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
   };
 
-  showPicker = () => {
-    const { image, addImage } = this.props;
+  static defaultProps = {
+    image: null,
+  };
 
-    if (image === null) {
-      ImagePicker.showImagePicker(options, (response) => {
-        if (response.didCancel) {
-          // console.log('User cancelled image picker');
-        } else if (response.error) {
-          // console.log('ImagePicker Error: ', response.error);
-        } else {
-          addImage(response.uri);
-        }
-      });
-    } else {
-      Actions.publishLook();
-    }
+  showPicker = () => {
+    const { addImage } = this.props;
+
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        // console.log('User cancelled image picker');
+      } else if (response.error) {
+        // console.log('ImagePicker Error: ', response.error);
+      } else {
+        addImage(response.uri);
+      }
+    });
+  };
+
+  handleSubmit = () => {
+    Actions.publishLook();
   };
 
   handleTap = (event) => {
@@ -100,7 +115,7 @@ export default class PublishCamera extends React.Component {
       },
     });
 
-    Actions.markItems({ hideBackButton: true, thingId });
+    Actions.describeItem({ hideBackButton: true, thingId });
   };
 
   render() {
@@ -109,20 +124,35 @@ export default class PublishCamera extends React.Component {
     return (
       <View style={{ flex: 1, alignSelf: 'stretch' }}>
         <ScrollView contentContainerStyle={{ alignSelf: 'stretch' }}>
-          <View style={{ marginBottom: 20 }}>
-            {image
-            && (
-            <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
-              <Image
-                source={{ uri: image }}
-                style={{ marginBottom: 16, width: wrapWidth, height: wrapHeight }}
-              />
-              <PublishThings items={things} removeThing={removeThing} />
-            </TouchableOpacity>
-            )
-            }
+          {image
+          && (
+            <React.Fragment>
+              <View style={{ marginBottom: 20 }}>
+                <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
+                  <Image
+                    source={{ uri: image }}
+                    style={{ width: wrapWidth, height: wrapHeight }}
+                  />
+                  <PublishThings items={things} removeThing={removeThing} />
+                </TouchableOpacity>
+              </View>
+              {things.length === 0 && (
+                <View style={styles.textWrap}>
+                  <Text style={styles.welcome}>
+                    Отметь свой LOOK и получи скидку
+                  </Text>
+                  <Text style={styles.instructions}>
+                    Для публикации лука и получения скидки,
+                    отметьте одну или несколько вещей для голосования».
+                  </Text>
+                </View>
+              )}
+            </React.Fragment>
+          )}
+          <View style={styles.buttonWrap}>
+            {image && things.length > 0 && <Button title="Опубликовать LOOK" onPress={this.handleSubmit} />}
+            {!image && <Button title="Создать LOOK" onPress={this.showPicker} />}
           </View>
-          <Button title={!image ? 'Создать LOOK' : 'Опубликовать LOOK'} onPress={this.showPicker} />
         </ScrollView>
       </View>
     );
