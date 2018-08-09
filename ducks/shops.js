@@ -12,16 +12,23 @@ export const ReducerRecord = Record({
   loaded: false,
 });
 
-const DiscountRecord = Record({
+const ShopRecord = Record({
   id: null,
-  user: null, // need record
-  value: null,
-  date_issued: null,
-  date_expiration: null,
-  is_applied: null,
-  shop: null, // need record
-  look_id: null,
-  item: null, // need record
+  name: null, // need record
+  address: null,
+  GPS_location: null,
+  city: {
+    id: null,
+    name: null,
+  },
+  discount: {
+    value: null,
+    target_likes: null,
+    days: null,
+  },
+  promocode: {
+    type: null,
+  },
 });
 
 /**
@@ -48,7 +55,7 @@ export default function reducer(discountsState = new ReducerRecord(), action) {
       return discountsState
         .set('loading', false)
         .set('loaded', true)
-        .update('entities', entities => entities.merge(arrToMap(payload.entities, DiscountRecord)));
+        .update('entities', entities => entities.merge(arrToMap(payload.entities, ShopRecord)));
 
     case FETCH_LIST_LOADED_ALL:
       return discountsState
@@ -63,31 +70,31 @@ export default function reducer(discountsState = new ReducerRecord(), action) {
 /**
  * Action creators
  */
-export function fetchList(userId) {
+export function fetchList() {
   return {
     type: FETCH_LIST_REQUEST,
-    payload: { userId },
   };
 }
 
 /**
  * Sagas
  */
-export const fetchListSaga = function* ({ payload }) {
-  const { userId } = payload;
-
+export const fetchListSaga = function* () {
+  console.log('SAGA');
   try {
-    const collection = yield firestore.collection('discounts').where('user.id', '==', userId).orderBy('date_issued', 'desc');
+    const collection = yield firestore.collection('shops').where('is_available', '==', true).orderBy('name', 'asc');
 
     const querySnapshot = yield call([collection, collection.get]);
 
     if (querySnapshot.docs.length === 0) {
+      console.log('empty');
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
     } else {
       const items = yield all(querySnapshot.docs.map(item => ({ id: item.id, ...item.data() })));
 
+      console.log(items);
       yield put({
         type: FETCH_LIST_SUCCESS,
         payload: { entities: items },

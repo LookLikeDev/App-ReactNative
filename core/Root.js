@@ -16,7 +16,6 @@ import SplashScreen from './screens/SplashScreen';
 import MainScreen from './screens/MainScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import PhotoScreen from './screens/PhotoScreen';
-import MarkItemsScreen from './screens/MarkItemsScreen';
 import DescribeItemScreen from './screens/DescribeItemScreen';
 import PublishLookScreen from './screens/PublishLookScreen';
 import LooksScreen from './screens/LooksScreen';
@@ -77,11 +76,6 @@ class Root extends React.Component {
                 key="photo"
                 component={PhotoScreen}
                 title="Мой LOOK"
-              />
-              <Scene
-                key="markItems"
-                component={MarkItemsScreen}
-                title="Отметить вещи"
               />
               <Scene
                 key="describeItem"

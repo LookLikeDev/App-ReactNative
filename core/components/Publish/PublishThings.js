@@ -187,7 +187,7 @@ export default class PublishThings extends React.Component {
             {brand && this.renderBrand(brand)}
             {price && this.renderPrice(price)}
             <TouchableOpacity
-              onPress={() => Actions.markItems({ thingId: id })}
+              onPress={() => Actions.describeItem({ thingId: id })}
               style={styles.edit}
             >
               <SvgUri

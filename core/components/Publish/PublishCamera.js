@@ -54,16 +54,15 @@ const styles = StyleSheet.create({
 
 export default class PublishCamera extends React.Component {
   static propTypes = {
-    image: PropTypes.shape({
-      uri: PropTypes.string,
-      data: PropTypes.string,
-      origURL: PropTypes.string,
-      fileName: PropTypes.string,
-    }).isRequired,
+    image: PropTypes.string,
     things: PropTypes.arrayOf(PropTypes.object).isRequired,
     addThing: PropTypes.func.isRequired,
     addImage: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    image: null,
   };
 
   showPicker = () => {
@@ -100,7 +99,7 @@ export default class PublishCamera extends React.Component {
       },
     });
 
-    Actions.markItems({ hideBackButton: true, thingId });
+    Actions.describeItem({ hideBackButton: true, thingId });
   };
 
   render() {
