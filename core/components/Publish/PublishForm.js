@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Actions } from 'react-native-router-flux';
 import { Field } from 'redux-form';
 import {
   StyleSheet,
   Text,
-  TextInput,
   ScrollView,
   View,
   Switch,
 } from 'react-native';
 import Button from '../Common/Button';
-import Input from '../Common/InputField';
+import InputField from '../Common/InputField';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,8 +31,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchGroup: {
-    paddingVertical: 16,
+    paddingVertical: 5,
     marginHorizontal: 20,
+    marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -74,6 +75,7 @@ export default class PublishForm extends React.Component {
 
   render() {
     const { handleSubmit, uploading, uploaded } = this.props;
+    console.log('FORM', this.props);
 
     if (uploading) {
       return (
@@ -98,9 +100,11 @@ export default class PublishForm extends React.Component {
         <Text style={[styles.text, styles.subTitle]}>
           «Эта информация будет отображаться вместе с вашим луком»
         </Text>
-        <Field name="name" labelText="Имя" component={Input} />
-        <Field name="birthday" labelText="Дата рождения" component={Input} />
-        <Field name="shopName" labelText="Магазин" component={Input} inputTextOrange />
+        <Field name="name" labelText="Имя" component={InputField} />
+        <Field name="birthday" labelText="Дата рождения" component={InputField} />
+
+        <Field name="shopName" labelText="Магазин" component={InputField} inputTextOrange />
+        <Button onPress={Actions.shopList} title="Выбрать магазин" />
         <Text style={[styles.text, styles.description]}>
           Точное указание магазина является необходимым условием для получения скидки
         </Text>

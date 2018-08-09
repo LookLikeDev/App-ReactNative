@@ -55,18 +55,16 @@ export default class NavBar extends React.Component {
     );
   };
 
-  renderRight = (isPreferences) => {
-    return (
-      <TouchableOpacity onPress={isPreferences ? Actions.pop : Actions.preferences}>
-        <SvgUri
-          width="22"
-          height="22"
-          fill="#A1A1A1"
-          source={isPreferences ? iconClose : iconPreferences}
-        />
-      </TouchableOpacity>
-    );
-  };
+  renderRight = isPreferences => (
+    <TouchableOpacity onPress={isPreferences ? Actions.pop : Actions.preferences}>
+      <SvgUri
+        width="22"
+        height="22"
+        fill="#A1A1A1"
+        source={isPreferences ? iconClose : iconPreferences}
+      />
+    </TouchableOpacity>
+  );
 
   render() {
     const { hideBackButton, scene: { index } } = this.props;

@@ -88,7 +88,6 @@ export default class PreferencesForm extends React.Component {
           <Text style={[styles.text, styles.description]}>
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
           </Text>
-          <Field name="publishAnonymous" labelText="Опубликовать анонимно" component={SwitchField} handleChange={handleSubmit(this.onPreferencesChange)} />
         </View>
       </ScrollView>
     );
