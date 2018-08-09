@@ -111,10 +111,10 @@ export function removeThing(id) {
   };
 }
 
-export function saveLook(userId, imageUri, formValues) {
+export function saveLook(userId, imageUri, formValues, shop) {
   return {
     type: LOOK_UPLOAD,
-    payload: { userId, imageUri, formValues },
+    payload: { userId, imageUri, formValues, shop },
   };
 }
 
@@ -139,7 +139,7 @@ function createFileUploadingChannel([imageFullPath, imageBlob]) {
   });
 }
 
-export const uploadImageSaga = function* ({ payload: { userId, imageUri, formValues } }) {
+export const publishLookSaga = function* ({ payload: { userId, imageUri, formValues, shop } }) {
   // TODO check and refactor, add clear image data after success uploading
   const looksCollection = firestore.collection('looks');
   const uuidImage = uuid();
@@ -165,9 +165,9 @@ export const uploadImageSaga = function* ({ payload: { userId, imageUri, formVal
       console.log(`progress: ${task}`);
     }
   } catch (error) {
-    console.log('--- ERROR --- uploadImageSaga ---', error);
+    console.log('--- ERROR --- publishLookSaga ---', error);
   } finally {
-    // TODO fix required fields [birthday, name, shop, ...]
+    // TODO fix required fields [birthday, name]
     yield call(
       [looksCollection, looksCollection.add],
       {
@@ -176,12 +176,10 @@ export const uploadImageSaga = function* ({ payload: { userId, imageUri, formVal
           name: formValues.name,
           birthday: formValues.birthday,
         },
-        shop: {
-          name: formValues.shopName,
-        },
         items: things,
         picture_file: imageFullPath,
         date_published: firebase.firestore.FieldValue.serverTimestamp(),
+        shop,
       },
     );
 
@@ -202,6 +200,6 @@ export const uploadImageSaga = function* ({ payload: { userId, imageUri, formVal
 
 export const saga = function* () {
   yield all([
-    takeEvery(LOOK_UPLOAD, uploadImageSaga),
+    takeEvery(LOOK_UPLOAD, publishLookSaga),
   ]);
 };

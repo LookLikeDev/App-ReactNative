@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  Text, TouchableOpacity, StyleSheet,
+} from 'react-native';
 import check from '../../../assets/icons/check.svg';
 
 const styles = StyleSheet.create({
@@ -20,6 +22,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
   },
+  orange: {
+    color: '#FC4600',
+  },
 });
 
 export default class ShopItem extends React.Component {
@@ -27,8 +32,10 @@ export default class ShopItem extends React.Component {
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
     }).isRequired,
     selected: PropTypes.bool,
+    handleSelected: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -36,19 +43,24 @@ export default class ShopItem extends React.Component {
   };
 
   render() {
-    const { data: { id, name } } = this.props;
+    const {
+      data, selected, handleSelected, data: { name },
+    } = this.props;
+
     return (
-      <View style={styles.item}>
-        <Text style={styles.shop}>
+      <TouchableOpacity onPress={() => handleSelected(data)} style={styles.item}>
+        <Text style={[styles.shop, selected && styles.orange]}>
           {name}
         </Text>
-        <SvgUri
-          width="21"
-          height="16"
-          fill="#FC4600"
-          source={check}
-        />
-      </View>
+        {selected && (
+          <SvgUri
+            width="21"
+            height="16"
+            fill="#FC4600"
+            source={check}
+          />
+        )}
+      </TouchableOpacity>
     );
   }
 }

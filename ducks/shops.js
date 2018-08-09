@@ -80,21 +80,18 @@ export function fetchList() {
  * Sagas
  */
 export const fetchListSaga = function* () {
-  console.log('SAGA');
   try {
     const collection = yield firestore.collection('shops').where('is_available', '==', true).orderBy('name', 'asc');
 
     const querySnapshot = yield call([collection, collection.get]);
 
     if (querySnapshot.docs.length === 0) {
-      console.log('empty');
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
     } else {
       const items = yield all(querySnapshot.docs.map(item => ({ id: item.id, ...item.data() })));
 
-      console.log(items);
       yield put({
         type: FETCH_LIST_SUCCESS,
         payload: { entities: items },

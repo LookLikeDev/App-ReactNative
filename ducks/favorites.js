@@ -141,7 +141,7 @@ export const fetchListSaga = function* (action) {
         let favorites = yield all(items.map(getSnapshot));
 
         favorites = yield all(favorites.map(getData));
-        console.log(favorites);
+
         yield put({
           type: FETCH_LIST_SUCCESS,
           payload: { entities: favorites },

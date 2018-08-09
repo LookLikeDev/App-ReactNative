@@ -8,6 +8,7 @@ import {
   ScrollView,
   View,
   Switch,
+  TouchableOpacity,
 } from 'react-native';
 import Button from '../Common/Button';
 import InputField from '../Common/InputField';
@@ -22,6 +23,35 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginHorizontal: 20,
     color: '#A1A1A1',
+  },
+  inputGroup: {
+    height: 56,
+    marginLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderBottomWidth: 1,
+    borderColor: '#BCBBC1',
+  },
+  label: {
+    fontFamily: 'SF-UI-Text-Regular',
+    fontSize: 16,
+    color: '#A1A1A1',
+    paddingRight: 6,
+  },
+  shopWrap: {
+    flex: 1,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  inputText: {
+    fontFamily: 'SF-UI-Text-Regular',
+    fontSize: 16,
+    color: '#000000',
+  },
+  orange: {
+    color: '#FC4600',
   },
   subTitle: {
     marginBottom: 12,
@@ -51,6 +81,10 @@ const styles = StyleSheet.create({
 
 export default class PublishForm extends React.Component {
   static propTypes = {
+    shop: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
     // from connect
     uploading: PropTypes.bool.isRequired,
     uploaded: PropTypes.bool.isRequired,
@@ -62,9 +96,11 @@ export default class PublishForm extends React.Component {
   };
 
   onSubmit = (values) => {
-    const { image, userId, saveLook } = this.props;
+    const {
+      image, userId, shop, saveLook,
+    } = this.props;
 
-    saveLook(userId, image, values);
+    saveLook(userId, image, values, shop);
   };
 
   renderSwitch = ({
@@ -74,8 +110,9 @@ export default class PublishForm extends React.Component {
   }) => <Switch onChange={() => onChange(!value)} {...restInput} style={style} value={value} />;
 
   render() {
-    const { handleSubmit, uploading, uploaded } = this.props;
-    console.log('FORM', this.props);
+    const {
+      shop, handleSubmit, uploading, uploaded,
+    } = this.props;
 
     if (uploading) {
       return (
@@ -102,9 +139,16 @@ export default class PublishForm extends React.Component {
         </Text>
         <Field name="name" labelText="Имя" component={InputField} />
         <Field name="birthday" labelText="Дата рождения" component={InputField} />
-
-        <Field name="shopName" labelText="Магазин" component={InputField} inputTextOrange />
-        <Button onPress={Actions.shopList} title="Выбрать магазин" />
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>
+            Магазин:
+          </Text>
+          <TouchableOpacity style={styles.shopWrap} onPress={() => Actions.shopList({ shop })}>
+            <Text style={[styles.inputText, styles.orange]}>
+              {shop.name}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <Text style={[styles.text, styles.description]}>
           Точное указание магазина является необходимым условием для получения скидки
         </Text>

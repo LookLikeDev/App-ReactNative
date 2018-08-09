@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Actions } from 'react-native-router-flux';
 import {
-  View, ScrollView, TextInput, StyleSheet,
+  View, ScrollView, TextInput, StyleSheet, ActivityIndicator,
 } from 'react-native';
+import Button from '../Common/Button';
 import ShopItem from './ShopItem';
 
 const styles = StyleSheet.create({
@@ -52,40 +54,89 @@ export default class ShopsList extends React.Component {
         name: PropTypes.string.isRequired,
       }),
     })).isRequired,
+    shop: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string,
+      address: PropTypes.string,
+    }).isRequired,
     fetchList: PropTypes.func.isRequired,
   };
 
   state = {
-    shop: '',
-    selected: '',
+    input: '',
   };
 
   componentWillMount() {
-    const { fetchList } = this.props;
+    const { shop, fetchList, loaded } = this.props;
 
-    fetchList();
+    this.setState({ input: shop.name === null ? '' : shop.name });
+    if (!loaded) fetchList();
   }
 
-  render() {
-    const { entities } = this.props;
-    const { shop, selected } = this.state;
+  /**
+   * @param {Object} shop
+   */
+  handleSelected = (shop) => {
+    this.setState({ input: shop.name });
+  };
 
-    const filteredList = entities.filter(item => item.name.search(shop) !== -1);
+  handleTextChange = (value) => {
+    this.setState({ input: value });
+  };
+
+  handleSubmit = () => {
+    const { entities } = this.props;
+    const { input } = this.state;
+    const shopIndex = entities.findIndex(item => input.toUpperCase() === item.name.toUpperCase());
+
+    if (shopIndex !== -1) {
+      Actions.publishLook({
+        shop: {
+          id: entities[shopIndex].id,
+          name: entities[shopIndex].name,
+          address: entities[shopIndex].address,
+        },
+      });
+    } else {
+      Actions.publishLook({ shop: { name: input } });
+    }
+  };
+
+  render() {
+    const { entities, loading } = this.props;
+    const { input } = this.state;
+
+    const filteredList = entities.filter((item) => {
+      const string = item.name.toUpperCase();
+      const searchStr = input.toUpperCase();
+
+      return string.search(searchStr) !== -1;
+    });
+
     return (
       <React.Fragment>
         <View style={styles.inputGroup}>
           <TextInput
             placeholder="Магазин"
-            onChangeText={value => this.setState({ shop: value })}
-            value={shop}
+            onChangeText={this.handleTextChange}
+            value={input}
             style={styles.inputText}
           />
         </View>
+        {loading && (
+          <ActivityIndicator animating size="large" style={{ marginTop: 26, alignSelf: 'stretch' }} />
+        )}
         <ScrollView style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'column' }}>
           {filteredList && filteredList.map(item => (
-            <ShopItem key={item.id} data={item} c={selected === item.name} />
+            <ShopItem
+              key={item.id}
+              data={item}
+              selected={input.toUpperCase() === item.name.toUpperCase()}
+              handleSelected={this.handleSelected}
+            />
           ))}
         </ScrollView>
+        <Button onPress={this.handleSubmit} title="Сохранить" borderLess />
       </React.Fragment>
     );
   }
