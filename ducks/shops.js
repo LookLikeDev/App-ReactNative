@@ -17,18 +17,9 @@ const ShopRecord = Record({
   name: null, // need record
   address: null,
   GPS_location: null,
-  city: {
-    id: null,
-    name: null,
-  },
-  discount: {
-    value: null,
-    target_likes: null,
-    days: null,
-  },
-  promocode: {
-    type: null,
-  },
+  city: null,
+  discount: null,
+  promocode: null,
 });
 
 /**

@@ -91,16 +91,25 @@ export default class PublishForm extends React.Component {
     userId: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     saveLook: PropTypes.func.isRequired,
+    discount: PropTypes.shape({
+      days: PropTypes.number,
+      target_likes: PropTypes.number,
+      value: PropTypes.number,
+    }),
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    discount: null,
+  };
+
   onSubmit = (values) => {
     const {
-      image, userId, shop, saveLook,
+      image, userId, shop, discount, saveLook,
     } = this.props;
 
-    saveLook(userId, image, values, shop);
+    saveLook(userId, image, values, shop, discount);
   };
 
   renderSwitch = ({
