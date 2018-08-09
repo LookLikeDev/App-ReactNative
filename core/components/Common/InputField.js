@@ -47,31 +47,38 @@ export default class InputField extends React.Component {
 
   static defaultProps = {
     inputTextOrange: false,
-    handleChange: false,
+    handleChange: null,
     keyboardType: 'default',
   };
 
   render() {
     const {
-      labelText, inputTextOrange, handleChange, keyboardType, input: { onChange, value, ...restInput },
+      labelText, inputTextOrange, handleChange, keyboardType,
+      input: { onChange, onBlur, onFocus, value, ...restInput },
+      meta: { touched, error, warning },
     } = this.props;
 
-    // console.log('WTF', restInput);
     return (
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>
-          {labelText}
-          :
-        </Text>
-        <TextInput
-          onChangeText={onChange}
-          onEndEditing={handleChange}
-          keyboardType={keyboardType}
-          value={value}
-          style={[styles.inputText, inputTextOrange && styles.orange]}
-          {...restInput}
-        />
-      </View>
+      <React.Fragment>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>
+            {labelText}
+            :
+          </Text>
+          <TextInput
+            onChangeText={onChange}
+            onEndEditing={handleChange}
+            keyboardType={keyboardType}
+            value={value}
+            style={[styles.inputText, inputTextOrange && styles.orange]}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            {...restInput}
+          />
+        </View>
+        {/*<Text>{touched ? 'da' : 'net'}</Text>
+        {touched && ((error && <Text>Error: {error}</Text>) || (warning && <Text>Warning: {warning}</Text>))}*/}
+      </React.Fragment>
     );
   }
 }

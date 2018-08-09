@@ -19,6 +19,7 @@ const LookRecord = Record({
   id: null,
   user: null,
   shop: null,
+  discount: null,
   items: null,
   reference: null,
   picture_uri: null,

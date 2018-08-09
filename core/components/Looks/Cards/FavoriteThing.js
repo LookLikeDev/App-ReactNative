@@ -133,7 +133,10 @@ export default class FavoriteThing extends React.Component {
     }).isRequired,
     name: PropTypes.string.isRequired,
     brand: PropTypes.string,
-    price: PropTypes.number,
+    price: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
     // from connect
     userId: PropTypes.string.isRequired,
     voting: PropTypes.bool.isRequired,

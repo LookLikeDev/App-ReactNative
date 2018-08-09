@@ -83,7 +83,7 @@ export default class PublishForm extends React.Component {
   static propTypes = {
     shop: PropTypes.shape({
       id: PropTypes.string,
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string,
     }).isRequired,
     // from connect
     uploading: PropTypes.bool.isRequired,

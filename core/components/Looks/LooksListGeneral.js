@@ -5,7 +5,7 @@ import CardGeneral from './Cards/CardGeneral';
 import LooksLoadedText from './LooksLoadedText';
 import Separator from '../Common/Separator';
 
-class LooksListGeneral extends React.Component {
+export default class LooksListGeneral extends React.Component {
   static propTypes = {
     userId: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
@@ -110,5 +110,3 @@ class LooksListGeneral extends React.Component {
     );
   }
 }
-
-export default LooksListGeneral;

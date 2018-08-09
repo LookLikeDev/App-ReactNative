@@ -5,18 +5,19 @@ import CardFavorite from './Cards/CardFavorite';
 import LooksLoadedText from './LooksLoadedText';
 import Separator from '../Common/Separator';
 
-class LooksListGeneral extends React.Component {
+export default class LooksListFavorites extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
-    voting: PropTypes.bool.isRequired,
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
-      reference: PropTypes.objectOf(PropTypes.object).isRequired,
+      discount: PropTypes.shape({
+        target_likes: PropTypes.number,
+      }),
     })).isRequired,
     likedLooks: PropTypes.objectOf(PropTypes.object).isRequired,
     fetchList: PropTypes.func.isRequired,
@@ -40,7 +41,7 @@ class LooksListGeneral extends React.Component {
     if (!loading && !loaded) fetchList(likedLooks);
   };
 
-  renderItem = ({ item }) => <CardFavorite voting={this.props.voting} data={item} />;
+  renderItem = ({ item }) => <CardFavorite data={item} />;
 
   renderFooter = () => {
     const { loading, loaded } = this.props;
@@ -78,5 +79,3 @@ class LooksListGeneral extends React.Component {
     );
   }
 }
-
-export default LooksListGeneral;

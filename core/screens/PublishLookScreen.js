@@ -10,7 +10,7 @@ export default class PublishLookScreen extends React.Component {
     title: PropTypes.string.isRequired,
     shop: PropTypes.shape({
       id: PropTypes.string,
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string,
     }),
   };
 

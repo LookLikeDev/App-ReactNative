@@ -46,7 +46,10 @@ export default class CardFavorite extends React.Component {
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
-      reference: PropTypes.objectOf(PropTypes.object).isRequired,
+      discount: PropTypes.shape({
+        target_likes: PropTypes.number,
+      }),
+      items: PropTypes.arrayOf(PropTypes.object),
     }).isRequired,
   };
 

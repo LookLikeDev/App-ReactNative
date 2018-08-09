@@ -120,7 +120,7 @@ export default class PublishThings extends React.Component {
           x: PropTypes.number.isRequired,
           y: PropTypes.number.isRequired,
         }).isRequired,
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
         brand: PropTypes.string,
         price: PropTypes.number,
       }),

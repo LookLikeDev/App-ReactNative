@@ -120,22 +120,24 @@ export default class CardGeneral extends React.Component {
           <Image style={styles.image} source={uri && { uri }} />
         </View>
         <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
-          <SvgUri
-            style={styles.dislikeSvg}
-            width="32"
-            height="32"
-            fill="#FFFFFF"
-            source={like}
-          />
+          <View style={styles.dislikeSvg}>
+            <SvgUri
+              width="32"
+              height="32"
+              fill="#FFFFFF"
+              source={like}
+            />
+          </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.like} onPress={this.handleLike}>
-          <SvgUri
-            style={styles.likeSvg}
-            width="32"
-            height="32"
-            fill="#FFFFFF"
-            source={like}
-          />
+          <View style={styles.likeSvg}>
+            <SvgUri
+              width="32"
+              height="32"
+              fill="#FFFFFF"
+              source={like}
+            />
+          </View>
         </TouchableOpacity>
       </View>
     );
