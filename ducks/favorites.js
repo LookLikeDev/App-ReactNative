@@ -129,6 +129,32 @@ const getSnapshot = function* (item) {
   return yield item.reference.get();
 };
 
+const createDiscount = function* (discount, shop, user, item, lookId) {
+  if (discount && discount.value > 0) {
+    const discountsCollection = firestore.collection('discounts');
+
+    try {
+      const dateEnd = yield Math.round(new Date().getTime() + (discount.days * 86400 * 1000));
+
+      yield call(
+        [discountsCollection, discountsCollection.add],
+        {
+          user,
+          value: Number(discount.value),
+          date_issued: new Date(),
+          date_expiration: new Date(dateEnd),
+          is_applied: false,
+          shop,
+          look_id: lookId,
+          item,
+        },
+      );
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+};
+
 export const fetchListSaga = function* (action) {
   const { likedItems } = action.payload;
   const state = yield select();
@@ -177,7 +203,12 @@ export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) 
   const lookRef = yield firestore.collection('looks').doc(lookId);
   const store = yield select();
   const lookThingsList = yield store[moduleName].getIn(['entities', lookId, 'items']).toArray();
+
+  const isReached = store[moduleName].getIn(['entities', lookId, 'items', thingId, 'is_discount_reached']);
   const discount = store[moduleName].getIn(['entities', lookId, 'discount']);
+  const shop = store[moduleName].getIn(['entities', lookId, 'shop']);
+  const user = store[moduleName].getIn(['entities', lookId, 'user']);
+  const votedItem = store[moduleName].getIn(['entities', lookId, 'items', thingId]).toJS();
 
   try {
     const newItemsList = yield lookThingsList.map((recordItem) => {
@@ -189,15 +220,21 @@ export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) 
         return {
           ...item,
           counter_likes: item.counter_likes + 1,
-          is_discount_reached: discount && discount.target_likes
+          is_discount_reached: discount
+          && discount.target_likes
           && (item.counter_likes + 1) >= discount.target_likes,
         };
       }
+
       return {
         ...item,
         counter_dislikes: item.counter_dislikes + 1,
       };
     });
+
+    if (discount && !isReached && (votedItem.counter_likes + 1) >= discount.target_likes) {
+      yield* createDiscount(discount, shop, user, votedItem, lookId);
+    }
 
     // console.log('NEW ITEMS LIST', newItemsList);
 
