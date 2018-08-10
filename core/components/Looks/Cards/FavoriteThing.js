@@ -126,14 +126,19 @@ const styles = StyleSheet.create({
 export default class FavoriteThing extends React.Component {
   static propTypes = {
     lookId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    position: PropTypes.shape({
-      x: PropTypes.number.isRequired,
-      y: PropTypes.number.isRequired,
+    item: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      position: PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+      }).isRequired,
+      name: PropTypes.string.isRequired,
+      brand: PropTypes.string,
+      price: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+      ]),
     }).isRequired,
-    name: PropTypes.string.isRequired,
-    brand: PropTypes.string,
-    price: PropTypes.number,
     // from connect
     userId: PropTypes.string.isRequired,
     voting: PropTypes.bool.isRequired,
@@ -144,8 +149,6 @@ export default class FavoriteThing extends React.Component {
   };
 
   static defaultProps = {
-    brand: null,
-    price: null,
     isVoted: false,
   };
 
@@ -157,7 +160,7 @@ export default class FavoriteThing extends React.Component {
 
   handleVote = (isLike) => {
     const {
-      id, lookId, userId, voting, isVoted, addVote, thingVote,
+      item: { id }, lookId, userId, voting, isVoted, addVote, thingVote,
     } = this.props;
 
     if (!voting && !isVoted) {
@@ -282,7 +285,9 @@ export default class FavoriteThing extends React.Component {
 
   render() {
     const {
-      name, brand, price, position: { x, y },
+      item: {
+        name, brand, price, position: { x, y },
+      },
     } = this.props;
     const { isOpen, isShowLike, isShowDislike } = this.state;
 

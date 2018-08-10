@@ -33,6 +33,11 @@ export default class ShopItem extends React.Component {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       address: PropTypes.string.isRequired,
+      discount: PropTypes.shape({
+        days: PropTypes.number,
+        target_likes: PropTypes.number,
+        value: PropTypes.number,
+      }).isRequired,
     }).isRequired,
     selected: PropTypes.bool,
     handleSelected: PropTypes.func.isRequired,

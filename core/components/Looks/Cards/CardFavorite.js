@@ -46,7 +46,10 @@ export default class CardFavorite extends React.Component {
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
-      reference: PropTypes.objectOf(PropTypes.object).isRequired,
+      discount: PropTypes.shape({
+        target_likes: PropTypes.number,
+      }),
+      items: PropTypes.arrayOf(PropTypes.object),
     }).isRequired,
   };
 
@@ -62,7 +65,7 @@ export default class CardFavorite extends React.Component {
         )}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
-          {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} {...item} />)}
+          {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} item={item} />)}
         </View>
       </View>
     );

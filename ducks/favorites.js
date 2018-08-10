@@ -7,7 +7,7 @@ import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
 
 export const ReducerRecord = Record({
-  entities: new OrderedMap({}),
+  entities: new OrderedMap({}), // OrderedMap of LookRecord
   error: null,
   loading: false,
   loaded: false,
@@ -19,10 +19,22 @@ const LookRecord = Record({
   id: null,
   user: null,
   shop: null,
-  items: null,
+  discount: null,
+  items: new OrderedMap({}), // OrderedMap of ThingRecord
   reference: null,
   picture_uri: null,
   date_published: null,
+});
+
+const ThingRecord = Record({
+  id: null,
+  name: null,
+  brand: null,
+  position: {},
+  price: null,
+  counter_likes: 0,
+  counter_dislikes: 0,
+  is_discount_reached: false,
 });
 
 /**
@@ -101,18 +113,46 @@ const getData = function* (item) {
       id: item.id,
       picture_uri: url,
       ...data,
+      items: new OrderedMap(arrToMap(data.items, ThingRecord)),
     };
   } catch (error) {
     return {
       id: item.id,
       picture_uri: null,
       ...data,
+      items: new OrderedMap(arrToMap(data.items, ThingRecord)),
     };
   }
 };
 
 const getSnapshot = function* (item) {
   return yield item.reference.get();
+};
+
+const createDiscount = function* (discount, shop, user, item, lookId) {
+  if (discount && discount.value > 0) {
+    const discountsCollection = firestore.collection('discounts');
+
+    try {
+      const dateEnd = yield Math.round(new Date().getTime() + (discount.days * 86400 * 1000));
+
+      yield call(
+        [discountsCollection, discountsCollection.add],
+        {
+          user,
+          value: Number(discount.value),
+          date_issued: new Date(),
+          date_expiration: new Date(dateEnd),
+          is_applied: false,
+          shop,
+          look_id: lookId,
+          item,
+        },
+      );
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
 };
 
 export const fetchListSaga = function* (action) {
@@ -162,23 +202,41 @@ export const fetchListSaga = function* (action) {
 export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) {
   const lookRef = yield firestore.collection('looks').doc(lookId);
   const store = yield select();
-  const lookThingsList = yield store[moduleName].getIn(['entities', lookId, 'items']);
+  const lookThingsList = yield store[moduleName].getIn(['entities', lookId, 'items']).toArray();
+
+  const isReached = store[moduleName].getIn(['entities', lookId, 'items', thingId, 'is_discount_reached']);
+  const discount = store[moduleName].getIn(['entities', lookId, 'discount']);
+  const shop = store[moduleName].getIn(['entities', lookId, 'shop']);
+  const user = store[moduleName].getIn(['entities', lookId, 'user']);
+  const votedItem = store[moduleName].getIn(['entities', lookId, 'items', thingId]).toJS();
 
   try {
-    const newItemsList = yield lookThingsList.map((item) => {
+    const newItemsList = yield lookThingsList.map((recordItem) => {
+      const item = recordItem.toJS();
+
       if (item.id !== thingId) return item;
 
       if (isLike) {
         return {
           ...item,
-          counter_likes: item.counter_likes > 0 ? item.counter_likes + 1 : 1,
+          counter_likes: item.counter_likes + 1,
+          is_discount_reached: discount
+          && discount.target_likes
+          && (item.counter_likes + 1) >= discount.target_likes,
         };
       }
+
       return {
         ...item,
-        counter_dislikes: item.counter_dislikes > 0 ? item.counter_dislikes + 1 : 1,
+        counter_dislikes: item.counter_dislikes + 1,
       };
     });
+
+    if (discount && !isReached && (votedItem.counter_likes + 1) >= discount.target_likes) {
+      yield* createDiscount(discount, shop, user, votedItem, lookId);
+    }
+
+    // console.log('NEW ITEMS LIST', newItemsList);
 
     yield call([lookRef, lookRef.update], { items: newItemsList });
 
