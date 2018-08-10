@@ -65,7 +65,7 @@ export default class CardFavorite extends React.Component {
         )}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
-          {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} {...item} />)}
+          {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} item={item} />)}
         </View>
       </View>
     );

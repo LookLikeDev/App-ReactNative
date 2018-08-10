@@ -19,9 +19,13 @@ export default class LooksListFavorites extends React.Component {
         target_likes: PropTypes.number,
       }),
     })).isRequired,
-    likedLooks: PropTypes.objectOf(PropTypes.object).isRequired,
+    likedLooks: PropTypes.objectOf(PropTypes.object),
     fetchList: PropTypes.func.isRequired,
     resetFavoritesCounter: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    likedLooks: null,
   };
 
   componentDidMount() {

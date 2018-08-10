@@ -6,9 +6,9 @@ import FavoriteThing from '../../../components/Looks/Cards/FavoriteThing';
 const mapStateToProps = (state, ownProps) => {
   let isVoted = false;
   const isLike = Object.values(state[userModule].getIn(['user', 'liked_looks'])).some((item) => {
-    if (item.items && item.items[ownProps.id]) {
+    if (item.items && item.items[ownProps.item.id]) {
       isVoted = true;
-      return item.items[ownProps.id].isLiked;
+      return item.items[ownProps.item.id].isLiked;
     }
     return false;
   });
