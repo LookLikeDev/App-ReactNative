@@ -59,6 +59,11 @@ export default function reducer(looksState = new ReducerRecord(), action) {
         .set('loading', false)
         .set('loaded', true);
 
+    case FETCH_LIST_ERROR:
+      return looksState
+        .set('loading', false)
+        .set('error', error);
+
     case ITEM_REMOVE:
       return looksState.deleteIn(['entities', payload.id]);
 
