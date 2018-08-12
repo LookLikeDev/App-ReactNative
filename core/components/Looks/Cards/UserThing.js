@@ -58,21 +58,28 @@ export default class UserThing extends React.Component {
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired,
     }).isRequired,
+    discount: PropTypes.shape({
+      days: PropTypes.number.isRequired,
+      target_likes: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
   };
 
   static defaultProps = {
     counter_likes: 0,
     is_discount_reached: false,
+    discount: null,
   };
 
   renderHint = () => {
-    const { counter_likes: counterLikes = 0 } = this.props;
+    const { counter_likes: counterLikes = 0, discount } = this.props;
+
     return (
       <View style={styles.hint}>
         <Text style={styles.text}>
           {counterLikes}
           {'/'}
-          {54}
+          {discount && discount.target_likes ? discount.target_likes : '--'}
         </Text>
       </View>
     );

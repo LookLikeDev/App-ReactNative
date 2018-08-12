@@ -17,6 +17,7 @@ export const ReducerRecord = Record({
 const LookRecord = Record({
   id: null,
   user: null,
+  discount: null,
   shop: null,
   items: null,
   reference: null,

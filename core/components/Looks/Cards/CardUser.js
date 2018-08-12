@@ -42,6 +42,11 @@ export default class CardUser extends React.Component {
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
+      discount: PropTypes.shape({
+        days: PropTypes.number.isRequired,
+        target_likes: PropTypes.number.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }),
@@ -51,7 +56,11 @@ export default class CardUser extends React.Component {
   };
 
   render() {
-    const { data: { user, items, picture_uri: uri } } = this.props;
+    const {
+      data: {
+        user, discount, items, picture_uri: uri,
+      },
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -60,7 +69,13 @@ export default class CardUser extends React.Component {
         </Text>
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
-          {items && items.length && items.map(item => <UserThing key={item.id} {...item} />)}
+          {items && items.length && items.map(item => (
+            <UserThing
+              key={item.id}
+              discount={discount}
+              {...item}
+            />
+          ))}
         </View>
       </View>
     );
