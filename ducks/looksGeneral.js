@@ -89,27 +89,32 @@ export function removeItem(item) {
  */
 const getData = function* (item) {
   // TODO change to static url
-  const storageRef = firebase.storage().ref();
+  // const storageRef = firebase.storage().ref();
   const data = yield item.data();
 
-  try {
-    const imageRef = yield call([storageRef, storageRef.child], item.data().picture_file);
-    const url = yield call([imageRef, imageRef.getDownloadURL]);
-
-    return {
-      id: item.id,
-      reference: item.ref,
-      picture_uri: url,
-      ...data,
-    };
-  } catch (error) {
-    return {
-      id: item.id,
-      reference: item.ref,
-      picture_uri: null,
-      ...data,
-    };
-  }
+  return {
+    id: item.id,
+    reference: item.ref,
+    ...data,
+  };
+  // try {
+  //   const imageRef = yield call([storageRef, storageRef.child], item.data().picture_file);
+  //   const url = yield call([imageRef, imageRef.getDownloadURL]);
+  //
+  //   return {
+  //     id: item.id,
+  //     reference: item.ref,
+  //     picture_uri: url,
+  //     ...data,
+  //   };
+  // } catch (error) {
+  //   return {
+  //     id: item.id,
+  //     reference: item.ref,
+  //     picture_uri: null,
+  //     ...data,
+  //   };
+  // }
 };
 
 export const fetchListSaga = function* ({ payload: { votedItems } }) {
