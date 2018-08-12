@@ -252,6 +252,7 @@ export const likeSaga = function* ({ payload: { item, userId } }) {
       {
         [`liked_looks.${item.id}`]: {
           reference: item.reference,
+          date_liked: firebase.firestore.FieldValue.serverTimestamp(),
         },
         counter_looks_voted: count,
       });
@@ -277,6 +278,7 @@ export const dislikeSaga = function* ({ payload: { item, userId } }) {
     yield call([userRef, userRef.update], {
       [`disliked_looks.${item.id}`]: {
         reference: item.reference,
+        date_disliked: firebase.firestore.FieldValue.serverTimestamp(),
       },
     });
     const userSnapshot = yield call([userRef, userRef.get]);

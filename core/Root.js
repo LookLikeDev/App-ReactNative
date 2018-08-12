@@ -48,6 +48,7 @@ class Root extends React.Component {
 
   render() {
     const { resetFavoritesCounter } = this.props;
+
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
         <Modal hideNavBar>
@@ -131,4 +132,6 @@ class Root extends React.Component {
   }
 }
 
-export default connect(null, { resetFavoritesCounter })(Root);
+export default connect(state => ({}), {
+  resetFavoritesCounter,
+})(Root);

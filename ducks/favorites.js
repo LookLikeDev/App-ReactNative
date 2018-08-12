@@ -168,20 +168,25 @@ export const fetchListSaga = function* (action) {
   } else {
     try {
       let items = yield all(Object.values(likedItems));
-
+      console.log(1);
+      // a - b asc, b - a desk
+      items = items.sort((a, b) => b.date_liked.toDate() - a.date_liked.toDate());
+      console.log(2);
       items = yield all(items.filter((item) => {
         if (data.get(item.reference.id) || count >= 5) return false;
-
+        console.log(3);
         count += 1;
-
+        console.log(4);
         return true;
       }));
-
+      console.log(5);
       if (items.length > 0) {
+        console.log(6);
         let favorites = yield all(items.map(getSnapshot));
-
+        console.log(7);
         favorites = yield all(favorites.map(getData));
 
+        console.log(favorites);
         yield put({
           type: FETCH_LIST_SUCCESS,
           payload: { entities: favorites },
@@ -194,6 +199,10 @@ export const fetchListSaga = function* (action) {
       yield put({
         type: FETCH_LIST_ERROR,
         error,
+      });
+      yield put({
+        type: FETCH_LIST_REQUEST,
+        payload: { likedItems },
       });
     }
   }

@@ -132,14 +132,11 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
       yield put({
         type: FETCH_LIST_LOADED_ALL,
       });
-      // return true;
     } else {
       yield put({
         type: FETCH_LIST_LAST_ELEMENT,
         payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
       });
-
-      // console.log(querySnapshot.docs);
 
       let items = querySnapshot.docs;
 
