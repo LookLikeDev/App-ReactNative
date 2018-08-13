@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import ShopsList from '../containers/Shops/ShopsList';
+import ShopsList from '../containers/shops/ShopsList';
 import Header from '../containers/Header';
 
 export default class ShopList extends React.Component {

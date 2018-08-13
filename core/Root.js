@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Modal,
@@ -10,15 +9,13 @@ import {
   Reducer,
 } from 'react-native-router-flux';
 
-import { resetFavoritesCounter } from '../ducks/user';
-
 import SplashScreen from './screens/SplashScreen';
-import MainScreen from './screens/MainScreen';
-import FavoritesScreen from './screens/FavoritesScreen';
+import MainScreen from './containers/screens/MainScreen';
+import FavoritesScreen from './containers/screens/FavoritesScreen';
 import PhotoScreen from './screens/PhotoScreen';
 import DescribeItemScreen from './screens/DescribeItemScreen';
 import PublishLookScreen from './screens/PublishLookScreen';
-import LooksScreen from './screens/LooksScreen';
+import LooksScreen from './containers/screens/LooksScreen';
 import LookDetailScreen from './screens/LookDetailScreen';
 import DiscountsListScreen from './screens/DiscountsListScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';
@@ -40,15 +37,8 @@ const ReduxRouter = connect()(({ dispatch, children, ...props }) => (
   </Router>
 ));
 
-class Root extends React.Component {
-  static propTypes = {
-    // from connect
-    resetFavoritesCounter: PropTypes.func.isRequired,
-  };
-
+export default class Root extends React.Component {
   render() {
-    const { resetFavoritesCounter } = this.props;
-
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
         <Modal hideNavBar>
@@ -69,7 +59,6 @@ class Root extends React.Component {
               key="favorites"
               component={FavoritesScreen}
               title="Избранное"
-              onEnter={resetFavoritesCounter}
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
             <Stack icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
@@ -131,7 +120,3 @@ class Root extends React.Component {
     );
   }
 }
-
-export default connect(state => ({}), {
-  resetFavoritesCounter,
-})(Root);

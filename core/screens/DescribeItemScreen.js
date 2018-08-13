@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import PublishThingForm from '../containers/Publish/PublishThingForm';
+import PublishThingForm from '../containers/publish/PublishThingForm';
 import Header from '../containers/Header';
 
 export default class MarkItemsScreen extends React.Component {

@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Record, OrderedMap } from 'immutable';
 import {
-  all, put, call, takeEvery, select,
+  all, put, call, takeEvery, takeLatest, select,
 } from 'redux-saga/effects';
 import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
@@ -9,6 +9,7 @@ import { arrToMap } from '../core/utils';
 export const ReducerRecord = Record({
   entities: new OrderedMap({}),
   error: null,
+  initialed: false,
   loading: false,
   loaded: false,
   lastElement: null,
@@ -34,6 +35,9 @@ export const FETCH_LIST_SUCCESS = `${appName}/${moduleName}/FETCH_LIST_SUCCESS`;
 export const FETCH_LIST_LOADED_ALL = `${appName}/${moduleName}/FETCH_LIST_LOADED_ALL`;
 export const FETCH_LIST_ERROR = `${appName}/${moduleName}/FETCH_LIST_ERROR`;
 
+export const UPDATE_LIST_REQUEST = `${appName}/${moduleName}/UPDATE_LIST_REQUEST`;
+export const UPDATE_LIST_SUCCESS = `${appName}/${moduleName}/UPDATE_LIST_SUCCESS`;
+
 export const ITEM_REMOVE = `${appName}/${moduleName}/ITEM_REMOVE`;
 
 /**
@@ -52,17 +56,23 @@ export default function reducer(looksState = new ReducerRecord(), action) {
     case FETCH_LIST_SUCCESS:
       return looksState
         .set('loading', false)
+        .set('initialed', true)
         .update('entities', entities => entities.merge(arrToMap(payload.entities, LookRecord)));
 
     case FETCH_LIST_LOADED_ALL:
       return looksState
         .set('loading', false)
+        .set('initialed', true)
         .set('loaded', true);
 
     case FETCH_LIST_ERROR:
       return looksState
         .set('loading', false)
         .set('error', error);
+
+    case UPDATE_LIST_SUCCESS:
+      return looksState
+        .set('entities', new OrderedMap(arrToMap(payload.entities, LookRecord)).merge(looksState.get('entities')));
 
     case ITEM_REMOVE:
       return looksState.deleteIn(['entities', payload.id]);
@@ -78,6 +88,13 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 export function fetchList(votedItems) {
   return {
     type: FETCH_LIST_REQUEST,
+    payload: { votedItems },
+  };
+}
+
+export function updateList(votedItems) {
+  return {
+    type: UPDATE_LIST_REQUEST,
     payload: { votedItems },
   };
 }
@@ -127,7 +144,7 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
   const state = yield select();
 
   try {
-    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
+    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(10);
 
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
@@ -179,8 +196,60 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
   }
 };
 
+export const updateListSaga = function* ({ payload: { votedItems } }) {
+  const db = firestore;
+  const store = yield select();
+  const first = yield store[moduleName].get('entities').first();
+  const initialed = yield store[moduleName].get('initialed');
+
+  try {
+    if (initialed) {
+      let collection = yield db.collection('looks');
+
+      if (first) {
+        collection = collection
+          .where('date_published', '>', first.date_published.toDate())
+          .orderBy('date_published', 'desc');
+      } else {
+        collection = collection
+          .orderBy('date_published', 'desc')
+          .limit(10);
+      }
+
+      const querySnapshot = yield call([collection, collection.get]);
+
+      if (querySnapshot.docs.length > 0) {
+        let items = querySnapshot.docs;
+
+        if (votedItems !== null) {
+          items = yield all(querySnapshot.docs.filter(
+            item => !Object.prototype.hasOwnProperty.call(votedItems, item.id),
+          ));
+        }
+
+        items = yield all(items.map(getData));
+
+        if (items.length === 0) {
+          yield put({
+            type: FETCH_LIST_REQUEST,
+            payload: { votedItems },
+          });
+        } else {
+          yield put({
+            type: UPDATE_LIST_SUCCESS,
+            payload: { entities: items },
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
 export const saga = function* () {
   yield all([
     takeEvery(FETCH_LIST_REQUEST, fetchListSaga),
+    takeLatest(UPDATE_LIST_REQUEST, updateListSaga),
   ]);
 };

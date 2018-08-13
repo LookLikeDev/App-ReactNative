@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import Header from '../containers/Header';
-import DiscountsList from '../containers/Discounts/DiscountsList';
+import DiscountsList from '../containers/discounts/DiscountsList';
 
 export default class DiscountsListScreen extends React.Component {
   static propTypes = {

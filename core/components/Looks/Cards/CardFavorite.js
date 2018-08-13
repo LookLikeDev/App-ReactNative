@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, StyleSheet, Image, Dimensions,
 } from 'react-native';
-import FavoriteThing from '../../../containers/Looks/Cards/FavoriteThing';
+import FavoriteThing from '../../../containers/looks/Cards/FavoriteThing';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);

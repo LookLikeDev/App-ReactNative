@@ -31,7 +31,7 @@ class SplashScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (snapshot !== null) Actions.main();
+    if (snapshot !== null) Actions.push('main');
   }
 
   getSnapshotBeforeUpdate() {
@@ -55,7 +55,7 @@ class SplashScreen extends React.Component {
           {' '}
           { userId }
         </Text>
-        <Button title="На главную" onPress={Actions.main} />
+        <Button title="На главную" onPress={() => Actions.push('main')} />
       </View>
     );
   }
