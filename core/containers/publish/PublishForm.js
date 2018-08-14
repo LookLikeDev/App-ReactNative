@@ -11,6 +11,11 @@ const mapStateToProps = (state, { shop }) => ({
   uploading: state[publishModule].uploading,
   uploaded: state[publishModule].uploaded,
   discount: state[discountsModule].getIn(['entities', shop.id, 'discount']),
+  initialValues: {
+    name: state[userModule].getIn(['user', 'name']),
+    birthday: state[userModule].getIn(['user', 'birthday']),
+    publishAnonymous: false,
+  },
 });
 
 const mapDispatchToProps = {
@@ -20,7 +25,4 @@ const mapDispatchToProps = {
 // TODO create selectors for entities
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'publishLook',
-  initialValues: {
-    publishAnonymous: false,
-  },
 })(PublishForm));

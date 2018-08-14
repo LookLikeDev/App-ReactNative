@@ -9,6 +9,8 @@ import { appName, firestore } from '../config';
 
 const UserRecord = Record({
   name: null,
+  birthday: null,
+  is_female: null,
   liked_looks: null,
   disliked_looks: null,
   counter_looks_voted: 0,

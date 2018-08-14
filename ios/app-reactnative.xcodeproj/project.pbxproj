@@ -403,15 +403,15 @@
 			baseConfigurationReference = 2C1548D9E4CB1AEFA5CCAE6D /* Pods-app-reactnative.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 267JCM4Y73;
+				DEVELOPMENT_TEAM = 33CGS99A88;
 				INFOPLIST_FILE = "$(SRCROOT)/app-reactnative/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.looklike.looklike;
+				PRODUCT_BUNDLE_IDENTIFIER = com.looklike.app.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -420,15 +420,15 @@
 			baseConfigurationReference = A47FE4D7F70906B7DC8CE39B /* Pods-app-reactnative.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 267JCM4Y73;
+				DEVELOPMENT_TEAM = 33CGS99A88;
 				INFOPLIST_FILE = "$(SRCROOT)/app-reactnative/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.looklike.looklike;
+				PRODUCT_BUNDLE_IDENTIFIER = com.looklike.app.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
