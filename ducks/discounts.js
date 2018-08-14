@@ -55,6 +55,11 @@ export default function reducer(discountsState = new ReducerRecord(), action) {
         .set('loading', false)
         .set('loaded', true);
 
+    case FETCH_LIST_ERROR:
+      return discountsState
+        .set('loading', false)
+        .set('error', error);
+
     default:
       return discountsState;
   }

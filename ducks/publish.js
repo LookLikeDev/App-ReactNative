@@ -73,7 +73,8 @@ export default function reducer(looksState = new ReducerRecord(), action) {
     case LOOK_UPLOAD_SUCCESS:
       return looksState
         .set('uploading', false)
-        .set('uploaded', true);
+        .set('image', null)
+        .set('things', new OrderedMap({}));
 
     default:
       return looksState;
@@ -123,30 +124,93 @@ export function saveLook(userId, imageUri, formValues, shop, discount) {
 /**
  * Sagas
  */
-function createFileUploadingChannel([imageFullPath, imageBlob]) {
-  // TODO check and refactor
-  return eventChannel((emitter) => {
-    const uploadTask = firebase.storage().ref().child(imageFullPath).put(imageBlob);
+// function createFileUploadingChannel([imageFullPath, imageBlob]) {
+//   // TODO check and refactor
+//   return eventChannel((emitter) => {
+//     const uploadTask = firebase.storage().ref().child(imageFullPath).put(imageBlob);
+//
+//     uploadTask.on('state_changed', (snapshot) => {
+//       const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+//       emitter(progress);
+//     }, (error) => {
+//       console.log('--- ERROR --- createFileUploadingChannel ---', error);
+//       emitter(END);
+//     }, () => {
+//       emitter(END);
+//     });
+//     return () => { uploadTask.cancel(); };
+//   });
+// }
 
-    uploadTask.on('state_changed', (snapshot) => {
-      const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      emitter(progress);
-    }, (error) => {
-      console.log('--- ERROR --- createFileUploadingChannel ---', error);
-      emitter(END);
-    }, () => {
-      emitter(END);
-    });
-    return () => { uploadTask.cancel(); };
-  });
-}
+// export const publishLookSaga = function* ({
+//   payload: {
+//     userId, imageUri, formValues, shop, discount,
+//   },
+// }) {
+//   // TODO check and refactor, add clear image data after success uploading
+//   const looksCollection = firestore.collection('looks');
+//   const uuidImage = uuid();
+//   const fileExtension = getFileExtensionByString(imageUri);
+//   const imageFullPath = `looks/${uuidImage}.${fileExtension}`;
+//
+//   const imageFile = yield fetch(imageUri);
+//   const imageBlob = yield imageFile.blob();
+//
+//   const store = yield select();
+//   const things = yield all(store[moduleName].things.toArray().map(item => item.toJS()));
+//
+//   const channelFileUpload = yield call(createFileUploadingChannel, [imageFullPath, imageBlob]);
+//
+//   yield put({
+//     type: LOOK_UPLOAD_START,
+//   });
+//
+//   try {
+//     while (true) {
+//       // take(END) will cause the saga to terminate by jumping to the finally block
+//       const task = yield take(channelFileUpload);
+//       console.log(`progress: ${task}`);
+//     }
+//   } catch (error) {
+//     console.log('--- ERROR --- publishLookSaga ---', error);
+//   } finally {
+//     const shopParams = yield discount === null ? { shop } : { shop, discount };
+//     // TODO fix required fields [birthday, name]
+//     yield call(
+//       [looksCollection, looksCollection.add],
+//       {
+//         user: {
+//           id: userId,
+//           name: formValues.name,
+//           birthday: formValues.birthday,
+//         },
+//         items: things,
+//         picture_file: imageFullPath,
+//         date_published: firebase.firestore.FieldValue.serverTimestamp(),
+//         ...shopParams,
+//       },
+//     );
+//
+//     yield put({
+//       type: LOOK_UPLOAD_SUCCESS,
+//     });
+//
+//     Alert.alert(
+//       'Лук опубликован',
+//       null,
+//       [
+//         { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); } },
+//       ],
+//       { cancelable: false },
+//     );
+//   }
+// };
 
-export const publishLookSaga = function* ({
-  payload: {
-    userId, imageUri, formValues, shop, discount,
-  },
-}) {
+export const publishLookSaga = function* ({ payload }) {
   // TODO check and refactor, add clear image data after success uploading
+  const {
+    userId, imageUri, formValues, shop, discount,
+  } = payload;
   const looksCollection = firestore.collection('looks');
   const uuidImage = uuid();
   const fileExtension = getFileExtensionByString(imageUri);
@@ -154,25 +218,19 @@ export const publishLookSaga = function* ({
 
   const imageFile = yield fetch(imageUri);
   const imageBlob = yield imageFile.blob();
+  const fileStorage = yield firebase.storage().ref().child(imageFullPath);
 
   const store = yield select();
   const things = yield all(store[moduleName].things.toArray().map(item => item.toJS()));
-
-  const channelFileUpload = yield call(createFileUploadingChannel, [imageFullPath, imageBlob]);
 
   yield put({
     type: LOOK_UPLOAD_START,
   });
 
+  const fileSnapshot = yield call([fileStorage, fileStorage.put], imageBlob);
+  const fileUri = yield fileSnapshot.ref.getDownloadURL();
+
   try {
-    while (true) {
-      // take(END) will cause the saga to terminate by jumping to the finally block
-      const task = yield take(channelFileUpload);
-      console.log(`progress: ${task}`);
-    }
-  } catch (error) {
-    console.log('--- ERROR --- publishLookSaga ---', error);
-  } finally {
     const shopParams = yield discount === null ? { shop } : { shop, discount };
     // TODO fix required fields [birthday, name]
     yield call(
@@ -185,6 +243,7 @@ export const publishLookSaga = function* ({
         },
         items: things,
         picture_file: imageFullPath,
+        picture_uri: fileUri,
         date_published: firebase.firestore.FieldValue.serverTimestamp(),
         ...shopParams,
       },
@@ -202,6 +261,8 @@ export const publishLookSaga = function* ({
       ],
       { cancelable: false },
     );
+  } catch (error) {
+    console.log('--- ERROR --- publishLookSaga ---', error);
   }
 };
 

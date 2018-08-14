@@ -2,33 +2,26 @@
   "expo": {
     "sdkVersion": "28.0.0",
     "ios": {
-      "bundleIdentifier": "com.reactnative.looklike",
+      "bundleIdentifier": "com.looklike.app.ios",
       "publishBundlePath": "ios/app-reactnative/Supporting/shell-app.bundle",
-      "publishManifestPath": "ios/app-reactnative/Supporting/shell-app-manifest.json",
-      "splash": {
-        "image": "assets/icons/splash.png",
-        "tabletImage": "./assets/icons/splash.png",
-        "backgroundColor": "#00FF00",
-        "resizeMode": "contain"
-      }
+      "publishManifestPath": "ios/app-reactnative/Supporting/shell-app-manifest.json"
     },
     "android": {
-      "package": "com.looklike.looklike"
+      "package": "com.looklike.app.android"
     },
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "assets/icons/splash.png",
-      "tabletImage": "assets/icons/splash.png",
-      "backgroundColor": "#00FF00",
-      "resizeMode": "contain"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "assets/**"
+      "**/*"
     ],
     "orientation": "portrait",
     "name": "App-ReactNative",
     "slug": "app-reactnative",
-    "version": "0.2.0",
-    "icon": "assets/icon.png",
+    "version": "0.2.1",
     "isDetached": true,
     "detach": {
       "scheme": "exp63efba04234a45f4a3ee4f0f13c08739",

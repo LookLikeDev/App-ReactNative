@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
+// import { CacheManager, Image as CacheImage } from 'react-native-expo-image-cache';
 import {
   View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, LayoutAnimation,
 } from 'react-native';
@@ -117,7 +118,7 @@ export default class CardGeneral extends React.Component {
           {user.name.toUpperCase()}
         </Text>
         <View style={styles.imageWrap}>
-          <Image style={styles.image} source={uri && { uri }} />
+          <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
         </View>
         <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
           <View style={styles.dislikeSvg}>

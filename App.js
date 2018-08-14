@@ -4,6 +4,7 @@ import { Font, AppLoading } from 'expo';
 import { Provider } from 'react-redux';
 import store from './redux';
 import Root from './core/Root';
+
 import sfUiTextRegular from './assets/fonts/SF-UI-Text-Regular.ttf';
 import sfUiTextSemiBold from './assets/fonts/SF-UI-Text-Semibold.ttf';
 import sfUiTextBold from './assets/fonts/SF-UI-Text-Bold.ttf';

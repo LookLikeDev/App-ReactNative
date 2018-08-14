@@ -34,12 +34,12 @@ export default class LooksListGeneral extends React.Component {
   componentDidMount() {
     const { entities } = this.props;
 
-    if (entities.length === 0) this.handleGetUsers();
+    if (entities.length === 0) this.handleGetLooks();
   }
 
   keyExtractor = item => item.id;
 
-  handleGetUsers = () => {
+  handleGetLooks = () => {
     const {
       loading, loaded, fetchList, likedLooks, dislikedLooks,
     } = this.props;
@@ -100,8 +100,8 @@ export default class LooksListGeneral extends React.Component {
           extraData={this.props}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
-          onEndReached={this.handleGetUsers}
-          onEndReachedThreshold={0.4}
+          onEndReached={this.handleGetLooks}
+          onEndReachedThreshold={0.8}
           ListFooterComponent={this.renderFooter}
           ListHeaderComponent={Separator}
           ItemSeparatorComponent={Separator}

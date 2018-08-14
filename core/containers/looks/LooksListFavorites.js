@@ -6,6 +6,7 @@ import {
 import LooksListFavorites from '../../components/Looks/LooksListFavorites';
 
 const mapStateToProps = (state) => {
+  // TODO refactor 'entities' selector
   const entities = state[looksModule].entities.toArray().map(item => ({
     ...item.toJS(),
     items: item.items.toArray(),
