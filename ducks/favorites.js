@@ -229,42 +229,37 @@ export const fetchListSaga = function* (action) {
 };
 
 export const updateListSaga = function* (action) {
-  const db = firestore;
   const store = yield select();
   const { likedItems } = action.payload;
-  const entities = yield store[moduleName].get('entities');
-  const first = yield entities.first();
   const initialed = yield store[moduleName].get('initialed');
+  const first = yield store[moduleName].get('entities').first();
 
   try {
     if (initialed && likedItems !== null) {
-      let collection = yield db.collection('looks').where('user.id', '==', userId);
+      let items = yield all(Object.values(likedItems));
+
+      // a - b asc, b - a desc
+      items = items.sort((a, b) => b.date_liked.toDate() - a.date_liked.toDate());
 
       if (first) {
-        collection = collection
-          .where('date_published', '>', first.date_published.toDate())
-          .orderBy('date_published', 'desc');
-      } else {
-        collection = collection
-          .orderBy('date_published', 'desc')
-          .limit(10);
+        const firstMountedItem = yield items.find(item => item.id === first.get('id'));
+
+        if (firstMountedItem) {
+          items = yield all(items.filter(item => item.date_liked.toDate() > firstMountedItem.date_liked.toDate()));
+        }
       }
 
-      const querySnapshot = yield call([collection, collection.get]);
+      if (items.length > 0) {
+        let favorites = yield all(items.map(getSnapshot));
 
-      if (querySnapshot.docs.length > 0) {
-        let items = yield all(querySnapshot.docs.filter(
-          item => !entities.has(item.id),
-        ));
+        favorites = yield all(favorites.map(getData));
 
-        items = yield all(items.map(getData));
-
-        if (items.length > 0) {
-          yield put({
-            type: UPDATE_LIST_SUCCESS,
-            payload: { entities: items },
-          });
-        }
+        yield put({
+          type: UPDATE_LIST_SUCCESS,
+          payload: { entities: favorites },
+        });
+      } else {
+        yield put({ type: FETCH_LIST_LOADED_ALL });
       }
     }
   } catch (error) {
@@ -284,7 +279,7 @@ export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) 
   const votedItem = store[moduleName].getIn(['entities', lookId, 'items', thingId]).toJS();
 
   try {
-    const newItemsList = yield lookThingsList.map((recordItem) => {
+    const newItemsList = yield all(lookThingsList.map((recordItem) => {
       const item = recordItem.toJS();
 
       if (item.id !== thingId) return item;
@@ -303,7 +298,7 @@ export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) 
         ...item,
         counter_dislikes: item.counter_dislikes + 1,
       };
-    });
+    }));
 
     if (discount && !isReached && (votedItem.counter_likes + 1) >= discount.target_likes) {
       yield* createDiscount(discount, shop, user, votedItem, lookId);
