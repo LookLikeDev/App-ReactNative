@@ -69,7 +69,7 @@ export default class PublishThingForm extends React.Component {
           <Field name="price" labelText="Цена" keyboardType="number-pad" component={InputField} />
         </View>
         <View style={styles.submit}>
-          <Button title="Отменить" onPress={this.onCancel} />
+          <Button title="Отменить" onPress={this.onCancel} type="material" />
           <Button title="Сохранить" onPress={handleSubmit(this.onSave)} />
         </View>
       </ScrollView>
