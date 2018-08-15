@@ -85,6 +85,46 @@ export default class UserThing extends React.Component {
     );
   };
 
+  renderLeft = () => {
+    const { position: { x, y } } = this.props;
+    const locationX = Math.round(x * (wrapWidth / 100));
+    const locationY = Math.round(y * (wrapHeight / 100));
+
+    return (
+      <View style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}>
+        <View style={styles.icon}>
+          <SvgUri
+            width="16"
+            height="16"
+            fill="#FFFFFF"
+            source={labelSvg}
+          />
+        </View>
+        {this.renderHint()}
+      </View>
+    );
+  };
+
+  renderRight = () => {
+    const { position: { x, y } } = this.props;
+    const locationX = Math.round(x * (wrapWidth / 100));
+    const locationY = Math.round(y * (wrapHeight / 100));
+
+    return (
+      <View style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}>
+        {this.renderHint()}
+        <View style={styles.icon}>
+          <SvgUri
+            width="16"
+            height="16"
+            fill="#FFFFFF"
+            source={labelSvg}
+          />
+        </View>
+      </View>
+    );
+  };
+
   render() {
     const {
       position: { x, y },
@@ -111,19 +151,6 @@ export default class UserThing extends React.Component {
       );
     }
 
-    return (
-      <View style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}>
-        {isLeft && this.renderHint()}
-        <View style={styles.icon}>
-          <SvgUri
-            width="16"
-            height="16"
-            fill="#FFFFFF"
-            source={labelSvg}
-          />
-        </View>
-        {!isLeft && this.renderHint()}
-      </View>
-    );
+    return isLeft ? this.renderLeft() : this.renderRight();
   }
 }

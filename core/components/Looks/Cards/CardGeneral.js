@@ -76,10 +76,10 @@ export default class CardGeneral extends React.Component {
     data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
       }),
       shop: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
       }),
       items: PropTypes.arrayOf(PropTypes.object),
       picture_uri: PropTypes.string.isRequired,
@@ -93,7 +93,7 @@ export default class CardGeneral extends React.Component {
     onPressDislike: false,
   };
 
-  componentWillUnmount() { // triggered on like's click (we will remove the item)
+  componentWillUnmount() { // trigger on like's click (we will remove the item)
     LayoutAnimation.easeInEaseOut();
   }
 
@@ -110,13 +110,18 @@ export default class CardGeneral extends React.Component {
   };
 
   render() {
-    const { data: { user, picture_uri: uri } } = this.props;
+    const { data: { user, shop, picture_uri: uri } } = this.props;
+    const shopName = shop.name ? ` / ${shop.name}` : '';
+    const shopAddress = shop.address ? ` / ${shop.address}` : '';
+    const title = `${user.name}${shopName}${shopAddress}`;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>
-          {user.name.toUpperCase()}
-        </Text>
+        {title && (
+          <Text style={styles.text}>
+            {title.toUpperCase()}
+          </Text>
+        )}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
         </View>

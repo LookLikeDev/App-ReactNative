@@ -36,12 +36,17 @@ const styles = StyleSheet.create({
 
 export default class PublishThingForm extends React.Component {
   static propTypes = {
-    // from connect
     thingId: PropTypes.string.isRequired,
+    edit: PropTypes.bool,
+    // from connect
     saveThing: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    edit: false,
   };
 
   onSave = (values) => {
@@ -52,9 +57,9 @@ export default class PublishThingForm extends React.Component {
   };
 
   onCancel = () => {
-    const { thingId, removeThing } = this.props;
+    const { thingId, edit, removeThing } = this.props;
 
-    removeThing(thingId);
+    if (!edit) removeThing(thingId);
     Actions.pop();
   };
 
@@ -69,7 +74,7 @@ export default class PublishThingForm extends React.Component {
           <Field name="price" labelText="Цена" keyboardType="number-pad" component={InputField} />
         </View>
         <View style={styles.submit}>
-          <Button title="Отменить" onPress={this.onCancel} />
+          <Button title="Отменить" onPress={this.onCancel} type="material" />
           <Button title="Сохранить" onPress={handleSubmit(this.onSave)} />
         </View>
       </ScrollView>

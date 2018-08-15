@@ -9,7 +9,6 @@ const mapStateToProps = (state, ownProps) => {
   if (!thing) return {};
 
   return {
-    thingId: ownProps.thingId,
     initialValues: {
       name: thing.name || null,
       brand: thing.brand || null,

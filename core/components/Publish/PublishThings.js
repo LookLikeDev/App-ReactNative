@@ -13,6 +13,9 @@ const dimensions = Dimensions.get('window');
 const wrapHeight = Math.round((dimensions.width * 4) / 3);
 const wrapWidth = dimensions.width;
 
+// [ширина экрана / 2] - [половина ширины label] - [отступ hint] - [margin от края экрана]
+const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
+
 const styles = StyleSheet.create({
   label: {
     position: 'absolute',
@@ -29,9 +32,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'absolute',
-    width: 160,
     backgroundColor: '#FFFFFF',
     zIndex: 2,
+    width: 160,
+    maxWidth,
   },
   hintLeft: {
     top: 0,
@@ -187,7 +191,7 @@ export default class PublishThings extends React.Component {
             {brand && this.renderBrand(brand)}
             {price && this.renderPrice(price)}
             <TouchableOpacity
-              onPress={() => Actions.describeItem({ thingId: id })}
+              onPress={() => Actions.describeItem({ thingId: id, edit: true })}
               style={styles.edit}
             >
               <SvgUri

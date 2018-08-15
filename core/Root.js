@@ -41,7 +41,7 @@ export default class Root extends React.Component {
   render() {
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
-        <Modal hideNavBar>
+        <Modal key="root" hideNavBar>
           <Scene
             key="splashScreen"
             component={SplashScreen}
@@ -61,7 +61,7 @@ export default class Root extends React.Component {
               title="Избранное"
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
-            <Stack icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
+            <Modal key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
               <Scene
                 key="photo"
                 component={PhotoScreen}
@@ -77,7 +77,7 @@ export default class Root extends React.Component {
                 component={PublishLookScreen}
                 title="Публикация"
               />
-            </Stack>
+            </Modal>
             <Scene
               key="looks"
               component={LooksScreen}

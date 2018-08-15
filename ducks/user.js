@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
 import { Record } from 'immutable';
 import {
-  all, put, call, takeEvery, select,
+  all, put, call, takeEvery, takeLatest, select,
 } from 'redux-saga/effects';
 import { Actions } from 'react-native-router-flux';
 import { appName, firestore } from '../config';
@@ -39,7 +39,8 @@ export const SIGN_IN_ERROR = `${appName}/${moduleName}/SIGN_IN_ERROR`;
 export const SIGN_OUT_REQUEST = `${appName}/${moduleName}/SIGN_OUT_REQUEST`;
 export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 
-export const USER_INFO_UPDATE = `${appName}/${moduleName}/USER_INFO_UPDATE`;
+export const UPDATE_USER_INFO_REQUEST = `${appName}/${moduleName}/UPDATE_USER_INFO_REQUEST`;
+export const UPDATE_USER_INFO_SUCCESS = `${appName}/${moduleName}/UPDATE_USER_INFO_SUCCESS`;
 
 // LIKE LOOK
 export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
@@ -89,6 +90,10 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case SIGN_OUT_SUCCESS:
       return new ReducerRecord();
 
+    case UPDATE_USER_INFO_SUCCESS:
+      return userState
+        .set('user', new UserRecord(payload.user));
+
     case LOOK_LIKE_REQUEST:
       return userState
         .updateIn(['user', 'counter_looks_voted'], count => count + 1);
@@ -132,7 +137,7 @@ export function signIn() {
 
 export function updateUserInfo(formValues) {
   return {
-    type: USER_INFO_UPDATE,
+    type: UPDATE_USER_INFO_REQUEST,
     payload: { formValues },
   };
 }
@@ -179,7 +184,8 @@ export const signUpSaga = function* () {
   try {
     const usersCollection = yield firestore.collection('users');
 
-    const userSnapshot = yield call([usersCollection, usersCollection.add], { name: 'test' });
+    // const userSnapshot = yield call([usersCollection, usersCollection.add], { name: 'test' });
+    const userSnapshot = yield call([usersCollection, usersCollection.add]);
 
     yield call([AsyncStorage, AsyncStorage.setItem], '@User:id', userSnapshot.id);
 
@@ -237,8 +243,15 @@ export const updateUserInfoSaga = function* (action) {
   const store = yield select();
 
   try {
-    const userSnapshot = yield firestore.collection('users').doc(store[moduleName].id);
-    yield userSnapshot.update(formValues);
+    const userRef = yield firestore.collection('users').doc(store[moduleName].id);
+    yield userRef.update(formValues);
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    yield put({
+      type: UPDATE_USER_INFO_SUCCESS,
+      payload: { user: userSnapshot.data() },
+    });
   } catch (error) {
     console.log('error user update', error);
   }
@@ -378,8 +391,7 @@ export const saga = function* () {
   yield all([
     takeEvery(SIGN_UP_REQUEST, signUpSaga),
     takeEvery(SIGN_IN_REQUEST, signInSaga),
-    takeEvery(USER_INFO_UPDATE, updateUserInfoSaga),
-    // MOVE TO FAVORITES
+    takeLatest(UPDATE_USER_INFO_REQUEST, updateUserInfoSaga),
     takeEvery(LOOK_LIKE_REQUEST, likeSaga),
     takeEvery(LOOK_DISLIKE_REQUEST, dislikeSaga),
     takeEvery(USER_VOTED_RESET_REQUEST, resetVotedCounterSaga),
