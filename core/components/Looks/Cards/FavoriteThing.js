@@ -12,6 +12,16 @@ const dimensions = Dimensions.get('window');
 const wrapHeight = Math.round((dimensions.width * 4) / 3);
 const wrapWidth = dimensions.width;
 
+const hitSlop = {
+  top: 20,
+  left: 20,
+  bottom: 20,
+  right: 20,
+};
+
+// [ширина экрана / 2] - [половина ширины label] - [отступ hint] - [margin от края экрана]
+const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
+
 const styles = StyleSheet.create({
   label: {
     position: 'absolute',
@@ -40,21 +50,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'absolute',
-    width: 160,
     backgroundColor: '#FFFFFF',
     zIndex: 2,
+    width: 160,
+    maxWidth,
   },
   hintLeft: {
     top: 0,
-    right: 52,
+    right: 36 + 16,
   },
   hintRight: {
     top: 0,
-    left: 52,
+    left: 36 + 16,
   },
   triangleLeft: {
     position: 'absolute',
-    top: 14,
+    top: (36 / 2) - 4, // [label height / 2 - (triangle width / 2)]
     right: -8,
     width: 0,
     height: 0,
@@ -69,7 +80,7 @@ const styles = StyleSheet.create({
   },
   triangleRight: {
     position: 'absolute',
-    top: 14,
+    top: (36 / 2) - 4,
     left: -8,
     width: 0,
     height: 0,
@@ -153,7 +164,7 @@ export default class FavoriteThing extends React.Component {
   };
 
   state = {
-    isOpen: false,
+    isOpen: true,
     isShowLike: true,
     isShowDislike: true,
   };
@@ -302,7 +313,7 @@ export default class FavoriteThing extends React.Component {
 
     return (
       <View style={styleWrap}>
-        <TouchableOpacity onPress={() => this.setState({ isOpen: !isOpen })}>
+        <TouchableOpacity hitSlop={hitSlop} onPressIn={() => this.setState({ isOpen: !isOpen })}>
           {this.renderIcon()}
         </TouchableOpacity>
         {isOpen && (

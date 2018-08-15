@@ -9,15 +9,20 @@ export default class MarkItemsScreen extends React.Component {
     // from <Scene />
     title: PropTypes.string.isRequired,
     thingId: PropTypes.string.isRequired,
+    edit: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    edit: false,
   };
 
   render() {
-    const { title, thingId } = this.props;
+    const { title, thingId, edit } = this.props;
 
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <PublishThingForm thingId={thingId} />
+        <PublishThingForm thingId={thingId} edit={edit} />
       </View>
     );
   }

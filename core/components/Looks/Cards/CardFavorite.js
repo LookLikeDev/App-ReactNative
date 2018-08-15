@@ -41,10 +41,10 @@ export default class CardFavorite extends React.Component {
       id: PropTypes.string.isRequired,
       picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
       }),
       shop: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
       }),
       discount: PropTypes.shape({
         target_likes: PropTypes.number,
@@ -54,13 +54,16 @@ export default class CardFavorite extends React.Component {
   };
 
   render() {
-    const { data: { id, user, items, picture_uri: uri } } = this.props;
+    const { data: { id, user, shop, items, picture_uri: uri } } = this.props;
+    const shopName = shop.name ? ` / ${shop.name}` : '';
+    const shopAddress = shop.address ? ` / ${shop.address}` : '';
+    const title = `${user.name}${shopName}${shopAddress}`;
 
     return (
       <View style={styles.container}>
-        {user && (
+        {title && (
         <Text style={styles.text}>
-          {user.name.toUpperCase()}
+          {title.toUpperCase()}
         </Text>
         )}
         <View style={styles.imageWrap}>
