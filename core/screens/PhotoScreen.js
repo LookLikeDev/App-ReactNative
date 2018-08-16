@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Actions } from 'react-native-router-flux';
-import { Alert, View } from 'react-native';
+import {
+  Alert, View,
+} from 'react-native';
 import Header from '../components/Header';
 import PublishCamera from '../containers/publish/PublishCamera';
 
@@ -22,20 +24,22 @@ export default class PhotoScreen extends React.Component {
     const availableScreens = ['photo', 'describeItem', 'preferences', 'shopList', 'publishLook'];
 
     if (!availableScreens.some(item => item === Actions.currentScene)) {
-      Actions.refs.photo.getWrappedInstance().handleOnExit();
+      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene);
     }
   }
 
-  handleOnExit = () => {
+  handleOnExit = (prevScene) => {
     const { resetPublishStack, image } = this.props;
+
+    console.log(prevScene);
 
     if (image) {
       Alert.alert(
-        'Вы хотите сохраните изменения',
-        null,
+        'Если вы уйдете все данные будут потеряны',
+        '',
         [
-          { text: 'Удалить', onPress: resetPublishStack, style: 'cancel' },
-          { text: 'Сохранить' },
+          { text: 'Уйти', onPress: resetPublishStack, style: 'cancel' },
+          { text: 'Остаться', onPress: () => Actions[prevScene]() },
         ],
         { cancelable: false },
       );

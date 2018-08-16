@@ -8,6 +8,13 @@ import iconBack from '../../assets/icons/navbar/back.svg';
 import iconClose from '../../assets/icons/navbar/close.svg';
 import iconPreferences from '../../assets/icons/navbar/preferences.svg';
 
+const hitSlop = {
+  top: 20,
+  left: 20,
+  bottom: 20,
+  right: 20,
+};
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight + 12,
@@ -44,7 +51,7 @@ export default class NavBar extends React.Component {
     if (isHideLeftButton) return null;
 
     return (
-      <TouchableOpacity onPress={Actions.pop}>
+      <TouchableOpacity hitSlop={hitSlop} onPress={Actions.pop}>
         <SvgUri
           width="14"
           height="22"
@@ -56,7 +63,7 @@ export default class NavBar extends React.Component {
   };
 
   renderRight = isPreferences => (
-    <TouchableOpacity onPress={isPreferences ? Actions.pop : Actions.preferences}>
+    <TouchableOpacity hitSlop={hitSlop} onPress={isPreferences ? Actions.pop : Actions.preferences}>
       <SvgUri
         width="22"
         height="22"

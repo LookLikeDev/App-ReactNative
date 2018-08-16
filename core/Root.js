@@ -11,6 +11,7 @@ import {
 
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './containers/screens/MainScreen';
+import CameraScreen from './containers/screens/CameraScreen';
 import PhotoScreen from './containers/screens/PhotoScreen';
 import LooksScreen from './containers/screens/LooksScreen';
 import FavoritesScreen from './containers/screens/FavoritesScreen';
@@ -61,7 +62,11 @@ export default class Root extends React.Component {
               title="Избранное"
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
-            <Modal key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
+            <Scene key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
+              <Scene
+                key="camera"
+                component={CameraScreen}
+              />
               <Scene
                 key="photo"
                 component={PhotoScreen}
@@ -77,7 +82,7 @@ export default class Root extends React.Component {
                 component={PublishLookScreen}
                 title="Публикация"
               />
-            </Modal>
+            </Scene>
             <Scene
               key="looks"
               component={LooksScreen}
