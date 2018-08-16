@@ -9,6 +9,7 @@ import {
   View,
   Switch,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Button from '../Common/Button';
 import InputField from '../Common/InputField';
@@ -127,9 +128,11 @@ export default class PublishForm extends React.Component {
 
     if (uploading) {
       return (
-        <Text>
-          Loading
-        </Text>
+        <View style={{ flex: 1, alignSelf: 'stretch' }}>
+          <View style={{ marginBottom: 26 }}>
+            <ActivityIndicator animating size="large" />
+          </View>
+        </View>
       );
     }
 

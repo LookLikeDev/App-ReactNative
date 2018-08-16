@@ -25,7 +25,7 @@ export default class Header extends React.Component {
     return (
       <View style={styles.header}>
         <Text style={styles.title}>
-          {title.toUpperCase()}
+          {title && title.toUpperCase()}
         </Text>
       </View>
     );

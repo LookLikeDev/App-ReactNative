@@ -131,7 +131,7 @@ export function saveLook(userId, imageUri, formValues, shop, discount) {
 
 export function resetPublishStack() {
   return {
-    type: LOOK_UPLOAD_SUCCESS,
+    type: RESET_PUBLISH_STACK,
   };
 }
 
