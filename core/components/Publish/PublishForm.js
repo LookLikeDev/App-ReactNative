@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Button from '../Common/Button';
 import InputField from '../Common/InputField';
+import DateField from '../Common/DateField';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,6 +119,7 @@ export default class PublishForm extends React.Component {
     },
   }) => <Switch onChange={() => onChange(!value)} {...restInput} style={style} value={value} />;
 
+
   render() {
     const {
       shop, handleSubmit, uploading, uploaded,
@@ -147,7 +149,7 @@ export default class PublishForm extends React.Component {
           «Эта информация будет отображаться вместе с вашим луком»
         </Text>
         <Field name="name" labelText="Имя" component={InputField} />
-        <Field name="birthday" labelText="Дата рождения" component={InputField} />
+        <Field name="birthday" labelText="Дата рождения" component={DateField} />
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
             Магазин:

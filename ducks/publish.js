@@ -45,6 +45,8 @@ export const THING_ADD = `${appName}/${moduleName}/THING_ADD`;
 export const THING_SAVE = `${appName}/${moduleName}/THING_SAVE`;
 export const THING_REMOVE = `${appName}/${moduleName}/THING_REMOVE`;
 
+export const RESET_PUBLISH_STACK = `${appName}/${moduleName}/RESET_PUBLISH_STACK`;
+
 /**
  * Reducer
  */
@@ -71,6 +73,12 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState.set('uploading', true);
 
     case LOOK_UPLOAD_SUCCESS:
+      return looksState
+        .set('uploading', false)
+        .set('image', null)
+        .set('things', new OrderedMap({}));
+
+    case RESET_PUBLISH_STACK:
       return looksState
         .set('uploading', false)
         .set('image', null)
@@ -118,6 +126,12 @@ export function saveLook(userId, imageUri, formValues, shop, discount) {
     payload: {
       userId, imageUri, formValues, shop, discount,
     },
+  };
+}
+
+export function resetPublishStack() {
+  return {
+    type: LOOK_UPLOAD_SUCCESS,
   };
 }
 
@@ -232,15 +246,16 @@ export const publishLookSaga = function* ({ payload }) {
 
   try {
     const shopParams = yield discount === null ? { shop } : { shop, discount };
+
     // TODO fix required fields [birthday, name]
+    const userParams = formValues.publishAnonymous
+      ? { id: userId }
+      : { id: userId, name: formValues.name, birthday: formValues.birthday };
+
     yield call(
       [looksCollection, looksCollection.add],
       {
-        user: {
-          id: userId,
-          name: formValues.name,
-          birthday: formValues.birthday,
-        },
+        user: userParams,
         items: things,
         picture_file: imageFullPath,
         picture_uri: fileUri,
@@ -253,11 +268,11 @@ export const publishLookSaga = function* ({ payload }) {
       type: LOOK_UPLOAD_SUCCESS,
     });
 
-    Alert.alert(
+    yield Alert.alert(
       'Лук опубликован',
       null,
       [
-        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); Actions.main(); } },
+        { text: 'Продолжить', onPress: () => { Actions.main(); Actions.reset('tabs'); } },
       ],
       { cancelable: false },
     );

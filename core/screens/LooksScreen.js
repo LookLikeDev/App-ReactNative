@@ -16,14 +16,11 @@ export default class MainScreen extends React.Component {
   };
 
   static onEnter() {
-    console.log('ENTER');
     Actions.refs.looks.getWrappedInstance().handleOnEnter();
   }
 
   handleOnEnter = () => {
     const { initialed, updateList, userId } = this.props;
-
-    console.log('HANDLE');
 
     if (initialed) updateList(userId);
   };

@@ -7,7 +7,7 @@
 	<key>isShell</key>
 	<true/>
 	<key>isSplashScreenDisabled</key>
-	<true/>
+	<false/>
 	<key>manifestUrl</key>
 	<string>exp://exp.host/@gekistolyarov/app-reactnative</string>
 	<key>releaseChannel</key>

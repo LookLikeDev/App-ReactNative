@@ -13,7 +13,10 @@ export default class LooksListFavorites extends React.Component {
       id: PropTypes.string.isRequired,
       picture_uri: PropTypes.string.isRequired,
       user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
+      }),
+      shop: PropTypes.shape({
+        name: PropTypes.string,
       }),
       discount: PropTypes.shape({
         target_likes: PropTypes.number,
