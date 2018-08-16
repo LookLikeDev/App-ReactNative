@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import InputField from './Common/InputField';
 import SwitchField from './Common/SwitchField';
+import DateField from './Common/DateField';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,7 +57,7 @@ export default class PreferencesForm extends React.Component {
 
   onPreferencesChange = (values) => {
     const { updateUserInfo } = this.props;
-
+    console.log(values);
     updateUserInfo(values);
   };
 
@@ -83,7 +84,7 @@ export default class PreferencesForm extends React.Component {
         </Text>
         <View style={styles.dataGroup}>
           <Field name="name" labelText="Имя" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
-          <Field name="birthday" labelText="Дата рождения" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
+          <Field name="birthday" labelText="Дата рождения" component={DateField} handleChange={handleSubmit(this.onPreferencesChange)} />
           <Field name="is_female" labelText="Пол" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
           <Text style={[styles.text, styles.description]}>
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами

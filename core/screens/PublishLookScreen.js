@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Header from '../containers/Header';
 import PublishForm from '../containers/publish/PublishForm';
 
@@ -19,6 +20,14 @@ export default class PublishLookScreen extends React.Component {
       name: null,
     },
   };
+
+  static onExit() {
+    const availableScreens = ['photo', 'describeItem', 'preferences', 'shopList', 'publishLook'];
+
+    if (!availableScreens.some(item => item === Actions.currentScene)) {
+      Actions.refs.photo.getWrappedInstance().handleOnExit();
+    }
+  }
 
   render() {
     const { title, shop } = this.props;

@@ -107,11 +107,12 @@ export default class UserThing extends React.Component {
 
   renderRight = () => {
     const { position: { x, y } } = this.props;
-    const locationX = Math.round(x * (wrapWidth / 100));
+    // Формула подсчета иная так как вместо координаты left используется right
+    const locationX = Math.round(wrapWidth - (x * (wrapWidth / 100)));
     const locationY = Math.round(y * (wrapHeight / 100));
 
     return (
-      <View style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}>
+      <View style={[styles.label, { right: locationX - 18, top: locationY - 18 }]}>
         {this.renderHint()}
         <View style={styles.icon}>
           <SvgUri
@@ -134,7 +135,7 @@ export default class UserThing extends React.Component {
     const locationX = Math.round(x * (wrapWidth / 100));
     const locationY = Math.round(y * (wrapHeight / 100));
 
-    const isLeft = x > (100 / 2);
+    const isLeft = x < (100 / 2);
 
     if (isDiscount) {
       return (

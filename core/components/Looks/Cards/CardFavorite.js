@@ -55,9 +55,12 @@ export default class CardFavorite extends React.Component {
 
   render() {
     const { data: { id, user, shop, items, picture_uri: uri } } = this.props;
-    const shopName = shop.name ? ` / ${shop.name}` : '';
-    const shopAddress = shop.address ? ` / ${shop.address}` : '';
-    const title = `${user.name}${shopName}${shopAddress}`;
+
+    const userName = user.name ? `${user.name} / ` : '';
+    const shopName = shop.name ? `${shop.name}  / ` : '';
+    const shopAddress = shop.address ? `${shop.address}` : '';
+
+    const title = `${userName}${shopName}${shopAddress}`;
 
     return (
       <View style={styles.container}>

@@ -11,11 +11,11 @@ import {
 
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './containers/screens/MainScreen';
+import PhotoScreen from './containers/screens/PhotoScreen';
+import LooksScreen from './containers/screens/LooksScreen';
 import FavoritesScreen from './containers/screens/FavoritesScreen';
-import PhotoScreen from './screens/PhotoScreen';
 import DescribeItemScreen from './screens/DescribeItemScreen';
 import PublishLookScreen from './screens/PublishLookScreen';
-import LooksScreen from './containers/screens/LooksScreen';
 import LookDetailScreen from './screens/LookDetailScreen';
 import DiscountsListScreen from './screens/DiscountsListScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';

@@ -5,18 +5,22 @@ import { moduleName as userModule } from '../../../ducks/user';
 import { saveLook, moduleName as publishModule } from '../../../ducks/publish';
 import { moduleName as discountsModule } from '../../../ducks/shops';
 
-const mapStateToProps = (state, { shop }) => ({
-  userId: state[userModule].id,
-  image: state[publishModule].image,
-  uploading: state[publishModule].uploading,
-  uploaded: state[publishModule].uploaded,
-  discount: state[discountsModule].getIn(['entities', shop.id, 'discount']),
-  initialValues: {
-    name: state[userModule].getIn(['user', 'name']),
-    birthday: state[userModule].getIn(['user', 'birthday']),
-    publishAnonymous: false,
-  },
-});
+const mapStateToProps = (state, { shop }) => {
+  const birthday = state[userModule].getIn(['user', 'birthday']);
+
+  return {
+    userId: state[userModule].id,
+    image: state[publishModule].image,
+    uploading: state[publishModule].uploading,
+    uploaded: state[publishModule].uploaded,
+    discount: state[discountsModule].getIn(['entities', shop.id, 'discount']),
+    initialValues: {
+      name: state[userModule].getIn(['user', 'name']),
+      birthday: birthday ? birthday.toDate() : null,
+      publishAnonymous: false,
+    },
+  }
+};
 
 const mapDispatchToProps = {
   saveLook,

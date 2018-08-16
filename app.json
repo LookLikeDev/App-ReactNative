@@ -4,7 +4,12 @@
     "ios": {
       "bundleIdentifier": "com.looklike.app.ios",
       "publishBundlePath": "ios/app-reactnative/Supporting/shell-app.bundle",
-      "publishManifestPath": "ios/app-reactnative/Supporting/shell-app-manifest.json"
+      "publishManifestPath": "ios/app-reactnative/Supporting/shell-app-manifest.json",
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#ffffff"
+      }
     },
     "android": {
       "package": "com.looklike.app.android"
@@ -12,7 +17,7 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -21,7 +26,7 @@
     "orientation": "portrait",
     "name": "App-ReactNative",
     "slug": "app-reactnative",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "isDetached": true,
     "detach": {
       "scheme": "exp63efba04234a45f4a3ee4f0f13c08739",

@@ -13,7 +13,13 @@ export default class LooksListGeneral extends React.Component {
     entities: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
+      }),
+      shop: PropTypes.shape({
+        name: PropTypes.string,
+      }),
+      discount: PropTypes.shape({
+        target_likes: PropTypes.number,
       }),
       items: PropTypes.arrayOf(PropTypes.object),
       picture_uri: PropTypes.string.isRequired,

@@ -3,15 +3,19 @@ import { connect } from 'react-redux';
 import PreferencesForm from '../components/PreferencesForm';
 import { moduleName as userModule, updateUserInfo } from '../../ducks/user';
 
-const mapStateToProps = state => ({
-  userId: state[userModule].id,
-  initialValues: {
-    name: state[userModule].getIn(['user', 'name']),
-    birthday: state[userModule].getIn(['user', 'birthday']),
-    is_female: state[userModule].getIn(['user', 'is_female']),
-    publishAnonymous: false,
-  },
-});
+const mapStateToProps = (state) => {
+  const birthday = state[userModule].getIn(['user', 'birthday']);
+
+  return {
+    userId: state[userModule].id,
+    initialValues: {
+      name: state[userModule].getIn(['user', 'name']),
+      birthday: birthday ? birthday.toDate() : null,
+      is_female: state[userModule].getIn(['user', 'is_female']),
+      publishAnonymous: false,
+    },
+  };
+};
 
 const mapDispatchToProps = {
   updateUserInfo,
