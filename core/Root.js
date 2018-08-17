@@ -15,10 +15,10 @@ import CameraScreen from './containers/screens/CameraScreen';
 import PhotoScreen from './containers/screens/PhotoScreen';
 import LooksScreen from './containers/screens/LooksScreen';
 import FavoritesScreen from './containers/screens/FavoritesScreen';
+import DiscountsListScreen from './containers/screens/DiscountsListScreen';
 import DescribeItemScreen from './screens/DescribeItemScreen';
 import PublishLookScreen from './screens/PublishLookScreen';
 import LookDetailScreen from './screens/LookDetailScreen';
-import DiscountsListScreen from './screens/DiscountsListScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
 import ShopList from './screens/ShopList';
@@ -73,11 +73,6 @@ export default class Root extends React.Component {
                 title="Мой LOOK"
               />
               <Scene
-                key="describeItem"
-                component={DescribeItemScreen}
-                title="Описать вещь"
-              />
-              <Scene
                 key="publishLook"
                 component={PublishLookScreen}
                 title="Публикация"
@@ -102,6 +97,12 @@ export default class Root extends React.Component {
               />
             </Stack>
           </Tabs>
+          <Scene
+            key="describeItem"
+            component={DescribeItemScreen}
+            title="Описать вещь"
+            hideNavBar={false}
+          />
           <Scene
             key="shopList"
             component={ShopList}

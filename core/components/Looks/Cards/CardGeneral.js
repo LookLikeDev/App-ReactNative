@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '15deg' }],
     position: 'absolute',
     right: 20,
-    bottom: -31,
+    bottom: 8, // -31
     zIndex: 2,
   },
   dislike: {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-15deg' }],
     position: 'absolute',
     left: 20,
-    bottom: -31,
+    bottom: 8, // -31
     zIndex: 2,
   },
   likeSvg: {

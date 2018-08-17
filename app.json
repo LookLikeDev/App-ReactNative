@@ -21,12 +21,12 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "./assets/**/*"
     ],
     "orientation": "portrait",
     "name": "App-ReactNative",
     "slug": "app-reactnative",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "isDetached": true,
     "detach": {
       "scheme": "exp63efba04234a45f4a3ee4f0f13c08739",

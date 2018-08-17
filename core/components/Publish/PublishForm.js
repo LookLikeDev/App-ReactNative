@@ -92,12 +92,13 @@ export default class PublishForm extends React.Component {
     uploaded: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    saveLook: PropTypes.func.isRequired,
     discount: PropTypes.shape({
       days: PropTypes.number,
       target_likes: PropTypes.number,
       value: PropTypes.number,
     }),
+    saveLook: PropTypes.func.isRequired,
+    setUserInfo: PropTypes.func.isRequired,
     // from reduxForm
     handleSubmit: PropTypes.func.isRequired,
   };
@@ -108,9 +109,10 @@ export default class PublishForm extends React.Component {
 
   onSubmit = (values) => {
     const {
-      image, userId, shop, discount, saveLook,
+      image, userId, shop, discount, saveLook, setUserInfo,
     } = this.props;
 
+    setUserInfo(values.name || null, values.birthday || null);
     saveLook(userId, image, values, shop, discount);
   };
 

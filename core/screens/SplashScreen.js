@@ -2,18 +2,39 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  View, Text,
+  View, Text, StyleSheet, Button,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { moduleName as userModuleName, signIn } from '../../ducks/user';
 import { moduleName as discountsModuleName, fetchList } from '../../ducks/discounts';
-import Button from '../components/Common/Button';
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 26,
+  },
+  title: {
+    fontFamily: 'SF-UI-Text-Semibold',
+    color: '#000000',
+    fontSize: 16,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  description: {
+    fontFamily: 'SF-UI-Text-Regular',
+    fontSize: 13,
+    lineHeight: 18,
+    color: '#A1A1A1',
+    textAlign: 'center',
+  },
+});
 
 // TODO don't forget to delete this component
 class SplashScreen extends React.Component {
   static propTypes = {
     // from connect
     userId: PropTypes.string,
+    isNetworkError: PropTypes.bool.isRequired,
     loadingDiscounts: PropTypes.bool.isRequired,
     loadedDiscounts: PropTypes.bool.isRequired,
     auth: PropTypes.func.isRequired,
@@ -47,20 +68,25 @@ class SplashScreen extends React.Component {
   }
 
   render() {
-    const { userId } = this.props;
+    const { userId, isNetworkError, auth } = this.props;
+
+    if (isNetworkError) {
+      return (
+        <View style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', alignContent: 'center' }}>
+          <View style={styles.container}>
+            <Text style={styles.title}>
+              Не удалось установить соединение.
+            </Text>
+            <Text style={styles.description}>
+              Проверьте доступ в интернет или попробуйте повторить вход позже.
+            </Text>
+            <Button onPress={auth} title="Повторить подключение" />
+          </View>
+        </View>
+      );
+    }
 
     return null;
-
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>
-          User Token:
-          {' '}
-          { userId }
-        </Text>
-        <Button title="На главную" onPress={() => Actions.push('main')} />
-      </View>
-    );
   }
 }
 
@@ -68,6 +94,7 @@ export default connect(state => ({
   loadingDiscounts: state[discountsModuleName].loading,
   loadedDiscounts: state[discountsModuleName].loaded,
   userId: state[userModuleName].id,
+  isNetworkError: state[userModuleName].isNetworkError,
 }), {
   auth: signIn,
   fetchDiscountsList: fetchList,

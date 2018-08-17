@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
 import { Actions } from 'react-native-router-flux';
 import Button from '../Common/Button';
 import PublishThings from './PublishThings';
@@ -18,17 +17,6 @@ import PublishThings from './PublishThings';
 const dimensions = Dimensions.get('window');
 const wrapHeight = Math.round((dimensions.width * 4) / 3);
 const wrapWidth = dimensions.width;
-
-const options = {
-  title: 'Выберите LOOK',
-  mediaType: 'photo',
-  maxWidth: 1080,
-  noData: true, // {true} disable base64 encoded image data
-  storageOptions: {
-    cameraRoll: true,
-  },
-  quality: 0.5,
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -73,26 +61,11 @@ export default class PublishCamera extends React.Component {
     image: PropTypes.string,
     things: PropTypes.arrayOf(PropTypes.object).isRequired,
     addThing: PropTypes.func.isRequired,
-    addImage: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     image: null,
-  };
-
-  showPicker = () => {
-    const { addImage } = this.props;
-
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        // console.log('User cancelled image picker');
-      } else if (response.error) {
-        // console.log('ImagePicker Error: ', response.error);
-      } else {
-        addImage(response.uri);
-      }
-    });
   };
 
   handleSubmit = () => {
@@ -123,11 +96,11 @@ export default class PublishCamera extends React.Component {
 
     return (
       <View style={{ flex: 1, alignSelf: 'stretch' }}>
-        <ScrollView contentContainerStyle={{ alignSelf: 'stretch' }}>
+        <ScrollView style={{ marginBottom: 20 }} contentContainerStyle={{ alignSelf: 'stretch' }}>
           {image
           && (
             <React.Fragment>
-              <View style={{ marginBottom: 20 }}>
+              <View>
                 <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
                   <Image
                     source={{ uri: image }}
@@ -136,24 +109,23 @@ export default class PublishCamera extends React.Component {
                   <PublishThings items={things} removeThing={removeThing} />
                 </TouchableOpacity>
               </View>
-              {things.length === 0 && (
-                <View style={styles.textWrap}>
-                  <Text style={styles.welcome}>
-                    Отметь свой LOOK и получи скидку
-                  </Text>
-                  <Text style={styles.instructions}>
-                    Для публикации лука и получения скидки,
-                    отметьте одну или несколько вещей для голосования».
-                  </Text>
-                </View>
-              )}
             </React.Fragment>
           )}
-          <View style={styles.buttonWrap}>
-            {image && things.length > 0 && <Button title="Опубликовать LOOK" onPress={this.handleSubmit} />}
-            {!image && <Button title="Создать LOOK" onPress={this.showPicker} />}
-          </View>
         </ScrollView>
+        {things.length === 0 && (
+          <View style={styles.textWrap}>
+            <Text style={styles.welcome}>
+              Нажмите на вещи и опишите их
+            </Text>
+            <Text style={styles.instructions}>
+              Для публикации лука и получения скидки,
+              отметьте одну или несколько вещей для голосования.
+            </Text>
+          </View>
+        )}
+        <View style={styles.buttonWrap}>
+          {image && things.length > 0 && <Button title="Опубликовать LOOK" onPress={this.handleSubmit} />}
+        </View>
       </View>
     );
   }

@@ -19,6 +19,13 @@ const hitSlop = {
   right: 20,
 };
 
+const hitSlopSmall = {
+  top: 5,
+  left: 5,
+  bottom: 5,
+  right: 5,
+};
+
 // [ширина экрана / 2] - [половина ширины label] - [отступ hint] - [margin от края экрана]
 const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
 
@@ -253,7 +260,7 @@ export default class FavoriteThing extends React.Component {
     }
 
     return (
-      <TouchableOpacity onPress={() => this.handleVote(true)} style={styles.like}>
+      <TouchableOpacity hitSlop={hitSlopSmall} onPress={() => this.handleVote(true)} style={styles.like}>
         <SvgUri
           width="14"
           height="14"
@@ -283,7 +290,7 @@ export default class FavoriteThing extends React.Component {
     }
 
     return (
-      <TouchableOpacity onPress={() => this.handleVote(false)} style={styles.dislike}>
+      <TouchableOpacity hitSlop={hitSlopSmall} onPress={() => this.handleVote(false)} style={styles.dislike}>
         <SvgUri
           width="14"
           height="14"

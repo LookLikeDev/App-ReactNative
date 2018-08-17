@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   View,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -32,40 +33,64 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
   },
+  required: {
+    color: '#FC4600',
+  },
+  validateText: {
+    fontFamily: 'SF-UI-Text-Regular',
+    color: '#FC4600',
+    fontSize: 16,
+    marginHorizontal: 20,
+  },
   orange: {
     color: '#FC4600',
   },
 });
 
 export default class InputField extends React.Component {
+  textInputRef = null;
+
   static propTypes = {
     labelText: PropTypes.string.isRequired,
     keyboardType: PropTypes.string,
     inputTextOrange: PropTypes.bool,
     handleChange: PropTypes.func,
+    required: PropTypes.bool,
   };
 
   static defaultProps = {
     inputTextOrange: false,
+    required: false,
     handleChange: null,
     keyboardType: 'default',
   };
 
   render() {
     const {
-      labelText, inputTextOrange, handleChange, keyboardType,
-      input: { onChange, onBlur, onFocus, value, ...restInput },
+      labelText, inputTextOrange, handleChange, keyboardType, required,
+      input: {
+        onChange, onBlur, onFocus, value, ...restInput
+      },
       meta: { touched, error, warning },
     } = this.props;
 
     return (
       <React.Fragment>
         <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>
-            {labelText}
-            :
-          </Text>
+          <TouchableWithoutFeedback onPressIn={() => this.textInputRef.focus()}>
+            <View>
+              <Text style={styles.inputLabel}>
+                {labelText}
+                :
+                {required && (
+                <Text style={styles.required}>
+                  *
+                </Text>)}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
           <TextInput
+            {...restInput}
             onChangeText={onChange}
             onEndEditing={handleChange}
             keyboardType={keyboardType}
@@ -73,11 +98,14 @@ export default class InputField extends React.Component {
             style={[styles.inputText, inputTextOrange && styles.orange]}
             onBlur={onBlur}
             onFocus={onFocus}
-            {...restInput}
+            ref={(input) => { this.textInputRef = input; }}
           />
         </View>
-        {/*<Text>{touched ? 'da' : 'net'}</Text>
-        {touched && ((error && <Text>Error: {error}</Text>) || (warning && <Text>Warning: {warning}</Text>))}*/}
+        {touched && error && (
+        <Text style={styles.validateText}>
+          Обязательно для заполнения
+        </Text>
+        )}
       </React.Fragment>
     );
   }

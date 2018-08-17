@@ -1,8 +1,8 @@
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PublishForm from '../../components/Publish/PublishForm';
-import { moduleName as userModule } from '../../../ducks/user';
-import { saveLook, moduleName as publishModule } from '../../../ducks/publish';
+import { moduleName as userModule, setUserInfo } from '../../../ducks/user';
+import { moduleName as publishModule, saveLook } from '../../../ducks/publish';
 import { moduleName as discountsModule } from '../../../ducks/shops';
 
 const mapStateToProps = (state, { shop }) => {
@@ -19,11 +19,12 @@ const mapStateToProps = (state, { shop }) => {
       birthday: birthday ? birthday.toDate() : null,
       publishAnonymous: false,
     },
-  }
+  };
 };
 
 const mapDispatchToProps = {
   saveLook,
+  setUserInfo,
 };
 
 // TODO create selectors for entities

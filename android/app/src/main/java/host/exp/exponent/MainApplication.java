@@ -10,7 +10,6 @@ import expolib_v1.okhttp3.OkHttpClient;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
-import com.imagepicker.ImagePickerPackage;
 
 public class MainApplication extends ExpoApplication {
 
@@ -26,8 +25,7 @@ public class MainApplication extends ExpoApplication {
         // TODO: add native modules!
 
         // Needed for `react-native link`
-        // new MainReactPackage(),
-            new ImagePickerPackage()
+        // new MainReactPackage()
     );
   }
 
