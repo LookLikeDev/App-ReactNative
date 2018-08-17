@@ -29,10 +29,17 @@ export default class DiscountsList extends React.Component {
     setDiscountsViewDate: PropTypes.func.isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { setDiscountsViewDate } = this.props;
 
     setDiscountsViewDate();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { setDiscountsViewDate, entities: currentEntities } = this.props;
+    const { entities: prevEntities } = prevProps;
+
+    if (currentEntities.length > prevEntities.length) setDiscountsViewDate();
   }
 
   render() {

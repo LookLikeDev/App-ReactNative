@@ -66,7 +66,7 @@ export default class ShopsList extends React.Component {
     input: '',
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { shop, fetchList, loaded } = this.props;
 
     this.setState({ input: shop.name === null ? '' : shop.name });

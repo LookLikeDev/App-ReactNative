@@ -88,7 +88,9 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState.set('voting', true);
 
     case ADD_VOTE_SUCCESS:
-      return looksState.set('voting', false);
+      return looksState
+        .set('voting', false)
+        .updateIn(['entities', payload.lookId, 'items'], items => items.merge(arrToMap(payload.items, ThingRecord)));
 
     default:
       return looksState;
@@ -310,6 +312,7 @@ export const addVoteSaga = function* ({ payload: { thingId, lookId, isLike } }) 
 
     yield put({
       type: ADD_VOTE_SUCCESS,
+      payload: { items: newItemsList, lookId },
     });
   } catch (error) {
     console.log('ERROR', error);

@@ -24,6 +24,7 @@ export const ReducerRecord = Record({
   error: null,
   loading: false,
   uploading: false,
+  isNetworkError: false,
 });
 
 /**
@@ -85,6 +86,7 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case SIGN_IN_ERROR:
       return userState
         .set('loading', false)
+        .set('isNetworkError', true)
         .set('error', error);
 
     case SIGN_OUT_SUCCESS:
@@ -185,7 +187,7 @@ export const signUpSaga = function* () {
     const usersCollection = yield firestore.collection('users');
 
     // const userSnapshot = yield call([usersCollection, usersCollection.add], { name: 'test' });
-    const userSnapshot = yield call([usersCollection, usersCollection.add]);
+    const userSnapshot = yield call([usersCollection, usersCollection.add], {});
 
     yield call([AsyncStorage, AsyncStorage.setItem], '@User:id', userSnapshot.id);
 
@@ -196,6 +198,7 @@ export const signUpSaga = function* () {
 
     yield call(Actions.main);
   } catch (error) {
+    console.log(error);
     yield put({
       type: SIGN_IN_ERROR,
       error,
@@ -389,8 +392,8 @@ export const thingVoteSaga = function* ({ payload }) {
 
 export const saga = function* () {
   yield all([
-    takeEvery(SIGN_UP_REQUEST, signUpSaga),
-    takeEvery(SIGN_IN_REQUEST, signInSaga),
+    takeLatest(SIGN_UP_REQUEST, signUpSaga),
+    takeLatest(SIGN_IN_REQUEST, signInSaga),
     takeLatest(UPDATE_USER_INFO_REQUEST, updateUserInfoSaga),
     takeEvery(LOOK_LIKE_REQUEST, likeSaga),
     takeEvery(LOOK_DISLIKE_REQUEST, dislikeSaga),

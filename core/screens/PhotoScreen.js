@@ -31,8 +31,6 @@ export default class PhotoScreen extends React.Component {
   handleOnExit = (prevScene) => {
     const { resetPublishStack, image } = this.props;
 
-    console.log(prevScene);
-
     if (image) {
       Alert.alert(
         'Если вы уйдете все данные будут потеряны',

@@ -57,7 +57,7 @@ export default class PreferencesForm extends React.Component {
 
   onPreferencesChange = (values) => {
     const { updateUserInfo } = this.props;
-    console.log(values);
+
     updateUserInfo(values);
   };
 

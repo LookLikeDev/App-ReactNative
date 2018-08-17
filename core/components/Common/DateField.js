@@ -80,8 +80,6 @@ export default class DateField extends React.Component {
     } = this.props;
     const { isDateTimePickerVisible } = this.state;
 
-    console.log(value);
-
     return (
       <React.Fragment>
         <TouchableOpacity style={styles.inputGroup} onPress={this.showDateTimePicker}>

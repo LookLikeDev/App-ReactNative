@@ -64,7 +64,7 @@ export default class CameraScreen extends React.Component {
     firstImageFromGallery: null,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     const results = await Promise.all([
       Permissions.askAsync(Permissions.CAMERA),
       Permissions.askAsync(Permissions.CAMERA_ROLL),
