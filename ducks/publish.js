@@ -272,7 +272,7 @@ export const publishLookSaga = function* ({ payload }) {
       'Лук опубликован',
       null,
       [
-        { text: 'Продолжить', onPress: () => { Actions.main(); Actions.reset('tabs'); } },
+        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); } },
       ],
       { cancelable: false },
     );

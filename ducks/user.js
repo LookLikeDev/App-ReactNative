@@ -43,6 +43,9 @@ export const SIGN_OUT_SUCCESS = `${appName}/${moduleName}/SIGN_OUT_SUCCESS`;
 export const UPDATE_USER_INFO_REQUEST = `${appName}/${moduleName}/UPDATE_USER_INFO_REQUEST`;
 export const UPDATE_USER_INFO_SUCCESS = `${appName}/${moduleName}/UPDATE_USER_INFO_SUCCESS`;
 
+export const SET_USER_INFO_REQUEST = `${appName}/${moduleName}/SET_USER_INFO_REQUEST`;
+export const SET_USER_INFO_SUCCESS = `${appName}/${moduleName}/SET_USER_INFO_SUCCESS`;
+
 // LIKE LOOK
 export const LOOK_LIKE_REQUEST = `${appName}/${moduleName}/LOOK_LIKE_REQUEST`;
 export const LOOK_LIKE_SUCCESS = `${appName}/${moduleName}/LOOK_LIKE_SUCCESS`;
@@ -144,6 +147,13 @@ export function updateUserInfo(formValues) {
   };
 }
 
+export function setUserInfo(name, birthday) {
+  return {
+    type: SET_USER_INFO_REQUEST,
+    payload: { name, birthday },
+  };
+}
+
 export function lookLike(item, userId) {
   return {
     type: LOOK_LIKE_REQUEST,
@@ -240,6 +250,11 @@ export const signInSaga = function* () {
   }
 };
 
+/**
+ * Генератор обновляющией данные пользователя из формы в настройках
+ * @param action
+ * @returns {IterableIterator<*>}
+ */
 export const updateUserInfoSaga = function* (action) {
   // TODO добавить уведомление что данные и правда корректно сохранились
   const { formValues } = action.payload;
@@ -248,6 +263,35 @@ export const updateUserInfoSaga = function* (action) {
   try {
     const userRef = yield firestore.collection('users').doc(store[moduleName].id);
     yield userRef.update(formValues);
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    yield put({
+      type: UPDATE_USER_INFO_SUCCESS,
+      payload: { user: userSnapshot.data() },
+    });
+  } catch (error) {
+    console.log('error user update', error);
+  }
+};
+
+/**
+ * Генератор добавляющий данные пользователя из формы публикации если он их до этого не добавлял
+ * @param action
+ * @returns {IterableIterator<*>}
+ */
+export const setUserInfoSaga = function* ({ payload: { name, birthday } }) {
+  const store = yield select();
+  const currentUserName = yield store[moduleName].getIn(['user', 'name']);
+  const currentUserBirthday = yield store[moduleName].getIn(['user', 'birthday']);
+
+  try {
+    const userRef = yield firestore.collection('users').doc(store[moduleName].id);
+
+    yield userRef.update({
+      ...name && !currentUserName && { name },
+      ...birthday && !currentUserBirthday && { birthday },
+    });
 
     const userSnapshot = yield call([userRef, userRef.get]);
 
@@ -395,6 +439,7 @@ export const saga = function* () {
     takeLatest(SIGN_UP_REQUEST, signUpSaga),
     takeLatest(SIGN_IN_REQUEST, signInSaga),
     takeLatest(UPDATE_USER_INFO_REQUEST, updateUserInfoSaga),
+    takeEvery(SET_USER_INFO_REQUEST, setUserInfoSaga),
     takeEvery(LOOK_LIKE_REQUEST, likeSaga),
     takeEvery(LOOK_DISLIKE_REQUEST, dislikeSaga),
     takeEvery(USER_VOTED_RESET_REQUEST, resetVotedCounterSaga),

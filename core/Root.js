@@ -73,11 +73,6 @@ export default class Root extends React.Component {
                 title="Мой LOOK"
               />
               <Scene
-                key="describeItem"
-                component={DescribeItemScreen}
-                title="Описать вещь"
-              />
-              <Scene
                 key="publishLook"
                 component={PublishLookScreen}
                 title="Публикация"
@@ -102,6 +97,12 @@ export default class Root extends React.Component {
               />
             </Stack>
           </Tabs>
+          <Scene
+            key="describeItem"
+            component={DescribeItemScreen}
+            title="Описать вещь"
+            hideNavBar={false}
+          />
           <Scene
             key="shopList"
             component={ShopList}

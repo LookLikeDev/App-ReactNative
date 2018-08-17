@@ -24,24 +24,36 @@ export default class PhotoScreen extends React.Component {
     const availableScreens = ['photo', 'describeItem', 'preferences', 'shopList', 'publishLook'];
 
     if (!availableScreens.some(item => item === Actions.currentScene)) {
-      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene);
+      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene, Actions.currentScene);
     }
   }
 
-  handleOnExit = (prevScene) => {
-    const { resetPublishStack, image } = this.props;
+  handleOnExit = (prevScene, currentScene) => {
+    const { image } = this.props;
 
     if (image) {
       Alert.alert(
         'Если вы уйдете все данные будут потеряны',
         '',
         [
-          { text: 'Уйти', onPress: resetPublishStack, style: 'cancel' },
+          {
+            text: 'Уйти',
+            onPress: () => this.handleResetScene(currentScene),
+            style: 'cancel',
+          },
           { text: 'Остаться', onPress: () => Actions[prevScene]() },
         ],
         { cancelable: false },
       );
     }
+  };
+
+  handleResetScene = (currentScene) => {
+    const { resetPublishStack } = this.props;
+
+    resetPublishStack();
+    Actions.replace('camera');
+    Actions[currentScene]();
   };
 
   render() {

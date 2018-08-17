@@ -21,7 +21,7 @@ export default class MarkItemsScreen extends React.Component {
     const availableScreens = ['photo', 'describeItem', 'preferences', 'shopList', 'publishLook'];
 
     if (!availableScreens.some(item => item === Actions.currentScene)) {
-      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene);
+      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene, Actions.currentScene);
     }
   }
 
