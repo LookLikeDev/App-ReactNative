@@ -5,6 +5,9 @@ import {
   View, Text, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+
+import Pan from '../Common/Pan';
+
 import labelSvg from '../../../assets/icons/look/label.svg';
 import editSvg from '../../../assets/icons/look/edit.svg';
 import removeSvg from '../../../assets/icons/look/remove.svg';
@@ -129,6 +132,8 @@ export default class PublishThings extends React.Component {
         price: PropTypes.number,
       }),
     ),
+    onDragBegin: PropTypes.func.isRequired,
+    onDragEnd: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
   };
 
@@ -157,7 +162,7 @@ export default class PublishThings extends React.Component {
   );
 
   renderItem = (item) => {
-    const { removeThing } = this.props;
+    const { removeThing, onDragBegin, onDragEnd } = this.props;
     const {
       id, name, brand, price, position: { x, y },
     } = item;
@@ -171,20 +176,25 @@ export default class PublishThings extends React.Component {
     const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
     const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
 
+    if (!name) return null;
+
     return (
-      <View
+      <Pan
         key={id}
-        style={[styles.label, { left: locationX - 18, top: locationY - 18 }]}
-        // onPress={() => console.log('mark mark mark mark')}
+        onDragBegin={onDragBegin}
+        onDragEnd={onDragEnd}
+        initialCoordinates={{
+          x: locationX - 18,
+          y: locationY - 18,
+        }}
       >
-        <SvgUri
-          width="16"
-          height="16"
-          fill="#FFFFFF"
-          source={labelSvg}
-        />
-        {name
-        && (
+        <View style={styles.label}>
+          <SvgUri
+            width="16"
+            height="16"
+            fill="#FFFFFF"
+            source={labelSvg}
+          />
           <View style={styleHint}>
             <View style={styleTriangle} />
             {name && this.renderName(name)}
@@ -210,8 +220,8 @@ export default class PublishThings extends React.Component {
               />
             </TouchableOpacity>
           </View>
-        )}
-      </View>
+        </View>
+      </Pan>
     );
   };
 

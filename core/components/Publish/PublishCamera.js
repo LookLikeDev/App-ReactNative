@@ -68,6 +68,10 @@ export default class PublishCamera extends React.Component {
     image: null,
   };
 
+  state = {
+    scrollEnabled: true,
+  };
+
   handleSubmit = () => {
     Actions.publishLook();
   };
@@ -91,12 +95,21 @@ export default class PublishCamera extends React.Component {
     Actions.describeItem({ hideBackButton: true, thingId });
   };
 
+  handleDragBegin = () => this.setState({ scrollEnabled: false });
+
+  handleDragEnd = () => this.setState({ scrollEnabled: true });
+
   render() {
     const { image, things, removeThing } = this.props;
+    const { scrollEnabled } = this.state;
 
     return (
       <View style={{ flex: 1, alignSelf: 'stretch' }}>
-        <ScrollView style={{ marginBottom: 20 }} contentContainerStyle={{ alignSelf: 'stretch' }}>
+        <ScrollView
+          style={{ marginBottom: 20 }}
+          contentContainerStyle={{ alignSelf: 'stretch' }}
+          scrollEnabled={scrollEnabled}
+        >
           {image
           && (
             <React.Fragment>
@@ -106,7 +119,12 @@ export default class PublishCamera extends React.Component {
                     source={{ uri: image }}
                     style={{ width: wrapWidth, height: wrapHeight }}
                   />
-                  <PublishThings items={things} removeThing={removeThing} />
+                  <PublishThings
+                    items={things}
+                    removeThing={removeThing}
+                    onDragBegin={this.handleDragBegin}
+                    onDragEnd={this.handleDragEnd}
+                  />
                 </TouchableOpacity>
               </View>
             </React.Fragment>
