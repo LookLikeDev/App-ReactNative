@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
+    marginLeft: -18,
+    marginTop: -18,
   },
   hint: {
     borderRadius: 8,
@@ -135,6 +137,7 @@ export default class PublishThings extends React.Component {
     onDragBegin: PropTypes.func.isRequired,
     onDragEnd: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
+    updateThing: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -162,7 +165,9 @@ export default class PublishThings extends React.Component {
   );
 
   renderItem = (item) => {
-    const { removeThing, onDragBegin, onDragEnd } = this.props;
+    const {
+      removeThing, updateThing, onDragBegin, onDragEnd,
+    } = this.props;
     const {
       id, name, brand, price, position: { x, y },
     } = item;
@@ -181,11 +186,13 @@ export default class PublishThings extends React.Component {
     return (
       <Pan
         key={id}
+        id={id}
         onDragBegin={onDragBegin}
         onDragEnd={onDragEnd}
+        updateThing={updateThing}
         initialCoordinates={{
-          x: locationX - 18,
-          y: locationY - 18,
+          x: locationX,
+          y: locationY,
         }}
       >
         <View style={styles.label}>

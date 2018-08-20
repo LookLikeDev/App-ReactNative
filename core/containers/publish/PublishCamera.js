@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-  moduleName, addThing, removeThing,
+  moduleName, addThing, updateThing, removeThing,
 } from '../../../ducks/publish';
 import PublishCamera from '../../components/Publish/PublishCamera';
 
@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addThing,
+  updateThing,
   removeThing,
 };
 

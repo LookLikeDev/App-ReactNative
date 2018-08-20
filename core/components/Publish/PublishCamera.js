@@ -62,6 +62,7 @@ export default class PublishCamera extends React.Component {
     things: PropTypes.arrayOf(PropTypes.object).isRequired,
     addThing: PropTypes.func.isRequired,
     removeThing: PropTypes.func.isRequired,
+    updateThing: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -100,7 +101,7 @@ export default class PublishCamera extends React.Component {
   handleDragEnd = () => this.setState({ scrollEnabled: true });
 
   render() {
-    const { image, things, removeThing } = this.props;
+    const { image, things, removeThing, updateThing } = this.props;
     const { scrollEnabled } = this.state;
 
     return (
@@ -122,6 +123,7 @@ export default class PublishCamera extends React.Component {
                   <PublishThings
                     items={things}
                     removeThing={removeThing}
+                    updateThing={updateThing}
                     onDragBegin={this.handleDragBegin}
                     onDragEnd={this.handleDragEnd}
                   />

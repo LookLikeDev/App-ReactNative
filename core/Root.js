@@ -45,92 +45,86 @@ export default class Root extends React.Component {
   render() {
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
-        <Overlay key="overlay">
-          <Modal key="modal" hideNavBar>
-            <Lightbox key="lightbox">
-              <Stack key="root" hideNavBar>
-                <Scene
-                  key="splashScreen"
-                  component={SplashScreen}
-                  title="Splash Screen"
-                  icon={({ focused }) => <TabIcon type="main" selected={focused} />}
-                />
-                <Tabs key="tabs" showLabel={false} swipeEnabled={false} animationEnabled={false}>
-                  <Scene
-                    key="main"
-                    component={MainScreen}
-                    title="Look Like"
-                    icon={({ focused }) => <TabIcon type="main" selected={focused} />}
-                  />
-                  <Scene
-                    key="favorites"
-                    component={FavoritesScreen}
-                    title="Избранное"
-                    icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
-                  />
-                  <Scene key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
-                    <Scene
-                      key="camera"
-                      component={CameraScreen}
-                    />
-                    <Scene
-                      key="photo"
-                      component={PhotoScreen}
-                      title="Мой LOOK"
-                    />
-                    <Scene
-                      key="publishLook"
-                      component={PublishLookScreen}
-                      title="Публикация"
-                    />
-                  </Scene>
-                  <Scene
-                    key="looks"
-                    component={LooksScreen}
-                    title="Мои луки"
-                    icon={({ focused }) => <TabIcon type="looks" selected={focused} />}
-                  />
-                  <Stack key="discounts" icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}>
-                    <Scene
-                      key="discountsList"
-                      component={DiscountsListScreen}
-                      title="Мои скидки"
-                    />
-                    <Scene
-                      key="discountsDetail"
-                      component={DiscountsDetailScreen}
-                      title="Промо-код"
-                    />
-                  </Stack>
-                </Tabs>
-                <Scene
-                  key="describeItem"
-                  component={DescribeItemScreen}
-                  title="Описать вещь"
-                  hideNavBar={false}
-                />
-                <Scene
-                  key="shopList"
-                  component={ShopList}
-                  title="Выбор магазина"
-                  hideNavBar={false}
-                />
-                <Scene
-                  key="lookDetail"
-                  component={LookDetailScreen}
-                  title="Комментарии"
-                  hideNavBar={false}
-                />
-                <Scene
-                  key="preferences"
-                  component={PreferencesScreen}
-                  title="Настройки"
-                  hideNavBar={false}
-                />
-              </Stack>
-            </Lightbox>
-          </Modal>
-        </Overlay>
+        <Stack key="root" hideNavBar>
+          <Scene
+            key="splashScreen"
+            component={SplashScreen}
+            title="Splash Screen"
+            icon={({ focused }) => <TabIcon type="main" selected={focused} />}
+          />
+          <Tabs key="tabs" showLabel={false} swipeEnabled={false} animationEnabled={false}>
+            <Scene
+              key="main"
+              component={MainScreen}
+              title="Look Like"
+              icon={({ focused }) => <TabIcon type="main" selected={focused} />}
+            />
+            <Scene
+              key="favorites"
+              component={FavoritesScreen}
+              title="Избранное"
+              icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
+            />
+            <Stack key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
+              <Scene
+                key="camera"
+                component={CameraScreen}
+              />
+              <Scene
+                key="photo"
+                component={PhotoScreen}
+                title="Мой LOOK"
+              />
+              <Scene
+                key="publishLook"
+                component={PublishLookScreen}
+                title="Публикация"
+              />
+            </Stack>
+            <Scene
+              key="looks"
+              component={LooksScreen}
+              title="Мои луки"
+              icon={({ focused }) => <TabIcon type="looks" selected={focused} />}
+            />
+            <Stack key="discounts" icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}>
+              <Scene
+                key="discountsList"
+                component={DiscountsListScreen}
+                title="Мои скидки"
+              />
+              <Scene
+                key="discountsDetail"
+                component={DiscountsDetailScreen}
+                title="Промо-код"
+              />
+            </Stack>
+          </Tabs>
+          <Modal
+            key="describeItem"
+            component={DescribeItemScreen}
+            title="Описать вещь"
+            hideNavBar={false}
+          />
+          <Scene
+            key="shopList"
+            component={ShopList}
+            title="Выбор магазина"
+            hideNavBar={false}
+          />
+          <Scene
+            key="lookDetail"
+            component={LookDetailScreen}
+            title="Комментарии"
+            hideNavBar={false}
+          />
+          <Modal
+            key="preferences"
+            component={PreferencesScreen}
+            title="Настройки"
+            hideNavBar={false}
+          />
+        </Stack>
       </ReduxRouter>
     );
   }

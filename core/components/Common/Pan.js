@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PanResponder, StyleSheet, View } from 'react-native';
+import {
+  PanResponder, StyleSheet, View, Dimensions,
+} from 'react-native';
+
+const dimensions = Dimensions.get('window');
+const wrapHeight = Math.round((dimensions.width * 4) / 3);
+const wrapWidth = dimensions.width;
 
 const styles = StyleSheet.create({
   circle: {
@@ -12,6 +18,8 @@ const styles = StyleSheet.create({
 
 export default class PanResponderExample extends React.Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
+    updateThing: PropTypes.func.isRequired,
     onDragBegin: PropTypes.func.isRequired,
     onDragEnd: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
@@ -50,25 +58,13 @@ export default class PanResponderExample extends React.Component {
   }
 
   highlight = () => {
-    const { onDragBegin } = this.props;
-
-    if (onDragBegin) {
-      onDragBegin();
-    }
-
     this.circleStyles.style.backgroundColor = 'blue';
     this.updateNativeStyles();
   };
 
   unHighlight = () => {
-    const { onDragEnd } = this.props;
-
     this.circleStyles.style.backgroundColor = 'green';
     this.updateNativeStyles();
-
-    if (onDragEnd) {
-      onDragEnd();
-    }
   };
 
   updateNativeStyles = () => {
@@ -79,7 +75,14 @@ export default class PanResponderExample extends React.Component {
 
   handleMoveShouldSetPanResponder = (e, gestureState) => true;
 
+  // DRAG START
   handlePanResponderGrant = (e, gestureState) => {
+    const { onDragBegin } = this.props;
+
+    if (onDragBegin) {
+      onDragBegin();
+    }
+
     this.highlight();
   };
 
@@ -89,10 +92,21 @@ export default class PanResponderExample extends React.Component {
     this.updateNativeStyles();
   };
 
+  // DRAG END
   handlePanResponderEnd = (e, gestureState) => {
+    const { onDragEnd, updateThing, id } = this.props;
+
     this.unHighlight();
     this.previousLeft += gestureState.dx;
     this.previousTop += gestureState.dy;
+
+    if (onDragEnd) {
+      const x = Math.round(this.previousLeft / (wrapWidth / 100));
+      const y = Math.round(this.previousTop / (wrapHeight / 100));
+
+      onDragEnd();
+      updateThing(id, { x, y });
+    }
   };
 
   render() {

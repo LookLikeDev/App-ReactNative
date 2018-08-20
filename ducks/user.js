@@ -288,17 +288,19 @@ export const setUserInfoSaga = function* ({ payload: { name, birthday } }) {
   try {
     const userRef = yield firestore.collection('users').doc(store[moduleName].id);
 
-    yield userRef.update({
-      ...name && !currentUserName && { name },
-      ...birthday && !currentUserBirthday && { birthday },
-    });
+    if ((name && !currentUserName) || (birthday && !currentUserBirthday)) {
+      yield userRef.update({
+        ...name && !currentUserName && { name },
+        ...birthday && !currentUserBirthday && { birthday },
+      });
 
-    const userSnapshot = yield call([userRef, userRef.get]);
+      const userSnapshot = yield call([userRef, userRef.get]);
 
-    yield put({
-      type: UPDATE_USER_INFO_SUCCESS,
-      payload: { user: userSnapshot.data() },
-    });
+      yield put({
+        type: UPDATE_USER_INFO_SUCCESS,
+        payload: { user: userSnapshot.data() },
+      });
+    }
   } catch (error) {
     console.log('error user update', error);
   }

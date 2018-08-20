@@ -52,7 +52,6 @@ export default class CameraScreen extends React.Component {
 
   static propTypes = {
     // from connect
-    // TODO сделать обнуление данных если пользователь попал на этот экран
     resetPublishStack: PropTypes.func.isRequired,
     addImage: PropTypes.func.isRequired,
   };
