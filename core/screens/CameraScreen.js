@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
 import { Actions } from 'react-native-router-flux';
 import {
-  Alert, View, CameraRoll, TouchableOpacity, Image, Text, StyleSheet,
+  View, CameraRoll, TouchableOpacity, Image, Text, StyleSheet,
 } from 'react-native';
 import { Camera, ImagePicker, Permissions } from 'expo';
 import cameraButtonSvg from '../../assets/icons/camera/cameraButton.svg';
@@ -52,7 +52,6 @@ export default class CameraScreen extends React.Component {
 
   static propTypes = {
     // from connect
-    // TODO сделать обнуление данных если пользователь попал на этот экран
     resetPublishStack: PropTypes.func.isRequired,
     addImage: PropTypes.func.isRequired,
   };

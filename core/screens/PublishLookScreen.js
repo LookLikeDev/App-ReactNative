@@ -21,11 +21,14 @@ export default class PublishLookScreen extends React.Component {
     },
   };
 
-  static onExit() {
+  static onExit(props) {
     const availableScreens = ['photo', 'describeItem', 'preferences', 'shopList', 'publishLook'];
 
     if (!availableScreens.some(item => item === Actions.currentScene)) {
-      Actions.refs.photo.getWrappedInstance().handleOnExit(Actions.prevScene, Actions.currentScene);
+      const { prevScene, currentScene } = Actions;
+
+      Actions.refs.photo
+      && Actions.refs.photo.getWrappedInstance().handleOnExit(prevScene, currentScene);
     }
   }
 

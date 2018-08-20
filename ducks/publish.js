@@ -6,7 +6,7 @@ import {
   all, put, call, take, takeEvery, select,
 } from 'redux-saga/effects';
 import { Alert } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { appName, firestore } from '../config';
 import { getFileExtensionByString } from '../core/utils';
 
@@ -43,6 +43,7 @@ export const LOOK_UPLOAD_SUCCESS = `${appName}/${moduleName}/LOOK_UPLOAD_SUCCESS
 
 export const THING_ADD = `${appName}/${moduleName}/THING_ADD`;
 export const THING_SAVE = `${appName}/${moduleName}/THING_SAVE`;
+export const THING_UPDATE = `${appName}/${moduleName}/THING_UPDATE`;
 export const THING_REMOVE = `${appName}/${moduleName}/THING_REMOVE`;
 
 export const RESET_PUBLISH_STACK = `${appName}/${moduleName}/RESET_PUBLISH_STACK`;
@@ -59,6 +60,9 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 
     case THING_ADD:
       return looksState.setIn(['things', payload.thing.id], new ThingRecord(payload.thing));
+
+    case THING_UPDATE:
+      return looksState.setIn(['things', payload.thingId, 'position'], payload.position);
 
     case THING_SAVE:
       return looksState
@@ -103,6 +107,13 @@ export function addThing(thing) {
   return {
     type: THING_ADD,
     payload: { thing },
+  };
+}
+
+export function updateThing(thingId, position) {
+  return {
+    type: THING_UPDATE,
+    payload: { thingId, position },
   };
 }
 
@@ -268,11 +279,13 @@ export const publishLookSaga = function* ({ payload }) {
       type: LOOK_UPLOAD_SUCCESS,
     });
 
+    yield Actions.replace('camera');
+
     yield Alert.alert(
       'Лук опубликован',
       null,
       [
-        { text: 'Продолжить', onPress: () => { Actions.reset('tabs'); } },
+        { text: 'Продолжить', onPress: () => { Actions.main(); } },
       ],
       { cancelable: false },
     );

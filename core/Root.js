@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  Overlay,
   Modal,
+  Lightbox,
   Scene,
   Stack,
   Tabs,
@@ -12,6 +14,7 @@ import {
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './containers/screens/MainScreen';
 import CameraScreen from './containers/screens/CameraScreen';
+// import CameraScreen2 from './screens/CameraScreen2';
 import PhotoScreen from './containers/screens/PhotoScreen';
 import LooksScreen from './containers/screens/LooksScreen';
 import FavoritesScreen from './containers/screens/FavoritesScreen';
@@ -42,14 +45,14 @@ export default class Root extends React.Component {
   render() {
     return (
       <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
-        <Modal key="root" hideNavBar>
+        <Stack key="root" hideNavBar>
           <Scene
             key="splashScreen"
             component={SplashScreen}
             title="Splash Screen"
             icon={({ focused }) => <TabIcon type="main" selected={focused} />}
           />
-          <Tabs key="tabs" showLabel={false}>
+          <Tabs key="tabs" showLabel={false} swipeEnabled={false} animationEnabled={false}>
             <Scene
               key="main"
               component={MainScreen}
@@ -62,7 +65,7 @@ export default class Root extends React.Component {
               title="Избранное"
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
-            <Scene key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
+            <Stack key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
               <Scene
                 key="camera"
                 component={CameraScreen}
@@ -77,7 +80,7 @@ export default class Root extends React.Component {
                 component={PublishLookScreen}
                 title="Публикация"
               />
-            </Scene>
+            </Stack>
             <Scene
               key="looks"
               component={LooksScreen}
@@ -97,7 +100,7 @@ export default class Root extends React.Component {
               />
             </Stack>
           </Tabs>
-          <Scene
+          <Modal
             key="describeItem"
             component={DescribeItemScreen}
             title="Описать вещь"
@@ -115,13 +118,13 @@ export default class Root extends React.Component {
             title="Комментарии"
             hideNavBar={false}
           />
-          <Scene
+          <Modal
             key="preferences"
             component={PreferencesScreen}
             title="Настройки"
             hideNavBar={false}
           />
-        </Modal>
+        </Stack>
       </ReduxRouter>
     );
   }
