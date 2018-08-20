@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Actions } from 'react-native-router-flux';
-import { View } from 'react-native';
+import { View, Button } from 'react-native';
 import Header from '../containers/Header';
 import DiscountsList from '../containers/discounts/DiscountsList';
 
@@ -31,6 +31,7 @@ export default class DiscountsListScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
+        <Button onPress={Actions.discountsDetail()} title="GO to discountsDetail" />
         <DiscountsList />
       </View>
     );

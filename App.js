@@ -11,6 +11,7 @@ import sfUiTextBold from './assets/fonts/SF-UI-Text-Bold.ttf';
 import sfProDisplayBlack from './assets/fonts/SF-Pro-Display-Black.ttf';
 import sfProDisplayBold from './assets/fonts/SF-Pro-Display-Bold.ttf';
 import sfProDisplaySemiBold from './assets/fonts/SF-Pro-Display-Semibold.ttf';
+import barcode128 from './assets/fonts/Barcode-128.ttf';
 import './config';
 
 // TODO just do it;
@@ -32,6 +33,7 @@ export default class App extends React.Component {
     'SF-Pro-Display-Black': sfProDisplayBlack,
     'SF-Pro-Display-Bold': sfProDisplayBold,
     'SF-Pro-Display-SemiBold': sfProDisplaySemiBold,
+    'Barcode-128': barcode128,
   });
 
   render() {

@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Overlay,
   Modal,
-  Lightbox,
   Scene,
   Stack,
   Tabs,
@@ -14,7 +12,6 @@ import {
 import SplashScreen from './screens/SplashScreen';
 import MainScreen from './containers/screens/MainScreen';
 import CameraScreen from './containers/screens/CameraScreen';
-// import CameraScreen2 from './screens/CameraScreen2';
 import PhotoScreen from './containers/screens/PhotoScreen';
 import LooksScreen from './containers/screens/LooksScreen';
 import FavoritesScreen from './containers/screens/FavoritesScreen';
