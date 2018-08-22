@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   View, Text, Image, StyleSheet, Dimensions,
 } from 'react-native';
-import UserThing from './UserThing';
+import UserThing from '../../../containers/looks/cards/UserThing';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -58,7 +58,9 @@ export default class CardUser extends React.Component {
 
   render() {
     const {
-      data: { user, shop, discount, items, picture_uri: uri },
+      data: {
+        user, shop, discount, items, picture_uri: uri,
+      },
     } = this.props;
 
     const userName = user.name ? `${user.name} / ` : '';

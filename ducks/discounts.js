@@ -23,6 +23,7 @@ const DiscountRecord = Record({
   shop: null, // need record
   look_id: null,
   item: null, // need record
+  promocode: null, // need record
 });
 
 /**

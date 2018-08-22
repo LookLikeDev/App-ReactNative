@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SvgUri from 'react-native-svg-uri';
+import { Actions } from 'react-native-router-flux';
 import {
-  View, Text, StyleSheet, Dimensions,
+  View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback,
 } from 'react-native';
 import labelSvg from '../../../../assets/icons/look/label.svg';
 import percentSvg from '../../../../assets/icons/look/percent.svg';
@@ -52,6 +53,8 @@ const styles = StyleSheet.create({
 
 export default class UserThing extends React.Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
+    discountId: PropTypes.string,
     counter_likes: PropTypes.number,
     is_discount_reached: PropTypes.bool,
     position: PropTypes.shape({
@@ -67,6 +70,7 @@ export default class UserThing extends React.Component {
 
   static defaultProps = {
     counter_likes: 0,
+    discountId: null,
     is_discount_reached: false,
     discount: null,
   };
@@ -130,6 +134,7 @@ export default class UserThing extends React.Component {
     const {
       position: { x, y },
       is_discount_reached: isDiscount = false,
+      discountId,
     } = this.props;
 
     const locationX = Math.round(x * (wrapWidth / 100));
@@ -137,18 +142,20 @@ export default class UserThing extends React.Component {
 
     const isLeft = x < (100 / 2);
 
-    if (isDiscount) {
+    if (isDiscount && discountId) {
       return (
-        <View style={[styles.label, { left: locationX, top: locationY }]}>
-          <View style={styles.percentIcon}>
-            <SvgUri
-              width="16"
-              height="16"
-              fill="#FFFFFF"
-              source={percentSvg}
-            />
+        <TouchableWithoutFeedback onPress={() => Actions.discountsDetail({ discountId })}>
+          <View style={[styles.label, { left: locationX, top: locationY }]}>
+            <View style={styles.percentIcon}>
+              <SvgUri
+                width="16"
+                height="16"
+                fill="#FFFFFF"
+                source={percentSvg}
+              />
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       );
     }
 

@@ -151,7 +151,7 @@ export default class PublishForm extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <Text style={[styles.text, styles.subTitle]}>
-          «Эта информация будет отображаться вместе с вашим луком»
+          Эта информация будет отображаться вместе с вашим луком
         </Text>
         <Field name="name" labelText="Имя" component={InputField} />
         <Field name="birthday" labelText="Дата рождения" component={DateField} />

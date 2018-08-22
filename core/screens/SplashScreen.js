@@ -52,7 +52,7 @@ class SplashScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (snapshot !== null) Actions.push('main');
+    if (snapshot !== null) Actions.main({ type: 'replace' });
   }
 
   getSnapshotBeforeUpdate() {

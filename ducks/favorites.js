@@ -4,7 +4,7 @@ import {
   all, put, call, takeEvery, takeLatest, select,
 } from 'redux-saga/effects';
 import { appName, firestore } from '../config';
-import { arrToMap } from '../core/utils';
+import { arrToMap, generatePromoCode } from '../core/utils';
 
 export const ReducerRecord = Record({
   entities: new OrderedMap({}), // OrderedMap of LookRecord
@@ -171,6 +171,10 @@ const createDiscount = function* (discount, shop, user, item, lookId) {
           shop,
           look_id: lookId,
           item,
+          promocode: {
+            type: 'barcode',
+            value: generatePromoCode(12),
+          },
         },
       );
     } catch (error) {
