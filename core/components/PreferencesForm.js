@@ -6,7 +6,11 @@ import {
   Text,
   ScrollView,
   View,
+  Button,
+  TouchableOpacity,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Actions } from 'react-native-router-flux';
 import InputField from './Common/InputField';
 import SwitchField from './Common/SwitchField';
 import DateField from './Common/DateField';
@@ -27,7 +31,6 @@ const styles = StyleSheet.create({
   },
   description: {
     paddingTop: 12,
-    marginBottom: 20,
   },
   dataGroup: {
     paddingBottom: 24,
@@ -44,6 +47,19 @@ const styles = StyleSheet.create({
   submit: {
     marginHorizontal: 20,
     marginBottom: 24,
+  },
+  link: {
+    height: 56,
+    marginLeft: 20,
+    paddingRight: 12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  linkText: {
+    fontFamily: 'SF-Pro-Display-SemiBold',
+    fontSize: 16,
+    color: '#000000',
   },
 });
 
@@ -80,7 +96,7 @@ export default class PreferencesForm extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.dataGroupTitle}>
-          {('личные данные').toUpperCase()}
+          {('Личные данные').toUpperCase()}
         </Text>
         <View style={styles.dataGroup}>
           <Field name="name" labelText="Имя" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
@@ -90,6 +106,17 @@ export default class PreferencesForm extends React.Component {
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
           </Text>
         </View>
+        <Text style={styles.dataGroupTitle}>
+          {('Информация').toUpperCase()}
+        </Text>
+        <TouchableOpacity onPress={Actions.policy}>
+          <View style={styles.link}>
+            <Text style={styles.linkText}>
+              Политика конфиденциальности
+            </Text>
+            <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     );
   }

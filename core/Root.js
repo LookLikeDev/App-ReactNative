@@ -23,6 +23,7 @@ import LookDetailScreen from './screens/LookDetailScreen';
 import DiscountsDetailScreen from './screens/DiscountsDetailScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
 import ShopList from './screens/ShopList';
+import PolicyScreen from './screens/PolicyScreen';
 
 import TabIcon from './containers/TabIcon';
 
@@ -122,7 +123,7 @@ export default class Root extends React.Component {
               />
             </Stack>
           </Tabs>
-          <Modal
+          <Scene
             key="describeItem"
             title="Описать вещь"
             component={DescribeItemScreen}
@@ -155,10 +156,19 @@ export default class Root extends React.Component {
             component={LookDetailScreen}
             hideNavBar={false}
           />
-          <Modal
+          <Scene
             key="preferences"
             title="Настройки"
             component={PreferencesScreen}
+            renderBackButton={() => <Text />}
+            renderRightButton={() => <CloseButton />}
+            renderTitle={() => <Text />}
+            hideNavBar={false}
+          />
+          <Scene
+            key="policy"
+            title="Политика конфиденциальности"
+            component={PolicyScreen}
             renderBackButton={() => <Text />}
             renderRightButton={() => <CloseButton />}
             renderTitle={() => <Text />}
