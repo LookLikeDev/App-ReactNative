@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Text } from 'react-native';
 import {
   Modal,
   Scene,
@@ -24,7 +25,10 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import ShopList from './screens/ShopList';
 
 import TabIcon from './containers/TabIcon';
-import NavBar from './components/NavBar';
+
+import LeftButton from './components/NavBar/LeftButton';
+import PreferencesButton from './components/NavBar/PreferencesButton';
+import CloseButton from './components/NavBar/CloseButton';
 
 const ReduxRouter = connect()(({ dispatch, children, ...props }) => (
   <Router
@@ -41,25 +45,39 @@ const ReduxRouter = connect()(({ dispatch, children, ...props }) => (
 export default class Root extends React.Component {
   render() {
     return (
-      <ReduxRouter sceneStyle={{ backgroundColor: '#FFFFFF' }} navBar={NavBar}>
+      <ReduxRouter
+        sceneStyle={{ backgroundColor: '#FFFFFF' }}
+        navigationBarStyle={{
+          backgroundColor: '#FFFFFF',
+          borderBottomWidth: 0,
+          marginHorizontal: 20,
+          height: 44,
+        }}
+      >
         <Stack key="root" hideNavBar>
           <Scene
             key="splashScreen"
-            component={SplashScreen}
             title="Splash Screen"
+            component={SplashScreen}
             icon={({ focused }) => <TabIcon type="main" selected={focused} />}
           />
           <Tabs key="tabs" showLabel={false} swipeEnabled={false} animationEnabled={false}>
             <Scene
               key="main"
-              component={MainScreen}
               title="Look Like"
+              component={MainScreen}
+              renderBackButton={() => <LeftButton />}
+              renderRightButton={() => <PreferencesButton />}
+              renderTitle={() => <Text />}
               icon={({ focused }) => <TabIcon type="main" selected={focused} />}
             />
             <Scene
               key="favorites"
-              component={FavoritesScreen}
               title="Избранное"
+              component={FavoritesScreen}
+              renderBackButton={() => <LeftButton />}
+              renderRightButton={() => <PreferencesButton />}
+              renderTitle={() => <Text />}
               icon={({ focused }) => <TabIcon type="favorites" selected={focused} showCount />}
             />
             <Stack key="photoStack" icon={({ focused }) => <TabIcon type="camera" selected={focused} />}>
@@ -69,56 +87,81 @@ export default class Root extends React.Component {
               />
               <Scene
                 key="photo"
-                component={PhotoScreen}
                 title="Мой LOOK"
+                component={PhotoScreen}
+                renderBackButton={() => <LeftButton />}
+                renderRightButton={() => <PreferencesButton />}
+                renderTitle={() => <Text />}
               />
               <Scene
                 key="publishLook"
-                component={PublishLookScreen}
                 title="Публикация"
+                component={PublishLookScreen}
+                renderBackButton={() => <LeftButton />}
+                renderRightButton={() => <PreferencesButton />}
+                renderTitle={() => <Text />}
               />
             </Stack>
             <Scene
               key="looks"
-              component={LooksScreen}
               title="Мои луки"
+              component={LooksScreen}
+              renderBackButton={() => <LeftButton />}
+              renderRightButton={() => <PreferencesButton />}
+              renderTitle={() => <Text />}
               icon={({ focused }) => <TabIcon type="looks" selected={focused} />}
             />
             <Stack key="discounts" icon={({ focused }) => <TabIcon type="discounts" selected={focused} showCount />}>
               <Scene
                 key="discountsList"
-                component={DiscountsListScreen}
                 title="Мои скидки"
-              />
-              <Scene
-                key="discountsDetail"
-                component={DiscountsDetailScreen}
-                title="Промо-код"
+                component={DiscountsListScreen}
+                renderBackButton={() => <LeftButton />}
+                renderRightButton={() => <PreferencesButton />}
+                renderTitle={() => <Text />}
               />
             </Stack>
           </Tabs>
           <Modal
             key="describeItem"
-            component={DescribeItemScreen}
             title="Описать вещь"
+            component={DescribeItemScreen}
+            renderBackButton={() => <LeftButton />}
+            renderRightButton={() => <PreferencesButton />}
+            renderTitle={() => <Text />}
+            hideNavBar={false}
+          />
+          <Scene
+            key="discountsDetail"
+            title="Промо-код"
+            component={DiscountsDetailScreen}
+            renderBackButton={() => <LeftButton />}
+            renderRightButton={() => <PreferencesButton />}
+            renderTitle={() => <Text />}
             hideNavBar={false}
           />
           <Scene
             key="shopList"
-            component={ShopList}
             title="Выбор магазина"
+            component={ShopList}
+            renderBackButton={() => <LeftButton />}
+            renderRightButton={() => <PreferencesButton />}
+            renderTitle={() => <Text />}
             hideNavBar={false}
           />
           <Scene
             key="lookDetail"
-            component={LookDetailScreen}
             title="Комментарии"
+            component={LookDetailScreen}
             hideNavBar={false}
           />
           <Modal
             key="preferences"
-            component={PreferencesScreen}
             title="Настройки"
+            component={PreferencesScreen}
+            renderBackButton={() => <Text />}
+            renderRightButton={() => <CloseButton />}
+            renderTitle={() => <Text />}
             hideNavBar={false}
           />
         </Stack>

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import {
+  View, Text, TouchableWithoutFeedback, StyleSheet,
+} from 'react-native';
 
 const styles = StyleSheet.create({
   item: {
@@ -101,7 +104,7 @@ export default class DiscountItem extends React.Component {
   render() {
     const {
       data: {
-        value, shop, item, date_expiration: dateExpiration, is_applied: isApplied,
+        id, value, shop, item, date_expiration: dateExpiration, is_applied: isApplied,
       },
     } = this.props;
 
@@ -111,29 +114,30 @@ export default class DiscountItem extends React.Component {
     const isDisabled = (dateEnd.getTime() < dateNow.getTime()) || isApplied;
 
     return (
-      <View style={styles.item}>
-        <View style={[styles.percentWrap, isDisabled && styles.percentWrapDisabled]}>
-          <Text style={[styles.percentText, isDisabled && styles.percentTextDisabled]}>
-            {value && `${value}%`}
-          </Text>
-        </View>
-        <View style={styles.info}>
-          <View style={[styles.date, isDisabled && styles.dateDisabled]}>
-            <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
-              до
-              {' '}
-              {dateEnd.toLocaleDateString('ru-RU')}
+      <TouchableWithoutFeedback onPress={() => Actions.discountsDetail({ discountId: id })}>
+        <View style={styles.item}>
+          <View style={[styles.percentWrap, isDisabled && styles.percentWrapDisabled]}>
+            <Text style={[styles.percentText, isDisabled && styles.percentTextDisabled]}>
+              {value && `${value}%`}
             </Text>
           </View>
-          <Text style={[styles.shop, isDisabled && styles.shopDisabled]}>
-            {shop && shop.name && shop.name}
-          </Text>
-          <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
-            {item && item.name && item.name}
-          </Text>
+          <View style={styles.info}>
+            <View style={[styles.date, isDisabled && styles.dateDisabled]}>
+              <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
+                до
+                {' '}
+                {dateEnd.toLocaleDateString('ru-RU')}
+              </Text>
+            </View>
+            <Text style={[styles.shop, isDisabled && styles.shopDisabled]}>
+              {shop && shop.name && shop.name}
+            </Text>
+            <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
+              {item && item.name && item.name}
+            </Text>
+          </View>
         </View>
-        <View />
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

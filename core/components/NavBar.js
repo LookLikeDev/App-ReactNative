@@ -17,13 +17,13 @@ const hitSlop = {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight + 12,
-    paddingBottom: 12,
+    height: Constants.statusBarHeight + 44,
+    paddingTop: Constants.statusBarHeight,
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FF0F0F',
   },
   solo: {
     justifyContent: 'flex-end',
@@ -44,11 +44,11 @@ export default class NavBar extends React.Component {
   };
 
   renderLeft = () => {
-    const { hideBackButton, scene: { index } } = this.props;
+    const { hideBackButton } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
-    const isHideLeftButton = !index || isPreferences || hideBackButton;
+    const isHideLeftButton = isPreferences || hideBackButton;
 
-    if (isHideLeftButton) return null;
+    if (isHideLeftButton) return <View style={{ width: 14, height: 22 }} />;
 
     return (
       <TouchableOpacity hitSlop={hitSlop} onPress={Actions.pop}>
@@ -62,26 +62,37 @@ export default class NavBar extends React.Component {
     );
   };
 
-  renderRight = isPreferences => (
-    <TouchableOpacity hitSlop={hitSlop} onPress={isPreferences ? Actions.pop : Actions.preferences}>
+  renderRight = () => (
+    <TouchableOpacity hitSlop={hitSlop} onPress={Actions.preferences}>
       <SvgUri
         width="22"
         height="22"
         fill="#A1A1A1"
-        source={isPreferences ? iconClose : iconPreferences}
+        source={iconPreferences}
+      />
+    </TouchableOpacity>
+  );
+
+  renderClose = () => (
+    <TouchableOpacity hitSlop={hitSlop} onPress={Actions.pop}>
+      <SvgUri
+        width="22"
+        height="22"
+        fill="#A1A1A1"
+        source={iconClose}
       />
     </TouchableOpacity>
   );
 
   render() {
-    const { hideBackButton, scene: { index } } = this.props;
+    const { hideBackButton } = this.props;
     const isPreferences = Actions.currentScene === 'preferences';
-    const isHideLeftButton = !index || isPreferences || hideBackButton;
+    const isHideLeftButton = isPreferences || hideBackButton;
 
     return (
-      <View style={[styles.container, isHideLeftButton && styles.solo]}>
+      <View style={[styles.container]}>
         { this.renderLeft() }
-        { this.renderRight(isPreferences) }
+        { isPreferences ? this.renderClose() : this.renderRight() }
       </View>
     );
   }

@@ -41,3 +41,19 @@ export function mapToArr(obj) {
   return obj.valueSeq().toArray();
   // return Object.keys(obj).map(id => obj[id]);
 }
+
+/**
+ * Создает промокод указанной длины
+ * @param {number} length
+ * @returns {string}
+ */
+export function generatePromoCode(length = 6) {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i += 1) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return text;
+}
