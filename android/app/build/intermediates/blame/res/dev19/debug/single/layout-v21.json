@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/gekistolyarov/.android/build-cache/3d0ecd12f5083da1da0c111b44cc4f82fb244ddc/output/res/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/gekistolyarov/.android/build-cache/3d0ecd12f5083da1da0c111b44cc4f82fb244ddc/output/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/layout-v21/notification_action.xml",
+        "source": "/Users/gekistolyarov/.android/build-cache/3d0ecd12f5083da1da0c111b44cc4f82fb244ddc/output/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/Users/gekistolyarov/.android/build-cache/3d0ecd12f5083da1da0c111b44cc4f82fb244ddc/output/res/layout-v21/notification_template_custom_big.xml"
+    }
+]

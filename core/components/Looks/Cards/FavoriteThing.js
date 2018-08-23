@@ -29,6 +29,7 @@ const hitSlopSmall = {
 // [ширина экрана / 2] - [половина ширины label] - [отступ hint] - [margin от края экрана]
 const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
 
+// TODO сделать координаты hint и label одинаковые и позицианировать hint с помощью margin
 const styles = StyleSheet.create({
   label: {
     position: 'absolute',
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     position: 'absolute',
     backgroundColor: '#FFFFFF',
-    zIndex: 2,
+    zIndex: 3,
     width: 160,
     maxWidth,
   },
@@ -221,26 +222,6 @@ export default class FavoriteThing extends React.Component {
     );
   };
 
-  renderName = value => (
-    <Text style={styles.text}>
-      {value}
-    </Text>
-  );
-
-  renderBrand = value => (
-    <Text style={styles.brand}>
-      {value}
-    </Text>
-  );
-
-  renderPrice = value => (
-    <Text style={styles.price}>
-      {value}
-      {' '}
-      руб.
-    </Text>
-  );
-
   renderLike = () => {
     const { isVoted, isLike } = this.props;
 
@@ -323,16 +304,32 @@ export default class FavoriteThing extends React.Component {
         <TouchableOpacity hitSlop={hitSlop} onPressIn={() => this.setState({ isOpen: !isOpen })}>
           {this.renderIcon()}
         </TouchableOpacity>
-        {isOpen && (
+        {isOpen ? (
           <View style={styleHint}>
             <View style={styleTriangle} />
-            {name && this.renderName(name)}
-            {brand && this.renderBrand(brand)}
-            {price && this.renderPrice(price)}
+            {name
+              ? (
+                <Text style={styles.text}>
+                  {name}
+                </Text>
+              )
+              : null}
+            {brand ? (
+              <Text style={styles.brand}>
+                {brand}
+              </Text>
+            ) : null}
+            {price ? (
+              <Text style={styles.price}>
+                {price}
+                {' '}
+              руб.
+              </Text>
+            ) : null}
             {isShowLike && this.renderLike()}
             {isShowDislike && this.renderDislike()}
           </View>
-        )}
+        ) : null}
       </View>
     );
   }
