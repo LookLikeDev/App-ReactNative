@@ -94,9 +94,12 @@ export default class DiscountItem extends React.Component {
       }),
       item: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        brand: PropTypes.string,
+        price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       }),
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        address: PropTypes.string,
       }),
     }).isRequired,
   };
@@ -107,7 +110,7 @@ export default class DiscountItem extends React.Component {
         id, value, shop, item, date_expiration: dateExpiration, is_applied: isApplied,
       },
     } = this.props;
-
+    console.log(this.props.data.shop);
     const dateEnd = dateExpiration.toDate();
     const dateNow = new Date();
 
@@ -131,9 +134,12 @@ export default class DiscountItem extends React.Component {
             </View>
             <Text style={[styles.shop, isDisabled && styles.shopDisabled]}>
               {shop && shop.name && shop.name}
+              {shop && shop.address && ` / ${shop.address}`}
             </Text>
             <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
               {item && item.name && item.name}
+              {item && item.brand && ` / ${item.brand}`}
+              {item && item.price && ` / ${item.price} руб.`}
             </Text>
           </View>
         </View>
