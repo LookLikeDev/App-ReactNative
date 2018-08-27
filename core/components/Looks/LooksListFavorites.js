@@ -77,7 +77,7 @@ export default class LooksListFavorites extends React.Component {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           onEndReached={this.handleGetUsers}
-          onEndReachedThreshold={0.4}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={this.renderFooter}
           ListHeaderComponent={Separator}
           ItemSeparatorComponent={Separator}

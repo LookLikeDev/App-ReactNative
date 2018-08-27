@@ -144,7 +144,7 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
   const state = yield select();
 
   try {
-    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(10);
+    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
 
     if (state[moduleName].lastElement !== null) {
       collection = yield call(

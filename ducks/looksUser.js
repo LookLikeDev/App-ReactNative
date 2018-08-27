@@ -180,7 +180,7 @@ export const updateListSaga = function* (action) {
       } else {
         collection = collection
           .orderBy('date_published', 'desc')
-          .limit(10);
+          .limit(5);
       }
 
       const querySnapshot = yield call([collection, collection.get]);

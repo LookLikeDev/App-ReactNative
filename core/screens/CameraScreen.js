@@ -76,14 +76,14 @@ export default class CameraScreen extends React.Component {
 
     this.setState({
       hasCameraPermission: results.every(({ status }) => status === 'granted'),
-      firstImageFromGallery: cameraRoll.edges[0].node.image,
+      firstImageFromGallery: cameraRoll.edges.length > 0 ? cameraRoll.edges[0].node.image : null,
     });
   }
 
   takePictureAsync = async () => {
     if (this.cameraRef) {
       const photo = await this.cameraRef.takePictureAsync({
-        quality: 0.5,
+        quality: 0.2,
       });
 
       this.savePictureAndRedirect(photo.uri);
@@ -93,7 +93,7 @@ export default class CameraScreen extends React.Component {
   takePictureAsyncFromGallery = async () => {
     const photo = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: false,
-      quality: 0.5,
+      quality: 0.2,
       aspect: [3, 4],
     });
 
@@ -121,10 +121,11 @@ export default class CameraScreen extends React.Component {
 
   render() {
     const {
-      hasCameraPermission, firstImageFromGallery, cameraType,
+      hasCameraPermission, firstImageFromGallery: galleryImage, cameraType,
     } = this.state;
 
     if (hasCameraPermission === null) {
+      console.log('WTF');
       return <View />;
     } if (hasCameraPermission === false) {
       return (
@@ -140,7 +141,9 @@ export default class CameraScreen extends React.Component {
           <View style={styles.cameraPanel}>
             <View style={styles.bottomPanel}>
               <TouchableOpacity hitSlop={hitSlop} onPress={this.takePictureAsyncFromGallery}>
-                <Image style={styles.galleryImage} source={{ uri: firstImageFromGallery.uri }} />
+                {galleryImage
+                  ? (<Image style={styles.galleryImage} source={{ uri: galleryImage.uri }} />)
+                  : (<View style={styles.galleryImage} />)}
               </TouchableOpacity>
               <TouchableOpacity hitSlop={hitSlop} onPress={this.takePictureAsync}>
                 <SvgUri

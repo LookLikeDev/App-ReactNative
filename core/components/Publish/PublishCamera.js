@@ -118,7 +118,7 @@ export default class PublishCamera extends React.Component {
                 <TouchableOpacity style={styles.touch} onPress={this.handleTap}>
                   <Image
                     source={{ uri: image }}
-                    style={{ width: wrapWidth, height: wrapHeight }}
+                    style={{ width: wrapWidth, height: wrapHeight, position: 'relative', zIndex: 1 }}
                   />
                   <PublishThings
                     items={things}

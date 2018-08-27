@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
     flex: 1,
-    top: -14,
+    top: -12,
     right: -14,
     borderRadius: 26,
     width: 26,

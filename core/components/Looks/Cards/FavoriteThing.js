@@ -29,9 +29,17 @@ const hitSlopSmall = {
 // [ширина экрана / 2] - [половина ширины label] - [отступ hint] - [margin от края экрана]
 const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
 
+// TODO сделать координаты hint и label одинаковые и позицианировать hint с помощью margin
 const styles = StyleSheet.create({
-  label: {
+  wrap: {
     position: 'absolute',
+    zIndex: 2,
+    // width: 36 + 16 + (maxWidth > 160 ? maxWidth : 160),
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingBottom: 14,
+  },
+  label: {
     width: 36,
     height: 36,
     borderRadius: 36 / 2,
@@ -41,7 +49,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   cancel: {
-    position: 'absolute',
     width: 36,
     height: 36,
     borderRadius: 36 / 2,
@@ -56,36 +63,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    position: 'absolute',
     backgroundColor: '#FFFFFF',
-    zIndex: 2,
-    width: 160,
+    zIndex: 3,
+    paddingBottom: 14,
+    minWidth: maxWidth < 160 ? maxWidth : 160,
     maxWidth,
   },
   hintLeft: {
-    top: 0,
-    right: 36 + 16,
+    marginRight: 16,
   },
   hintRight: {
-    top: 0,
-    left: 36 + 16,
+    marginLeft: 16,
   },
   triangleLeft: {
-    position: 'absolute',
-    top: (36 / 2) - 4, // [label height / 2 - (triangle width / 2)]
-    right: -8,
-    width: 0,
-    height: 0,
-    borderTopWidth: 4,
-    borderBottomWidth: 4,
-    borderLeftWidth: 8,
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderLeftColor: '#FFFFFF',
-  },
-  triangleRight: {
     position: 'absolute',
     top: (36 / 2) - 4,
     left: -8,
@@ -99,6 +89,21 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     borderRightColor: '#FFFFFF',
+  },
+  triangleRight: {
+    position: 'absolute',
+    top: (36 / 2) - 4, // [label height / 2 - (triangle width / 2)]
+    right: -8,
+    width: 0,
+    height: 0,
+    borderTopWidth: 4,
+    borderBottomWidth: 4,
+    borderLeftWidth: 8,
+    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderLeftColor: '#FFFFFF',
   },
   text: {
     color: '#000000',
@@ -118,26 +123,27 @@ const styles = StyleSheet.create({
   },
   like: {
     position: 'absolute',
-    right: -4,
-    bottom: -14,
+    right: 0,
+    bottom: 0,
     height: 28,
     width: 28,
     borderRadius: 28 / 2,
     backgroundColor: '#00C835',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 4,
   },
   dislike: {
     position: 'absolute',
-    right: 32,
-    bottom: -14,
+    right: 36,
+    bottom: 0,
     height: 28,
     width: 28,
     borderRadius: 28 / 2,
     backgroundColor: '#FC4600',
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{ rotate: '180deg' }],
+    zIndex: 4,
   },
 });
 
@@ -221,34 +227,14 @@ export default class FavoriteThing extends React.Component {
     );
   };
 
-  renderName = value => (
-    <Text style={styles.text}>
-      {value}
-    </Text>
-  );
-
-  renderBrand = value => (
-    <Text style={styles.brand}>
-      {value}
-    </Text>
-  );
-
-  renderPrice = value => (
-    <Text style={styles.price}>
-      {value}
-      {' '}
-      руб.
-    </Text>
-  );
-
-  renderLike = () => {
+  renderLike = (isRightMark) => {
     const { isVoted, isLike } = this.props;
 
     if (isVoted && !isLike) return null;
 
     if (isVoted && isLike) {
       return (
-        <View style={styles.like}>
+        <View style={[styles.like, isRightMark && { right: 36 + 16 }]}>
           <SvgUri
             width="14"
             height="14"
@@ -260,25 +246,36 @@ export default class FavoriteThing extends React.Component {
     }
 
     return (
-      <TouchableOpacity hitSlop={hitSlopSmall} onPress={() => this.handleVote(true)} style={styles.like}>
-        <SvgUri
-          width="14"
-          height="14"
-          fill="#FFFFFF"
-          source={likeSvg}
-        />
+      <TouchableOpacity
+        hitSlop={hitSlopSmall}
+        onPress={() => this.handleVote(true)}
+        style={[styles.like, isRightMark && { right: 36 + 16 }]}
+      >
+        <View>
+          <SvgUri
+            width="14"
+            height="14"
+            fill="#FFFFFF"
+            source={likeSvg}
+          />
+        </View>
       </TouchableOpacity>
     );
   };
 
-  renderDislike = () => {
+  renderDislike = (isRightMark) => {
     const { isVoted, isLike } = this.props;
 
     if (isVoted && isLike) return null;
 
     if (isVoted && !isLike) {
       return (
-        <View style={styles.dislike}>
+        <View style={[
+          styles.dislike,
+          isRightMark && { right: 36 + 16 + 36 },
+          { transform: [{ rotate: '180deg' }] },
+        ]}
+        >
           <SvgUri
             width="14"
             height="14"
@@ -290,18 +287,24 @@ export default class FavoriteThing extends React.Component {
     }
 
     return (
-      <TouchableOpacity hitSlop={hitSlopSmall} onPress={() => this.handleVote(false)} style={styles.dislike}>
-        <SvgUri
-          width="14"
-          height="14"
-          fill="#FFFFFF"
-          source={likeSvg}
-        />
+      <TouchableOpacity
+        style={[styles.dislike, isRightMark && { right: 36 + 16 + 36 }]}
+        onPress={() => this.handleVote(false)}
+        hitSlop={hitSlopSmall}
+      >
+        <View style={{ transform: [{ rotate: '180deg' }] }}>
+          <SvgUri
+            width="14"
+            height="14"
+            fill="#FFFFFF"
+            source={likeSvg}
+          />
+        </View>
       </TouchableOpacity>
     );
   };
 
-  render() {
+  renderLeft = () => {
     const {
       item: {
         name, brand, price, position: { x, y },
@@ -312,28 +315,105 @@ export default class FavoriteThing extends React.Component {
     const locationX = Math.round(x * (wrapWidth / 100));
     const locationY = Math.round(y * (wrapHeight / 100));
 
-    const isLeft = x > (100 / 2);
-
-    const styleWrap = [isOpen ? styles.cancel : styles.label, { left: locationX - 18, top: locationY - 18 }];
-    const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
-    const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
-
     return (
-      <View style={styleWrap}>
-        <TouchableOpacity hitSlop={hitSlop} onPressIn={() => this.setState({ isOpen: !isOpen })}>
+      <View style={[styles.wrap, { left: locationX - 18, top: locationY - 18, paddingRight: 4 }]}>
+        <TouchableOpacity
+          style={[isOpen ? styles.cancel : styles.label]}
+          hitSlop={hitSlop}
+          onPressIn={() => this.setState({ isOpen: !isOpen })}
+        >
           {this.renderIcon()}
         </TouchableOpacity>
-        {isOpen && (
-          <View style={styleHint}>
-            <View style={styleTriangle} />
-            {name && this.renderName(name)}
-            {brand && this.renderBrand(brand)}
-            {price && this.renderPrice(price)}
-            {isShowLike && this.renderLike()}
-            {isShowDislike && this.renderDislike()}
+        {isOpen ? (
+          <View style={[styles.hint, styles.hintRight]}>
+            <View style={styles.triangleLeft} />
+            {name
+              ? (
+                <Text style={styles.text}>
+                  {name}
+                </Text>
+              )
+              : null}
+            {brand ? (
+              <Text style={styles.brand}>
+                {brand}
+              </Text>
+            ) : null}
+            {price ? (
+              <Text style={styles.price}>
+                {price}
+                {' '}
+                руб.
+              </Text>
+            ) : null}
           </View>
-        )}
+        ) : null}
+        {isOpen && isShowLike ? this.renderLike() : null}
+        {isOpen && isShowDislike ? this.renderDislike() : null}
       </View>
     );
+  };
+
+  renderRight = () => {
+    const {
+      item: {
+        name, brand, price, position: { x, y },
+      },
+    } = this.props;
+    const { isOpen, isShowLike, isShowDislike } = this.state;
+
+    // Формула подсчета иная так как вместо координаты left используется right
+    const locationX = Math.round(wrapWidth - (x * (wrapWidth / 100)));
+    const locationY = Math.round(y * (wrapHeight / 100));
+
+    return (
+      <View style={[styles.wrap, { right: locationX - 18, top: locationY - 18 }]}>
+        {isOpen ? (
+          <View style={[styles.hint, styles.hintLeft]}>
+            <View style={styles.triangleRight} />
+            {name
+              ? (
+                <Text style={styles.text}>
+                  {name}
+                </Text>
+              )
+              : null}
+            {brand ? (
+              <Text style={styles.brand}>
+                {brand}
+              </Text>
+            ) : null}
+            {price ? (
+              <Text style={styles.price}>
+                {price}
+                {' '}
+                руб.
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+        {isOpen && isShowLike ? this.renderLike(true) : null}
+        {isOpen && isShowDislike ? this.renderDislike(true) : null}
+        <TouchableOpacity
+          style={[isOpen ? styles.cancel : styles.label]}
+          hitSlop={hitSlop}
+          onPressIn={() => this.setState({ isOpen: !isOpen })}
+        >
+          {this.renderIcon()}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  render() {
+    const {
+      item: {
+        position: { x },
+      },
+    } = this.props;
+
+    const isLeft = x < (100 / 2);
+
+    return isLeft ? this.renderLeft() : this.renderRight();
   }
 }
