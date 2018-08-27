@@ -121,6 +121,7 @@ export default class ShopsList extends React.Component {
             onChangeText={this.handleTextChange}
             value={input}
             style={styles.inputText}
+            underlineColorAndroid="transparent"
           />
         </View>
         {loading && (

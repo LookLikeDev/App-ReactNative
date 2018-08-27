@@ -5,12 +5,24 @@ import {
   View, Text, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-
 import Pan from '../Common/Pan';
-
 import labelSvg from '../../../assets/icons/look/label.svg';
 import editSvg from '../../../assets/icons/look/edit.svg';
 import removeSvg from '../../../assets/icons/look/remove.svg';
+
+const hitSlop = {
+  top: 20,
+  left: 20,
+  bottom: 20,
+  right: 20,
+};
+
+const hitSlopSmall = {
+  top: 5,
+  left: 5,
+  bottom: 5,
+  right: 5,
+};
 
 const dimensions = Dimensions.get('window');
 const wrapHeight = Math.round((dimensions.width * 4) / 3);
@@ -20,8 +32,12 @@ const wrapWidth = dimensions.width;
 const maxWidth = Math.round((wrapWidth / 2) - 18 - 16 - 20);
 
 const styles = StyleSheet.create({
+  wrap: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingBottom: 14,
+  },
   label: {
-    position: 'absolute',
     width: 36,
     height: 36,
     borderRadius: 36 / 2,
@@ -29,45 +45,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
-    marginLeft: -18,
-    marginTop: -18,
   },
   hint: {
+    position: 'relative',
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    position: 'absolute',
     backgroundColor: '#FFFFFF',
-    zIndex: 2,
-    width: 160,
+    zIndex: 3,
+    paddingBottom: 14,
+    minWidth: maxWidth < 160 ? maxWidth : 160,
     maxWidth,
   },
   hintLeft: {
-    top: 0,
-    right: 52,
+    marginRight: 14,
   },
   hintRight: {
-    top: 0,
-    left: 52,
+    marginLeft: 14,
   },
   triangleLeft: {
     position: 'absolute',
-    top: 14,
-    right: -8,
-    width: 0,
-    height: 0,
-    borderTopWidth: 4,
-    borderBottomWidth: 4,
-    borderLeftWidth: 8,
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderLeftColor: '#FFFFFF',
-  },
-  triangleRight: {
-    position: 'absolute',
-    top: 14,
+    top: (36 / 2) - 4,
     left: -8,
     width: 0,
     height: 0,
@@ -79,6 +77,21 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     borderRightColor: '#FFFFFF',
+  },
+  triangleRight: {
+    position: 'absolute',
+    top: (36 / 2) - 4, // [label height / 2 - (triangle width / 2)]
+    right: -8,
+    width: 0,
+    height: 0,
+    borderTopWidth: 4,
+    borderBottomWidth: 4,
+    borderLeftWidth: 8,
+    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderLeftColor: '#FFFFFF',
   },
   text: {
     color: '#000000',
@@ -98,25 +111,27 @@ const styles = StyleSheet.create({
   },
   edit: {
     position: 'absolute',
-    right: -4,
-    bottom: -14,
+    right: 0,
+    bottom: 0,
     height: 28,
     width: 28,
     borderRadius: 28 / 2,
     backgroundColor: '#00C835',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 5,
   },
   remove: {
     position: 'absolute',
-    right: 32,
-    bottom: -14,
+    right: 36,
+    bottom: 0,
     height: 28,
     width: 28,
     borderRadius: 28 / 2,
     backgroundColor: '#FC4600',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 5,
   },
 });
 
@@ -164,28 +179,21 @@ export default class PublishThings extends React.Component {
     </Text>
   );
 
-  renderItem = (item) => {
+  renderLeft = (item) => {
     const {
       removeThing, updateThing, onDragBegin, onDragEnd,
     } = this.props;
+
     const {
       id, name, brand, price, position: { x, y },
     } = item;
 
-    // The values are stored in percentages and need to be converted to a device.
     const locationX = Math.round(x * (wrapWidth / 100));
     const locationY = Math.round(y * (wrapHeight / 100));
 
-    const isLeft = x > (100 / 2);
-
-    const styleHint = [styles.hint, isLeft ? styles.hintLeft : styles.hintRight];
-    const styleTriangle = isLeft ? styles.triangleLeft : styles.triangleRight;
-
-    if (!name) return null;
-
     return (
       <Pan
-        key={id}
+        key={`left_${id}`}
         id={id}
         onDragBegin={onDragBegin}
         onDragEnd={onDragEnd}
@@ -195,41 +203,130 @@ export default class PublishThings extends React.Component {
           y: locationY,
         }}
       >
-        <View style={styles.label}>
-          <SvgUri
-            width="16"
-            height="16"
-            fill="#FFFFFF"
-            source={labelSvg}
-          />
-          <View style={styleHint}>
-            <View style={styleTriangle} />
-            {name && this.renderName(name)}
-            {brand && this.renderBrand(brand)}
-            {price && this.renderPrice(price)}
-            <TouchableOpacity
-              onPress={() => Actions.describeItem({ thingId: id, edit: true })}
-              style={styles.edit}
-            >
-              <SvgUri
-                width="14"
-                height="14"
-                fill="#FFFFFF"
-                source={editSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => removeThing(id)} style={styles.remove}>
-              <SvgUri
-                width="14"
-                height="14"
-                fill="#FFFFFF"
-                source={removeSvg}
-              />
-            </TouchableOpacity>
+        <View style={styles.wrap}>
+          <View style={styles.label}>
+            <SvgUri
+              width="16"
+              height="16"
+              fill="#FFFFFF"
+              source={labelSvg}
+            />
           </View>
+          <View style={[styles.hint, styles.hintRight]}>
+            <View style={styles.triangleLeft} />
+            {name ? this.renderName(name) : null}
+            {brand ? this.renderBrand(brand) : null}
+            {price ? this.renderPrice(price) : null}
+          </View>
+          <TouchableOpacity
+            onPressIn={() => { Actions.describeItem({ thingId: id, edit: true }); }}
+            hitSlop={hitSlopSmall}
+            style={styles.edit}
+          >
+            <SvgUri
+              width="14"
+              height="14"
+              fill="#FFFFFF"
+              source={editSvg}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPressIn={() => removeThing(id)}
+            hitSlop={hitSlopSmall}
+            style={styles.remove}
+          >
+            <SvgUri
+              width="14"
+              height="14"
+              fill="#FFFFFF"
+              source={removeSvg}
+            />
+          </TouchableOpacity>
         </View>
       </Pan>
     );
+  };
+
+  renderRight = (item) => {
+    const {
+      removeThing, updateThing, onDragBegin, onDragEnd,
+    } = this.props;
+
+    const {
+      id, name, brand, price, position: { x, y },
+    } = item;
+
+    // Формула подсчета иная так как вместо координаты left используется right
+    const locationX = Math.round(x * (wrapWidth / 100));
+    const locationY = Math.round(y * (wrapHeight / 100));
+
+    return (
+      <Pan
+        key={`right_${id}`}
+        id={id}
+        onDragBegin={onDragBegin}
+        onDragEnd={onDragEnd}
+        updateThing={updateThing}
+        initialCoordinates={{
+          x: locationX,
+          y: locationY,
+        }}
+        renderRTL
+      >
+        <View style={styles.wrap}>
+          <View style={[styles.hint, styles.hintLeft]}>
+            <View style={styles.triangleRight} />
+            {name ? this.renderName(name) : null}
+            {brand ? this.renderBrand(brand) : null}
+            {price ? this.renderPrice(price) : null}
+          </View>
+          <View style={styles.label}>
+            <SvgUri
+              width="16"
+              height="16"
+              fill="#FFFFFF"
+              source={labelSvg}
+            />
+          </View>
+          {/* EDIT */}
+          <TouchableOpacity
+            onPressIn={() => Actions.describeItem({ thingId: id, edit: true })}
+            hitSlop={hitSlopSmall}
+            style={[styles.edit, { right: 36 + 16 }]}
+          >
+            <SvgUri
+              width="14"
+              height="14"
+              fill="#FFFFFF"
+              source={editSvg}
+            />
+          </TouchableOpacity>
+          {/* REMOVE */}
+          <TouchableOpacity
+            onPressIn={() => removeThing(id)}
+            hitSlop={hitSlopSmall}
+            style={[styles.remove, { right: 36 + 16 + 36 }]}
+          >
+            <SvgUri
+              width="14"
+              height="14"
+              fill="#FFFFFF"
+              source={removeSvg}
+            />
+          </TouchableOpacity>
+        </View>
+      </Pan>
+    );
+  };
+
+  renderItem = (item) => {
+    const { name, position: { x } } = item;
+
+    const isLeft = x < (100 / 2);
+
+    if (!name) return null;
+
+    return isLeft ? this.renderLeft(item) : this.renderRight(item);
   };
 
   render() {

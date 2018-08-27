@@ -96,6 +96,7 @@ export default class InputField extends React.Component {
             keyboardType={keyboardType}
             value={value}
             style={[styles.inputText, inputTextOrange && styles.orange]}
+            underlineColorAndroid="transparent"
             onBlur={onBlur}
             onFocus={onFocus}
             ref={(input) => { this.textInputRef = input; }}

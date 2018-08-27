@@ -53,6 +53,7 @@ export default class Root extends React.Component {
           borderBottomWidth: 0,
           marginHorizontal: 20,
           height: 44,
+          elevation: 0,
         }}
       >
         <Stack key="root" hideNavBar>

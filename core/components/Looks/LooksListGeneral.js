@@ -107,7 +107,7 @@ export default class LooksListGeneral extends React.Component {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           onEndReached={this.handleGetLooks}
-          onEndReachedThreshold={0.8}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={this.renderFooter}
           ListHeaderComponent={Separator}
           ItemSeparatorComponent={Separator}

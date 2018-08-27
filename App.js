@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, UIManager, Platform } from 'react-native';
 import { Font, AppLoading } from 'expo';
 import { Provider } from 'react-redux';
 import store from './redux';
@@ -16,6 +16,10 @@ import './config';
 
 // TODO just do it;
 console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default class App extends React.Component {
   state = {

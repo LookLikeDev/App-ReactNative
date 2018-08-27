@@ -35,21 +35,25 @@ const styles = StyleSheet.create({
     height: imageHeight,
     resizeMode: Image.resizeMode.cover,
   },
-  like: {
+  likeContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     height: 80,
     width: 80,
-    backgroundColor: '#00C835',
-    borderRadius: 20,
-    transform: [{ rotate: '15deg' }],
     position: 'absolute',
     right: 20,
     bottom: 8, // -31
     zIndex: 2,
+    backgroundColor: '#00C835',
+    borderRadius: 20,
+    transform: [{ rotate: '15deg' }],
   },
-  dislike: {
+  like: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dislikeContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -62,6 +66,12 @@ const styles = StyleSheet.create({
     left: 20,
     bottom: 8, // -31
     zIndex: 2,
+  },
+  dislike: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   likeSvg: {
     transform: [{ rotate: '-15deg' }],
@@ -128,26 +138,30 @@ export default class CardGeneral extends React.Component {
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
         </View>
-        <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
-          <View style={styles.dislikeSvg}>
-            <SvgUri
-              width="32"
-              height="32"
-              fill="#FFFFFF"
-              source={like}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.like} onPress={this.handleLike}>
-          <View style={styles.likeSvg}>
-            <SvgUri
-              width="32"
-              height="32"
-              fill="#FFFFFF"
-              source={like}
-            />
-          </View>
-        </TouchableOpacity>
+        <View style={styles.dislikeContainer}>
+          <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
+            <View style={styles.dislikeSvg}>
+              <SvgUri
+                width="32"
+                height="32"
+                fill="#FFFFFF"
+                source={like}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.likeContainer}>
+          <TouchableOpacity style={styles.like} onPress={this.handleLike}>
+            <View style={styles.likeSvg}>
+              <SvgUri
+                width="32"
+                height="32"
+                fill="#FFFFFF"
+                source={like}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
