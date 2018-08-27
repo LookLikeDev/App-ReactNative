@@ -318,7 +318,7 @@ export const likeSaga = function* ({ payload: { item, userId } }) {
           reference: item.reference,
           date_liked: firebase.firestore.FieldValue.serverTimestamp(),
         },
-        counter_looks_voted: count,
+        counter_looks_voted: count + 1,
       });
 
     const userSnapshot = yield call([userRef, userRef.get]);
@@ -337,6 +337,8 @@ export const likeSaga = function* ({ payload: { item, userId } }) {
 
 export const dislikeSaga = function* ({ payload: { item, userId } }) {
   const userRef = yield firestore.collection('users').doc(userId);
+  const userData = yield select();
+  const count = yield userData[moduleName].user.counter_looks_voted;
 
   try {
     yield call([userRef, userRef.update], {
@@ -344,6 +346,7 @@ export const dislikeSaga = function* ({ payload: { item, userId } }) {
         reference: item.reference,
         date_disliked: firebase.firestore.FieldValue.serverTimestamp(),
       },
+      counter_looks_voted: count + 1,
     });
     const userSnapshot = yield call([userRef, userRef.get]);
 
