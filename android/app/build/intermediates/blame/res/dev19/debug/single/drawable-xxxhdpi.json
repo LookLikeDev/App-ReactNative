@@ -20,8 +20,16 @@
         "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-xxxhdpi/shell_notification_icon.png"
     },
     {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-xxxhdpi/screen.png",
+        "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-xxxhdpi/screen.png"
+    },
+    {
         "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-xxxhdpi/ic_home_white_36dp.png",
         "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-xxxhdpi/ic_home_white_36dp.png"
+    },
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-xxxhdpi/icon.png",
+        "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-xxxhdpi/icon.png"
     },
     {
         "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-xxxhdpi/pin_white.png",

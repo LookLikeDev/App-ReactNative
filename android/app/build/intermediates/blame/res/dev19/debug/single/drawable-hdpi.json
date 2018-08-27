@@ -4,12 +4,20 @@
         "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-hdpi/ic_logo_white_32dp.png"
     },
     {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-hdpi/icon.png",
+        "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-hdpi/icon.png"
+    },
+    {
         "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-hdpi/ic_share_white_36dp.png",
         "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-hdpi/ic_share_white_36dp.png"
     },
     {
         "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-hdpi/ic_arrow_back_white_36dp.png",
         "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-hdpi/ic_arrow_back_white_36dp.png"
+    },
+    {
+        "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-hdpi/screen.png",
+        "source": "/Users/gekistolyarov/projects/App-ReactNative/android/app/src/main/res/drawable-hdpi/screen.png"
     },
     {
         "merged": "/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/res/merged/dev19/debug/drawable-hdpi/ic_home_white_36dp.png",
