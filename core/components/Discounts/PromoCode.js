@@ -22,6 +22,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
   },
+  dateDisabled: {
+    backgroundColor: '#EBEBEB',
+    opacity: 0.5,
+  },
+  dateTextDisabled: {
+    color: '#000000',
+  },
   group: {
     marginBottom: 16,
   },
@@ -84,6 +91,7 @@ export default class PromoCode extends React.Component {
       }),
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        address: PropTypes.string,
       }),
       promocode: PropTypes.shape({
         value: PropTypes.string.isRequired,
@@ -131,8 +139,8 @@ export default class PromoCode extends React.Component {
 
     return (
       <React.Fragment>
-        <View style={styles.date}>
-          <Text style={styles.dateText}>
+        <View style={[styles.date, isDisabled && styles.dateDisabled]}>
+          <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
             до
             {' '}
             {dateEnd.toLocaleDateString('ru-RU')}
@@ -151,8 +159,7 @@ export default class PromoCode extends React.Component {
         <View style={styles.group}>
           <Text style={styles.desc}>
             {shop && shop.name && shop.name}
-            {' '}
-            {shop && shop.address && `«${shop.address}»`}
+            {shop && shop.address && ` / ${shop.address}`}
           </Text>
           <Text style={styles.title}>
             Магазин
