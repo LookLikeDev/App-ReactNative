@@ -46,6 +46,7 @@ buck-out
 local.properties
 *.iml
 /android/app/build/
+/android/build/
 
 # Node
 node_modules
@@ -76,3 +77,4 @@ package-lock.json
 
 # Export
 .expo
+.expo-source

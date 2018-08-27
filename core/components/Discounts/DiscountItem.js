@@ -94,6 +94,8 @@ export default class DiscountItem extends React.Component {
       }),
       item: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        brand: PropTypes.string,
+        price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       }),
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
@@ -134,6 +136,8 @@ export default class DiscountItem extends React.Component {
             </Text>
             <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
               {item && item.name && item.name}
+              {item && item.brand && ` / ${item.brand}`}
+              {item && item.price && ` / ${item.price} руб.`}
             </Text>
           </View>
         </View>

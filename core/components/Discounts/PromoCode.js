@@ -79,6 +79,8 @@ export default class PromoCode extends React.Component {
       }),
       item: PropTypes.shape({
         name: PropTypes.string.isRequired,
+        brand: PropTypes.string,
+        price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       }),
       shop: PropTypes.shape({
         name: PropTypes.string.isRequired,
@@ -160,6 +162,8 @@ export default class PromoCode extends React.Component {
         <View style={styles.groupLast}>
           <Text style={styles.desc}>
             {item && item.name && item.name}
+            {item && item.brand && ` / ${item.brand}`}
+            {item && item.price && ` / ${item.price} руб.`}
           </Text>
           <Text style={styles.title}>
             Название вещи
