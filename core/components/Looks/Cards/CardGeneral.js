@@ -127,8 +127,6 @@ export default class CardGeneral extends React.Component {
       },
     } = this.props;
 
-    console.log(this.props);
-
     const age = getCalculatedAge(user.birthday, datePublished);
 
     return (

@@ -162,7 +162,6 @@ export default class CameraScreen extends React.Component {
     if (!showCamera) return null;
 
     if (hasCameraPermission === null) {
-      console.log('WTF');
       return <View />;
     } if (hasCameraPermission === false) {
       return (
