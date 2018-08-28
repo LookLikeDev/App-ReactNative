@@ -134,7 +134,7 @@ export default class CameraScreen extends React.Component {
         },
       ],
       {
-        compress: 0.5,
+        compress: 0.2,
         format: 'jpeg',
         base64: false,
       },
@@ -162,7 +162,6 @@ export default class CameraScreen extends React.Component {
     if (!showCamera) return null;
 
     if (hasCameraPermission === null) {
-      console.log('WTF');
       return <View />;
     } if (hasCameraPermission === false) {
       return (

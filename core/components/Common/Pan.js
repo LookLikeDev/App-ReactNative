@@ -77,7 +77,6 @@ export default class PanResponderExample extends React.Component {
         },
       };
     }
-    console.log('RTL?', props.renderRTL);
   }
 
   componentDidMount() {

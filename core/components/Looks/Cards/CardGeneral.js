@@ -6,6 +6,7 @@ import {
   View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, LayoutAnimation,
 } from 'react-native';
 import like from '../../../../assets/icons/look/like.svg';
+import { getCalculatedAge } from '../../../utils';
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 4) / 3);
@@ -120,21 +121,22 @@ export default class CardGeneral extends React.Component {
   };
 
   render() {
-    const { data: { user, shop, picture_uri: uri } } = this.props;
+    const {
+      data: {
+        user, shop, picture_uri: uri, date_published: datePublished,
+      },
+    } = this.props;
 
-    const userName = user.name ? `${user.name} / ` : '';
-    const shopName = shop.name ? `${shop.name}  / ` : '';
-    const shopAddress = shop.address ? `${shop.address}` : '';
-
-    const title = `${userName}${shopName}${shopAddress}`;
+    const age = getCalculatedAge(user.birthday, datePublished);
 
     return (
       <View style={styles.container}>
-        {title ? (
-          <Text style={styles.text}>
-            {title.toUpperCase()}
-          </Text>
-        ) : null}
+        <Text style={styles.text}>
+          {user.name ? user.name.toUpperCase() : null}
+          {age ? `, ${age}`.toUpperCase() : null}
+          {shop.name ? ` / ${shop.name}`.toUpperCase() : null}
+          {shop.address ? ` / ${shop.address}`.toUpperCase() : null}
+        </Text>
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
         </View>

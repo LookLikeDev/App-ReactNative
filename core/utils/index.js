@@ -57,3 +57,28 @@ export function generatePromoCode(length = 6) {
 
   return text;
 }
+
+export function declOfNum(number, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+
+  return titles[(number % 100 > 4 && number % 100 < 20)
+    ? 2
+    : cases[(number % 10 < 5)
+      ? number % 10
+      : 5]
+  ];
+}
+
+export function getCalculatedAge(dateStartFirestore, dateEndFirestore) {
+  if (dateStartFirestore && dateEndFirestore) {
+    const ageDifMs = dateEndFirestore.toDate().getTime() - dateStartFirestore.toDate().getTime();
+    const ageDate = new Date(ageDifMs); // miliseconds from epoch
+    const resultAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+    if (resultAge > 0) {
+      return `${resultAge} ${declOfNum(resultAge, ['год', 'года', 'лет'])}`;
+    }
+  }
+
+  return null;
+}
