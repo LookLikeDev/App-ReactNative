@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   View,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,6 +13,7 @@ import { Actions } from 'react-native-router-flux';
 import InputField from './Common/InputField';
 import SwitchField from './Common/SwitchField';
 import DateField from './Common/DateField';
+import NativePicker from './Common/Picker';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,9 +106,19 @@ export default class PreferencesForm extends React.Component {
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
           </Text>
         </View>
-        <Text style={styles.dataGroupTitle}>
-          {('Информация').toUpperCase()}
-        </Text>
+        <View>
+          <Text style={styles.dataGroupTitle}>
+            {('TEST').toUpperCase()}
+          </Text>
+        </View>
+        <View>
+          <NativePicker />
+        </View>
+        <View>
+          <Text style={styles.dataGroupTitle}>
+            {('Информация').toUpperCase()}
+          </Text>
+        </View>
         <TouchableOpacity onPress={Actions.policy}>
           <View style={styles.link}>
             <Text style={styles.linkText}>

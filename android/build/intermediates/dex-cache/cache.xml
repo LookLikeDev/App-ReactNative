@@ -1389,6 +1389,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/incremental-runtime-classes/dev/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10000/instant-run_fe1e045b2520e91a4fe67a0ee76051f7db66cf66/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/gekistolyarov/.android/build-cache/50552f38acaafb89f3e502cdda9c3d1673f51c52/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -2115,6 +2124,15 @@
         revision="27.0.3"
         sha1="42a37372fca7123a593202ba76a7f98fbd691f05">
         <dex dex="/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10/classes_5ad3cda6bfb8156d3e9d07b8d0a2c90efb61c125/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/incremental-classes/dev/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9b1667c54674b8d952e6597062dbca09a6bc25d8">
+        <dex dex="/Users/gekistolyarov/projects/App-ReactNative/android/app/build/intermediates/transforms/dex/dev/debug/folders/1000/10000/instant-run-bootstrap_b43b955f6b2860ee74aa95993e84224e53cb796d/classes.dex" />
     </item>
     <item
         is-multidex="true"
