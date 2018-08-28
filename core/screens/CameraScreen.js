@@ -5,7 +5,9 @@ import { Actions } from 'react-native-router-flux';
 import {
   View, CameraRoll, TouchableOpacity, Image, Text, StyleSheet,
 } from 'react-native';
-import { Camera, ImagePicker, Permissions } from 'expo';
+import {
+  Camera, ImagePicker, ImageManipulator, Permissions,
+} from 'expo';
 import cameraButtonSvg from '../../assets/icons/camera/cameraButton.svg';
 import switchCameraTypeSvg from '../../assets/icons/camera/switchCameraType.svg';
 
@@ -59,11 +61,23 @@ export default class CameraScreen extends React.Component {
   state = {
     hasCameraPermission: null,
     cameraType: Camera.Constants.Type.back,
-    // TODO сделать проверку есть ли вообще хоть одно изображение в галерее
     firstImageFromGallery: null,
+    showCamera: false,
   };
 
-  async componentDidMount() {
+  static onEnter() {
+    if (Actions.refs.camera) {
+      Actions.refs.camera.getWrappedInstance().showCamera();
+    }
+  }
+
+  static onExit() {
+    if (Actions.refs.camera) {
+      Actions.refs.camera.getWrappedInstance().hideCamera();
+    }
+  }
+
+  showCamera = async () => {
     const results = await Promise.all([
       Permissions.askAsync(Permissions.CAMERA),
       Permissions.askAsync(Permissions.CAMERA_ROLL),
@@ -76,9 +90,16 @@ export default class CameraScreen extends React.Component {
 
     this.setState({
       hasCameraPermission: results.every(({ status }) => status === 'granted'),
+      showCamera: true,
       firstImageFromGallery: cameraRoll.edges.length > 0 ? cameraRoll.edges[0].node.image : null,
     });
-  }
+  };
+
+  hideCamera = () => {
+    this.setState({
+      showCamera: false,
+    });
+  };
 
   takePictureAsync = async () => {
     if (this.cameraRef) {
@@ -102,10 +123,24 @@ export default class CameraScreen extends React.Component {
     }
   };
 
-  savePictureAndRedirect = (image) => {
+  savePictureAndRedirect = async (imageUri) => {
     const { addImage } = this.props;
 
-    addImage(image);
+    const resizeImage = await ImageManipulator.manipulate(
+      imageUri,
+      [
+        {
+          resize: {
+            width: 1080,
+            // Don't do this
+            // height: 1440,
+          },
+        },
+      ],
+      { format: 'png' },
+    );
+
+    addImage(resizeImage.uri);
     Actions.photo();
   };
 
@@ -121,8 +156,10 @@ export default class CameraScreen extends React.Component {
 
   render() {
     const {
-      hasCameraPermission, firstImageFromGallery: galleryImage, cameraType,
+      hasCameraPermission, firstImageFromGallery: galleryImage, cameraType, showCamera,
     } = this.state;
+
+    if (!showCamera) return null;
 
     if (hasCameraPermission === null) {
       console.log('WTF');

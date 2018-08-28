@@ -71,11 +71,11 @@ export default class CardUser extends React.Component {
 
     return (
       <View style={styles.container}>
-        {title && (
+        {title ? (
           <Text style={styles.text}>
             {title.toUpperCase()}
           </Text>
-        )}
+        ) : null}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
           {items && items.length && items.map(item => (

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
   inputGroup: {
     height: 56,
     marginLeft: 20,
-    paddingRight: 20,
+    paddingRight: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -37,6 +38,9 @@ const styles = StyleSheet.create({
   },
   orange: {
     color: '#FC4600',
+  },
+  icon: {
+    transform: [{ rotate: '90deg' }],
   },
 });
 
@@ -67,7 +71,7 @@ export default class DateField extends React.Component {
     onChange(date);
 
     if (handleChange) {
-      // TODO ┬┴┬┴┤(･_├┬┴┬┴ I promise to delete this after deleting redux-form
+      // TODO I promise to delete this after deleting redux-form ┬┴┬┴┤(･_├┬┴┬┴
       setTimeout(handleChange);
     }
   };
@@ -91,6 +95,9 @@ export default class DateField extends React.Component {
             <Text style={[styles.inputText, inputTextOrange && styles.orange]}>
               {value instanceof Date ? value.toLocaleDateString('ru-RU') : null}
             </Text>
+          </View>
+          <View style={styles.icon}>
+            <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
           </View>
         </TouchableOpacity>
         <DateTimePicker

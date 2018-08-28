@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   View,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,6 +13,7 @@ import { Actions } from 'react-native-router-flux';
 import InputField from './Common/InputField';
 import SwitchField from './Common/SwitchField';
 import DateField from './Common/DateField';
+import NativePicker from './Common/Picker';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,10 +44,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     backgroundColor: '#EBEBEB',
   },
-  submit: {
-    marginHorizontal: 20,
-    marginBottom: 24,
-  },
   link: {
     height: 56,
     marginLeft: 20,
@@ -74,6 +70,7 @@ export default class PreferencesForm extends React.Component {
   onPreferencesChange = (values) => {
     const { updateUserInfo } = this.props;
 
+    console.log(values);
     updateUserInfo(values);
   };
 
@@ -99,16 +96,49 @@ export default class PreferencesForm extends React.Component {
           {('Личные данные').toUpperCase()}
         </Text>
         <View style={styles.dataGroup}>
-          <Field name="name" labelText="Имя" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
-          <Field name="birthday" labelText="Дата рождения" component={DateField} handleChange={handleSubmit(this.onPreferencesChange)} />
-          <Field name="is_female" labelText="Пол" component={InputField} handleChange={handleSubmit(this.onPreferencesChange)} />
+          <Field
+            name="name"
+            labelText="Имя"
+            component={InputField}
+            handleChange={handleSubmit(this.onPreferencesChange)}
+          />
+          <Field
+            name="birthday"
+            labelText="Дата рождения"
+            component={DateField}
+            handleChange={handleSubmit(this.onPreferencesChange)}
+          />
           <Text style={[styles.text, styles.description]}>
             Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
           </Text>
+          <Field
+            name="is_female"
+            labelText="Пол"
+            component={NativePicker}
+            handleChange={handleSubmit(this.onPreferencesChange)}
+            items={[
+              {
+                label: 'Не указан',
+                value: null,
+              },
+              {
+                label: 'Мужской',
+                value: false,
+              },
+              {
+                label: 'Женский',
+                value: true,
+              },
+            ]}
+            // fix cause redux-form automaticly convert null to empty string O_o wtf
+            format={value => (value === '' ? null : value)}
+          />
         </View>
-        <Text style={styles.dataGroupTitle}>
-          {('Информация').toUpperCase()}
-        </Text>
+        <View>
+          <Text style={styles.dataGroupTitle}>
+            {('Информация').toUpperCase()}
+          </Text>
+        </View>
         <TouchableOpacity onPress={Actions.policy}>
           <View style={styles.link}>
             <Text style={styles.linkText}>
