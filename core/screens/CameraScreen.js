@@ -103,9 +103,7 @@ export default class CameraScreen extends React.Component {
 
   takePictureAsync = async () => {
     if (this.cameraRef) {
-      const photo = await this.cameraRef.takePictureAsync({
-        quality: 0.2,
-      });
+      const photo = await this.cameraRef.takePictureAsync();
 
       this.savePictureAndRedirect(photo.uri);
     }
@@ -114,8 +112,6 @@ export default class CameraScreen extends React.Component {
   takePictureAsyncFromGallery = async () => {
     const photo = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: false,
-      quality: 0.2,
-      aspect: [3, 4],
     });
 
     if (!photo.cancelled) {
@@ -137,7 +133,11 @@ export default class CameraScreen extends React.Component {
           },
         },
       ],
-      { format: 'png' },
+      {
+        compress: 0.5,
+        format: 'jpeg',
+        base64: false,
+      },
     );
 
     addImage(resizeImage.uri);
