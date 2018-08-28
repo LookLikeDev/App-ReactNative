@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   StyleSheet,
   Text,
@@ -9,7 +11,6 @@ import {
   Picker,
   Platform,
 } from 'react-native';
-import Modal from 'react-native-modal';
 
 const styles = StyleSheet.create({
   modal: {
@@ -25,11 +26,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'flex-end',
   },
-  // -------------------
   inputGroup: {
     height: 56,
     marginLeft: 20,
-    paddingRight: 20,
+    paddingRight: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -52,7 +52,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
   },
-  // -------------------
+  icon: {
+    transform: [{ rotate: '90deg' }],
+  },
 });
 
 export default class NativePicker extends React.Component {
@@ -100,14 +102,36 @@ export default class NativePicker extends React.Component {
 
     if (Platform.OS === 'android') {
       return (
-        <Picker
-          mode="dialog"
-          prompt="Пол"
-          selectedValue={selectedValue}
-          onValueChange={this.handleValueChange}
-        >
-          {items.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
-        </Picker>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>
+            {labelText}
+            :
+          </Text>
+          <View style={styles.inputTextWrap}>
+            <Text style={styles.inputText}>
+              {selectedItem.label || null}
+            </Text>
+          </View>
+          <View style={styles.icon}>
+            <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
+          </View>
+          <Picker
+            mode="dialog"
+            prompt="Пол"
+            selectedValue={selectedValue}
+            onValueChange={this.handleValueChange}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 0,
+            }}
+          >
+            {items.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
+          </Picker>
+        </View>
       );
     }
 
@@ -122,6 +146,9 @@ export default class NativePicker extends React.Component {
             <Text style={styles.inputText}>
               {selectedItem.label || null}
             </Text>
+          </View>
+          <View style={styles.icon}>
+            <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
           </View>
         </TouchableOpacity>
         <Modal isVisible={isModalVisible} style={styles.modal}>

@@ -44,10 +44,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     backgroundColor: '#EBEBEB',
   },
-  submit: {
-    marginHorizontal: 20,
-    marginBottom: 24,
-  },
   link: {
     height: 56,
     marginLeft: 20,
@@ -112,6 +108,9 @@ export default class PreferencesForm extends React.Component {
             component={DateField}
             handleChange={handleSubmit(this.onPreferencesChange)}
           />
+          <Text style={[styles.text, styles.description]}>
+            Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
+          </Text>
           <Field
             name="is_female"
             labelText="Пол"
@@ -134,9 +133,6 @@ export default class PreferencesForm extends React.Component {
             // fix cause redux-form automaticly convert null to empty string O_o wtf
             format={value => (value === '' ? null : value)}
           />
-          <Text style={[styles.text, styles.description]}>
-            Ваши имя и возраст будут показываться другим пользователям вместе с вашими образами
-          </Text>
         </View>
         <View>
           <Text style={styles.dataGroupTitle}>
