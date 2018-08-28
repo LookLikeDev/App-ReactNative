@@ -79,6 +79,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginHorizontal: 20,
   },
+  validateText: {
+    fontFamily: 'SF-UI-Text-Regular',
+    color: '#FC4600',
+    fontSize: 16,
+    marginHorizontal: 20,
+  },
+  required: {
+    color: '#FC4600',
+  },
 });
 
 export default class PublishForm extends React.Component {
@@ -107,13 +116,23 @@ export default class PublishForm extends React.Component {
     discount: null,
   };
 
+  state = {
+    submitPressed: false,
+  };
+
   onSubmit = (values) => {
     const {
       image, userId, shop, discount, saveLook, setUserInfo,
     } = this.props;
 
-    setUserInfo(values.name || null, values.birthday || null);
-    saveLook(userId, image, values, shop, discount);
+    this.setState({
+      submitPressed: true,
+    });
+
+    if (shop && shop.name && shop.name.length > 0) {
+      setUserInfo(values.name || null, values.birthday || null);
+      saveLook(userId, image, values, shop, discount);
+    }
   };
 
   renderSwitch = ({
@@ -127,6 +146,7 @@ export default class PublishForm extends React.Component {
     const {
       shop, handleSubmit, uploading, uploaded,
     } = this.props;
+    const { submitPressed } = this.state;
 
     if (uploading) {
       return (
@@ -158,6 +178,9 @@ export default class PublishForm extends React.Component {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
             Магазин:
+            <Text style={styles.required}>
+              *
+            </Text>
           </Text>
           <TouchableOpacity style={styles.shopWrap} onPress={() => Actions.shopList({ shop })}>
             <Text style={[styles.inputText, styles.orange]}>
@@ -165,6 +188,11 @@ export default class PublishForm extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
+        {submitPressed && !shop.name ? (
+          <Text style={styles.validateText}>
+            Название магазина обязательно для заполнения
+          </Text>
+        ) : null}
         <Text style={[styles.text, styles.description]}>
           Точное указание магазина является необходимым условием для получения скидки
         </Text>
