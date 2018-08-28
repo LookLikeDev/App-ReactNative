@@ -70,7 +70,7 @@ export default class NativePicker extends React.Component {
         </TouchableOpacity>
         <Modal isVisible={isModalVisible} style={styles.modal}>
           <View style={styles.modalContainer}>
-            <View>
+            <View style={styles.modalTopPanel}>
               <Button onPress={this.toggleModal} style={{ textAlign: 'right' }} title="Выбрать" />
             </View>
             <Picker

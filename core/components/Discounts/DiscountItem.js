@@ -110,7 +110,7 @@ export default class DiscountItem extends React.Component {
         id, value, shop, item, date_expiration: dateExpiration, is_applied: isApplied,
       },
     } = this.props;
-    console.log(this.props.data.shop);
+
     const dateEnd = dateExpiration.toDate();
     const dateNow = new Date();
 

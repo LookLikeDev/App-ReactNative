@@ -177,32 +177,6 @@ export default class PromoCode extends React.Component {
           </Text>
         </View>
         {this.renderPromoCode()}
-        { /*
-        <TouchableWithoutFeedback onPress={() => Actions.discountsDetail({ discountId: id })}>
-          <View style={styles.item}>
-            <View style={[styles.percentWrap, isDisabled && styles.percentWrapDisabled]}>
-              <Text style={[styles.percentText, isDisabled && styles.percentTextDisabled]}>
-                {value && `${value}%`}
-              </Text>
-            </View>
-            <View style={styles.info}>
-              <View style={[styles.date, isDisabled && styles.dateDisabled]}>
-                <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
-                  до
-                  {' '}
-                  {dateEnd.toLocaleDateString('ru-RU')}
-                </Text>
-              </View>
-              <Text style={[styles.shop, isDisabled && styles.shopDisabled]}>
-                {shop && shop.name && shop.name}
-              </Text>
-              <Text style={[styles.desk, isDisabled && styles.deskDisabled]}>
-                {item && item.name && item.name}
-              </Text>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-        */ }
       </React.Fragment>
     );
   }
