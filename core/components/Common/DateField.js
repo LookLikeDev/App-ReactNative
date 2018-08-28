@@ -101,6 +101,9 @@ export default class DateField extends React.Component {
           </View>
         </TouchableOpacity>
         <DateTimePicker
+          locale="ru"
+          cancelTextIOS="Отменить"
+          confirmTextIOS="Подтвердить"
           isVisible={isDateTimePickerVisible}
           onConfirm={this.handleDatePicked}
           onCancel={this.hideDateTimePicker}
