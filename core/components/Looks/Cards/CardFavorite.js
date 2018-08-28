@@ -64,11 +64,11 @@ export default class CardFavorite extends React.Component {
 
     return (
       <View style={styles.container}>
-        {title && (
-        <Text style={styles.text}>
-          {title.toUpperCase()}
-        </Text>
-        )}
+        {title ? (
+          <Text style={styles.text}>
+            {title.toUpperCase()}
+          </Text>
+        ) : null}
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={uri && { uri }} />
           {items && items.length && items.map(item => <FavoriteThing key={item.id} lookId={id} item={item} />)}

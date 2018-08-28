@@ -25,12 +25,54 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'flex-end',
   },
+  // -------------------
+  inputGroup: {
+    height: 56,
+    marginLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderBottomWidth: 1,
+    borderColor: '#BCBBC1',
+  },
+  inputLabel: {
+    fontFamily: 'SF-UI-Text-Regular',
+    fontSize: 16,
+    color: '#A1A1A1',
+    paddingRight: 6,
+  },
+  inputTextWrap: {
+    flex: 1,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  inputText: {
+    fontFamily: 'SF-UI-Text-Regular',
+    fontSize: 16,
+    color: '#000000',
+  },
+  // -------------------
 });
 
 export default class NativePicker extends React.Component {
+  static propTypes = {
+    items: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+    })).isRequired,
+    handleChange: PropTypes.func.isRequired,
+    // from Field
+    labelText: PropTypes.string.isRequired,
+    input: PropTypes.shape({
+      onChange: PropTypes.func.isRequired,
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.bool]),
+    }).isRequired,
+  };
+
   state = {
     isModalVisible: false,
-    selectedValue: null,
+    selectedValue: this.props.input.value,
   };
 
   toggleModal = () => {
@@ -39,12 +81,22 @@ export default class NativePicker extends React.Component {
   };
 
   handleValueChange = (itemValue) => {
-    console.log(itemValue);
+    const {
+      handleChange, input: { onChange },
+    } = this.props;
+
     this.setState({ selectedValue: itemValue });
+    onChange(itemValue);
+
+    if (handleChange) {
+      setTimeout(() => handleChange(itemValue), 1500);
+    }
   };
 
   render() {
+    const { items, labelText } = this.props;
     const { selectedValue, isModalVisible } = this.state;
+    const selectedItem = items.find(item => item.value === selectedValue);
 
     if (Platform.OS === 'android') {
       return (
@@ -54,19 +106,23 @@ export default class NativePicker extends React.Component {
           selectedValue={selectedValue}
           onValueChange={this.handleValueChange}
         >
-          <Picker.Item label="Не указан" value={null} />
-          <Picker.Item label="Мужской" value={false} />
-          <Picker.Item label="Женский" value />
+          {items.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
         </Picker>
       );
     }
 
     return (
       <React.Fragment>
-        <TouchableOpacity onPress={this.toggleModal}>
-          <Text>
-            Show Modal
+        <TouchableOpacity style={styles.inputGroup} onPress={this.toggleModal}>
+          <Text style={styles.inputLabel}>
+            {labelText}
+            :
           </Text>
+          <View style={styles.inputTextWrap}>
+            <Text style={styles.inputText}>
+              {selectedItem.label || null}
+            </Text>
+          </View>
         </TouchableOpacity>
         <Modal isVisible={isModalVisible} style={styles.modal}>
           <View style={styles.modalContainer}>
@@ -77,9 +133,7 @@ export default class NativePicker extends React.Component {
               selectedValue={selectedValue}
               onValueChange={this.handleValueChange}
             >
-              <Picker.Item label="Не указан" value={null} />
-              <Picker.Item label="Мужской" value={false} />
-              <Picker.Item label="Женский" value />
+              {items.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
             </Picker>
           </View>
         </Modal>
