@@ -8,6 +8,9 @@ const dimensions = Dimensions.get('window');
 const wrapWidth = dimensions.width;
 
 const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
   date: {
     borderRadius: 4,
     paddingHorizontal: 8,
@@ -68,6 +71,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Barcode-128',
     fontSize: 200, // auto scale font size for width
     width: wrapWidth - (20 * 2),
+    marginBottom: 20,
+  },
+  attentionText: {
+    fontFamily: 'SF-UI-Text-Regular',
+    color: '#8A8A8F',
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 18,
   },
 });
 
@@ -121,6 +132,11 @@ export default class PromoCode extends React.Component {
         >
           {value}
         </Text>
+        <Text style={styles.attentionText}>
+          Промо-код является демонстрационным.
+          Скидка предъявителю не предоставляется.
+          LookLike работает в режиме тестирования
+        </Text>
       </View>
     );
   };
@@ -138,7 +154,7 @@ export default class PromoCode extends React.Component {
     const isDisabled = (dateEnd.getTime() < dateNow.getTime()) || isApplied;
 
     return (
-      <React.Fragment>
+      <View style={styles.container}>
         <View style={[styles.date, isDisabled && styles.dateDisabled]}>
           <Text style={[styles.dateText, isDisabled && styles.dateTextDisabled]}>
             до
@@ -177,7 +193,7 @@ export default class PromoCode extends React.Component {
           </Text>
         </View>
         {this.renderPromoCode()}
-      </React.Fragment>
+      </View>
     );
   }
 }

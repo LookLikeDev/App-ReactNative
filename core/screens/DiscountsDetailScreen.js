@@ -19,7 +19,7 @@ export default class DiscountsDetailScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         <Header title={title} />
-        <ScrollView style={{ flex: 1, marginHorizontal: 20 }}>
+        <ScrollView style={{ flex: 1 }}>
           <PromoCode discountId={discountId} />
         </ScrollView>
       </View>
