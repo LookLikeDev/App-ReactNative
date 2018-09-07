@@ -4,6 +4,7 @@ import UserThing from '../../../components/Looks/Cards/UserThing';
 
 const mapStateToProps = (state, ownProps) => {
   if (ownProps.is_discount_reached) {
+    console.log(ownProps);
     return {
       discountId: state[discountsModule].entities.find(item => item.item.id === ownProps.id).get('id'),
     };

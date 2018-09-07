@@ -26,15 +26,19 @@ export default class LooksListGeneral extends React.Component {
     })).isRequired,
     fetchList: PropTypes.func.isRequired,
     likedLooks: PropTypes.objectOf(PropTypes.object),
+    blockedLooks: PropTypes.objectOf(PropTypes.object),
     dislikedLooks: PropTypes.objectOf(PropTypes.object),
     removeItem: PropTypes.func.isRequired,
     lookLike: PropTypes.func.isRequired,
     lookDislike: PropTypes.func.isRequired,
+    blockLook: PropTypes.func.isRequired,
+    blockUser: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     likedLooks: null,
     dislikedLooks: null,
+    blockedLooks: null,
   };
 
   componentDidMount() {
@@ -47,10 +51,10 @@ export default class LooksListGeneral extends React.Component {
 
   handleGetLooks = () => {
     const {
-      loading, loaded, fetchList, likedLooks, dislikedLooks,
+      loading, loaded, fetchList, blockedLooks, likedLooks, dislikedLooks,
     } = this.props;
 
-    if (!loading && !loaded) fetchList({ ...likedLooks, ...dislikedLooks });
+    if (!loading && !loaded) fetchList({ ...likedLooks, ...dislikedLooks }, blockedLooks);
   };
 
   handleLike = (item) => {
@@ -67,6 +71,18 @@ export default class LooksListGeneral extends React.Component {
     removeItem(item);
   };
 
+  handleBlockLook = (item) => {
+    const { blockLook, userId, removeItem } = this.props;
+    blockLook(item, userId);
+    removeItem(item);
+  };
+
+  handleBlockUser = (item) => {
+    const { blockUser, userId, removeItem } = this.props;
+    blockUser(item.user, userId);
+    removeItem(item);
+  };
+
   renderItem = ({ item }) => {
     const { userId } = this.props;
 
@@ -76,6 +92,8 @@ export default class LooksListGeneral extends React.Component {
         userId={userId}
         onPressLike={this.handleLike}
         onPressDislike={this.handleDislike}
+        onPressBlockLook={this.handleBlockLook}
+        onPressBlockUser={this.handleBlockUser}
       />
     );
   };

@@ -85,17 +85,17 @@ export default function reducer(looksState = new ReducerRecord(), action) {
 /**
  * Action creators
  */
-export function fetchList(votedItems) {
+export function fetchList(votedItems, blockedLooks) {
   return {
     type: FETCH_LIST_REQUEST,
-    payload: { votedItems },
+    payload: { votedItems, blockedLooks },
   };
 }
 
-export function updateList(votedItems) {
+export function updateList(votedItems, blockedLooks) {
   return {
     type: UPDATE_LIST_REQUEST,
-    payload: { votedItems },
+    payload: { votedItems, blockedLooks },
   };
 }
 
@@ -139,10 +139,11 @@ const getData = function* (item) {
   // }
 };
 
-export const fetchListSaga = function* ({ payload: { votedItems } }) {
+export const fetchListSaga = function* ({ payload }) {
   const db = firestore;
   const state = yield select();
 
+  const { votedItems, blockedLooks } = payload;
   try {
     let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
 
@@ -173,12 +174,18 @@ export const fetchListSaga = function* ({ payload: { votedItems } }) {
         ));
       }
 
+      if (blockedLooks !== null) {
+        items = yield all(querySnapshot.docs.filter(
+          item => !Object.prototype.hasOwnProperty.call(blockedLooks, item.id),
+        ));
+      }
+
       items = yield all(items.map(getData));
 
       if (items.length === 0) {
         yield put({
           type: FETCH_LIST_REQUEST,
-          payload: { votedItems },
+          payload: { votedItems, blockedLooks },
         });
       } else {
         yield put({

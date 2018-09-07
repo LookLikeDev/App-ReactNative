@@ -5,7 +5,9 @@ import SvgUri from 'react-native-svg-uri';
 import {
   View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, LayoutAnimation,
 } from 'react-native';
+import ActionSheet from 'react-native-actionsheet';
 import like from '../../../../assets/icons/look/like.svg';
+import alertSvg from '../../../../assets/icons/look/alert.svg';
 import { getCalculatedAge } from '../../../utils';
 
 const dimensions = Dimensions.get('window');
@@ -35,6 +37,21 @@ const styles = StyleSheet.create({
     width: imageWidth,
     height: imageHeight,
     resizeMode: Image.resizeMode.cover,
+  },
+  alertContainer: {
+    flex: 1,
+    height: 36,
+    width: 36,
+    position: 'absolute',
+    right: 20,
+    top: 42,
+    zIndex: 2,
+  },
+  alertButton: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   likeContainer: {
     flex: 1,
@@ -97,16 +114,16 @@ export default class CardGeneral extends React.Component {
     }).isRequired,
     onPressLike: PropTypes.func,
     onPressDislike: PropTypes.func,
+    onPressBlockLook: PropTypes.func,
+    onPressBlockUser: PropTypes.func,
   };
 
   static defaultProps = {
     onPressLike: false,
     onPressDislike: false,
+    onPressBlockLook: false,
+    onPressBlockUser: false,
   };
-
-  componentWillUnmount() { // trigger on like's click (we will remove the item)
-    LayoutAnimation.easeInEaseOut();
-  }
 
   handleLike = () => {
     const { onPressLike, data } = this.props;
@@ -120,17 +137,39 @@ export default class CardGeneral extends React.Component {
     onPressDislike(data);
   };
 
+  handleAlertMenu = () => {
+    this.ActionSheet.show();
+  };
+
+  componentWillUnmount() { // trigger on like's click (we will remove the item)
+    LayoutAnimation.easeInEaseOut();
+  }
+
   render() {
     const {
       data: {
         user, shop, picture_uri: uri, date_published: datePublished,
       },
     } = this.props;
-
     const age = getCalculatedAge(user.birthday, datePublished);
-
+    const { onPressBlockLook, onPressBlockUser, data } = this.props;
     return (
       <View style={styles.container}>
+        <ActionSheet
+          ref={o => this.ActionSheet = o}
+          title="Выберите действие"
+          options={['Нежелательный контент', 'Заблокировать автора', 'Отмена']}
+          cancelButtonIndex={2}
+          destructiveButtonIndex={2}
+          onPress={(index) => {
+            if (index === 0) {
+              onPressBlockLook(data);
+            }
+            if (index === 1) {
+              onPressBlockUser(data);
+            }
+          }}
+        />
         <Text style={styles.text}>
           {user.name ? user.name.toUpperCase() : null}
           {age ? `, ${age}`.toUpperCase() : null}
@@ -140,8 +179,25 @@ export default class CardGeneral extends React.Component {
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
         </View>
+        <View style={styles.alertContainer}>
+          <TouchableOpacity
+            style={styles.alertButton}
+            onPress={this.handleAlertMenu}
+          >
+            <View>
+              <SvgUri
+                width="32"
+                height="32"
+                source={alertSvg}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
         <View style={styles.dislikeContainer}>
-          <TouchableOpacity style={styles.dislike} onPress={this.handleDislike}>
+          <TouchableOpacity
+            style={styles.dislike}
+            onPress={this.handleDislike}
+          >
             <View style={styles.dislikeSvg}>
               <SvgUri
                 width="32"

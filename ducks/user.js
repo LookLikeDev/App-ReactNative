@@ -13,6 +13,9 @@ const UserRecord = Record({
   is_female: null,
   liked_looks: null,
   disliked_looks: null,
+  blocked_looks: null,
+  blocked_users: null,
+  reference: null,
   counter_looks_voted: 0,
   counter_items_voted: 0,
   date_discounts_view: null, // дата последнего просмотра страницы скидок
@@ -64,6 +67,12 @@ export const THING_VOTE_DISLIKE_SUCCESS = `${appName}/${moduleName}/THING_VOTE_D
 // RESET DISCOUNTS VIEW DATE
 export const USER_DISCOUNTS_VIEW_DATE_REQUEST = `${appName}/${moduleName}/USER_DISCOUNTS_VIEW_DATE_REQUEST`;
 export const USER_DISCOUNTS_VIEW_DATE_SUCCESS = `${appName}/${moduleName}/USER_DISCOUNTS_VIEW_DATE_SUCCESS`;
+
+// BLOCK CONTENT
+export const BLOCK_LOOK_REQUEST = `${appName}/${moduleName}/BLOCK_LOOK_REQUEST`;
+export const BLOCK_LOOK_SUCCESS = `${appName}/${moduleName}/BLOCK_LOOK_SUCCESS`;
+export const BLOCK_USER_REQUEST = `${appName}/${moduleName}/BLOCK_USER_REQUEST`;
+export const BLOCK_USER_SUCCESS = `${appName}/${moduleName}/BLOCK_USER_SUCCESS`;
 
 /**
  * Reducer
@@ -120,6 +129,17 @@ export default function reducer(userState = new ReducerRecord(), action) {
     case USER_DISCOUNTS_VIEW_DATE_SUCCESS:
       return userState.set('user', new UserRecord(payload.user));
 
+    case BLOCK_LOOK_SUCCESS:
+      return userState
+        .set('user', new UserRecord(payload.user))
+        .set('id', payload.id);
+
+
+    case BLOCK_USER_SUCCESS:
+      return userState
+        .set('user', new UserRecord(payload.user))
+        .set('id', payload.id);
+
     default:
       return userState;
   }
@@ -155,6 +175,7 @@ export function setUserInfo(name, birthday) {
 }
 
 export function lookLike(item, userId) {
+  console.log(item, userId);
   return {
     type: LOOK_LIKE_REQUEST,
     payload: { item, userId },
@@ -186,6 +207,21 @@ export function thingVote(thingId, lookId, userId, isLiked) {
     payload: {
       thingId, lookId, userId, isLiked,
     },
+  };
+}
+
+export function blockLook(item, userId) {
+  console.log(item, userId);
+  return {
+    type: BLOCK_LOOK_REQUEST,
+    payload: { item, userId },
+  };
+}
+
+export function blockUser(item, userId) {
+  return {
+    type: BLOCK_USER_REQUEST,
+    payload: { item, userId },
   };
 }
 
@@ -303,6 +339,70 @@ export const setUserInfoSaga = function* ({ payload: { name, birthday } }) {
     }
   } catch (error) {
     console.log('error user update', error);
+  }
+};
+
+export const blockLookSaga = function* ({ payload: { item, userId } }) {
+  const userRef = yield firestore.collection('users').doc(userId);
+  const looksRef = yield firestore.collection('users').doc(item.id);
+
+  try {
+    yield call([userRef, userRef.update],
+      {
+        [`blocked_looks.${item.id}`]: {
+          reference: looksRef,
+          date_blocked: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+      });
+
+    yield call([looksRef, looksRef.update],
+      {
+        is_reported: true,
+      });
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    yield put({
+      type: BLOCK_LOOK_SUCCESS,
+      payload: {
+        id: userSnapshot.id,
+        user: userSnapshot.data(),
+      },
+    });
+  } catch (error) {
+    console.log('ERROR', error);
+  }
+};
+
+export const blockUserSaga = function* ({ payload: { item, userId } }) {
+  const userRef = yield firestore.collection('users').doc(userId);
+  const blockedRef = yield firestore.collection('users').doc(item.id);
+
+  try {
+    yield call([userRef, userRef.update],
+      {
+        [`blocked_users.${item.id}`]: {
+          reference: item.reference,
+          date_blocked: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+      });
+
+    yield call([blockedRef, blockedRef.update],
+      {
+        is_reported: true,
+      });
+
+    const userSnapshot = yield call([userRef, userRef.get]);
+
+    yield put({
+      type: BLOCK_LOOK_SUCCESS,
+      payload: {
+        id: userSnapshot.id,
+        user: userSnapshot.data(),
+      },
+    });
+  } catch (error) {
+    console.log('ERROR', error);
   }
 };
 
@@ -450,5 +550,7 @@ export const saga = function* () {
     takeEvery(USER_VOTED_RESET_REQUEST, resetVotedCounterSaga),
     takeEvery(THING_VOTE_REQUEST, thingVoteSaga),
     takeEvery(USER_DISCOUNTS_VIEW_DATE_REQUEST, setDiscountsViewDateSaga),
+    takeEvery(BLOCK_LOOK_REQUEST, blockLookSaga),
+    takeEvery(BLOCK_USER_REQUEST, blockUserSaga),
   ]);
 };
