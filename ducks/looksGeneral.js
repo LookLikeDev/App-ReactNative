@@ -148,7 +148,7 @@ export const fetchListSaga = function* ({ payload }) {
   const state = yield select();
   const userModule = 'user';
   const { votedItems, blockedLooks } = payload;
-  const blockedUsers = state[userModule].get('user').blocked_users || null;
+  const blockedUsers = state[userModule].get('blocked_users') || null;
   try {
     let collection = yield db.collection('looks')
       .orderBy('date_published', 'desc')
