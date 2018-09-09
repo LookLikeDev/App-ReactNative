@@ -142,7 +142,6 @@ const getData = function* (item) {
 export const fetchListSaga = function* ({ payload }) {
   const db = firestore;
   const state = yield select();
-
   const { votedItems, blockedLooks } = payload;
   try {
     let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);

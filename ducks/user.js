@@ -344,7 +344,7 @@ export const setUserInfoSaga = function* ({ payload: { name, birthday } }) {
 
 export const blockLookSaga = function* ({ payload: { item, userId } }) {
   const userRef = yield firestore.collection('users').doc(userId);
-  const looksRef = yield firestore.collection('users').doc(item.id);
+  const looksRef = yield firestore.collection('looks').doc(item.id);
 
   try {
     yield call([userRef, userRef.update],
@@ -382,7 +382,7 @@ export const blockUserSaga = function* ({ payload: { item, userId } }) {
     yield call([userRef, userRef.update],
       {
         [`blocked_users.${item.id}`]: {
-          reference: item.reference,
+          reference: blockedRef,
           date_blocked: firebase.firestore.FieldValue.serverTimestamp(),
         },
       });
