@@ -1,7 +1,11 @@
-import firebase from 'firebase';
-import { Record, OrderedMap } from 'immutable';
+import { OrderedMap, Record } from 'immutable';
 import {
-  all, put, call, takeEvery, takeLatest, select,
+  all,
+  call,
+  put,
+  select,
+  takeEvery,
+  takeLatest,
 } from 'redux-saga/effects';
 import { appName, firestore } from '../config';
 import { arrToMap } from '../core/utils';
@@ -54,25 +58,25 @@ export default function reducer(looksState = new ReducerRecord(), action) {
       return looksState.set('lastElement', payload.lastElement);
 
     case FETCH_LIST_SUCCESS:
-      return looksState
-        .set('loading', false)
+      return looksState.set('loading', false)
         .set('initialed', true)
-        .update('entities', entities => entities.merge(arrToMap(payload.entities, LookRecord)));
+        .update('entities', entities => entities.merge(
+          arrToMap(payload.entities, LookRecord),
+        ));
 
     case FETCH_LIST_LOADED_ALL:
-      return looksState
-        .set('loading', false)
+      return looksState.set('loading', false)
         .set('initialed', true)
         .set('loaded', true);
 
     case FETCH_LIST_ERROR:
-      return looksState
-        .set('loading', false)
-        .set('error', error);
+      return looksState.set('loading', false).set('error', error);
 
     case UPDATE_LIST_SUCCESS:
-      return looksState
-        .set('entities', new OrderedMap(arrToMap(payload.entities, LookRecord)).merge(looksState.get('entities')));
+      return looksState.set('entities',
+        new OrderedMap(arrToMap(payload.entities, LookRecord)).merge(
+          looksState.get('entities'),
+        ));
 
     case ITEM_REMOVE:
       return looksState.deleteIn(['entities', payload.id]);
@@ -142,9 +146,13 @@ const getData = function* (item) {
 export const fetchListSaga = function* ({ payload }) {
   const db = firestore;
   const state = yield select();
+  const userModule = 'user';
   const { votedItems, blockedLooks } = payload;
+  const blockedUsers = state[userModule].get('user').blocked_users || null;
   try {
-    let collection = yield db.collection('looks').orderBy('date_published', 'desc').limit(5);
+    let collection = yield db.collection('looks')
+      .orderBy('date_published', 'desc')
+      .limit(5);
 
     if (state[moduleName].lastElement !== null) {
       collection = yield call(
@@ -155,43 +163,51 @@ export const fetchListSaga = function* ({ payload }) {
 
     const querySnapshot = yield call([collection, collection.get]);
 
-    if (querySnapshot.docs.length === 0) {
-      yield put({
-        type: FETCH_LIST_LOADED_ALL,
-      });
-    } else {
+    if (querySnapshot.docs.length !== 0) {
       yield put({
         type: FETCH_LIST_LAST_ELEMENT,
-        payload: { lastElement: querySnapshot.docs[querySnapshot.docs.length - 1] },
+        payload: {
+          lastElement: querySnapshot.docs[querySnapshot.docs.length - 1],
+        },
       });
 
-      let items = querySnapshot.docs;
+      let items = yield all(querySnapshot.docs.map(getData));
 
       if (votedItems !== null) {
-        items = yield all(querySnapshot.docs.filter(
+        items = items.filter(
           item => !Object.prototype.hasOwnProperty.call(votedItems, item.id),
-        ));
+        );
       }
 
       if (blockedLooks !== null) {
-        items = yield all(querySnapshot.docs.filter(
-          item => !Object.prototype.hasOwnProperty.call(blockedLooks, item.id),
-        ));
+        items = items.filter(
+          item => !Object.prototype.hasOwnProperty.call(blockedLooks,
+            item.id),
+        );
       }
 
-      items = yield all(items.map(getData));
+      if (blockedUsers !== null) {
+        items = items.filter(
+          item => !Object.prototype.hasOwnProperty.call(blockedLooks,
+            item.user.id),
+        );
+      }
 
-      if (items.length === 0) {
-        yield put({
-          type: FETCH_LIST_REQUEST,
-          payload: { votedItems, blockedLooks },
-        });
-      } else {
+      if (items.length !== 0) {
         yield put({
           type: FETCH_LIST_SUCCESS,
           payload: { entities: items },
         });
+      } else {
+        yield put({
+          type: FETCH_LIST_REQUEST,
+          payload: { votedItems, blockedLooks },
+        });
       }
+    } else {
+      yield put({
+        type: FETCH_LIST_LOADED_ALL,
+      });
     }
   } catch (error) {
     console.log('error', error);
@@ -213,13 +229,10 @@ export const updateListSaga = function* ({ payload: { votedItems } }) {
       let collection = yield db.collection('looks');
 
       if (first) {
-        collection = collection
-          .where('date_published', '>', first.date_published.toDate())
-          .orderBy('date_published', 'desc');
+        collection = collection.where('date_published', '>',
+          first.date_published.toDate()).orderBy('date_published', 'desc');
       } else {
-        collection = collection
-          .orderBy('date_published', 'desc')
-          .limit(10);
+        collection = collection.orderBy('date_published', 'desc').limit(10);
       }
 
       const querySnapshot = yield call([collection, collection.get]);
@@ -229,7 +242,8 @@ export const updateListSaga = function* ({ payload: { votedItems } }) {
 
         if (votedItems !== null) {
           items = yield all(querySnapshot.docs.filter(
-            item => !Object.prototype.hasOwnProperty.call(votedItems, item.id),
+            item => !Object.prototype.hasOwnProperty.call(votedItems,
+              item.id),
           ));
         }
 

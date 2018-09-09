@@ -175,7 +175,6 @@ export function setUserInfo(name, birthday) {
 }
 
 export function lookLike(item, userId) {
-  console.log(item, userId);
   return {
     type: LOOK_LIKE_REQUEST,
     payload: { item, userId },
@@ -211,7 +210,6 @@ export function thingVote(thingId, lookId, userId, isLiked) {
 }
 
 export function blockLook(item, userId) {
-  console.log(item, userId);
   return {
     type: BLOCK_LOOK_REQUEST,
     payload: { item, userId },
