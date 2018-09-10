@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { Actions } from 'react-native-router-flux';
 import { Field } from 'redux-form';
 import {
-  StyleSheet,
-  Text,
-  ScrollView,
-  View,
-  Switch,
-  TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { WebBrowser } from 'expo';
 import Button from '../Common/Button';
 import InputField from '../Common/InputField';
 import DateField from '../Common/DateField';
@@ -25,6 +26,9 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginHorizontal: 20,
     color: '#A1A1A1',
+  },
+  link: {
+    color: '#FC4600',
   },
   inputGroup: {
     height: 56,
@@ -139,15 +143,26 @@ export default class PublishForm extends React.Component {
     style, input: {
       onChange, checked, value, ...restInput
     },
-  }) => <Switch onChange={() => onChange(!value)} {...restInput} style={style} value={value} />;
+  }) => (
+    <Switch
+      onChange={() => onChange(!value)}
+      {...restInput}
+      style={style}
+      value={value}
+    />
+  );
 
+  _onPressLink = () => {
+    WebBrowser.openBrowserAsync(
+      'https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf',
+    );
+  };
 
   render() {
     const {
       shop, handleSubmit, uploading, uploaded,
     } = this.props;
     const { submitPressed } = this.state;
-
     if (uploading) {
       return (
         <View style={{ flex: 1, alignSelf: 'stretch' }}>
@@ -171,18 +186,21 @@ export default class PublishForm extends React.Component {
     return (
       <ScrollView style={styles.container}>
         <Text style={[styles.text, styles.subTitle]}>
-          Эта информация будет отображаться вместе с вашим луком
+        Эта информация будет отображаться вместе с вашим луком
         </Text>
         <Field name="name" labelText="Имя" component={InputField} />
         <Field name="birthday" labelText="Дата рождения" component={DateField} />
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
-            Магазин:
+          Магазин:
             <Text style={styles.required}>
-              *
+            *
             </Text>
           </Text>
-          <TouchableOpacity style={styles.shopWrap} onPress={() => Actions.shopList({ shop })}>
+          <TouchableOpacity
+            style={styles.shopWrap}
+            onPress={() => Actions.shopList({ shop })}
+          >
             <Text style={[styles.inputText, styles.orange]}>
               {shop.name}
             </Text>
@@ -190,20 +208,35 @@ export default class PublishForm extends React.Component {
         </View>
         {submitPressed && !shop.name ? (
           <Text style={styles.validateText}>
-            Название магазина обязательно для заполнения
+          Название магазина обязательно для заполнения
           </Text>
         ) : null}
         <Text style={[styles.text, styles.description]}>
-          Точное указание магазина является необходимым условием для получения скидки
+        Точное указание магазина является необходимым условием для получения
+        скидки
         </Text>
         <View style={styles.switchGroup}>
           <Text style={styles.switchLabel}>
-            Опубликовать анонимно:
+          Опубликовать анонимно:
           </Text>
           <Field name="publishAnonymous" component={this.renderSwitch} />
         </View>
+        <View>
+          <Text style={[styles.text, styles.subTitle, { marginBottom: 24 }]}>
+          Нажимая кнопку «Опубликовать», я подтверждаю, что я прочитал
+            {' '}
+            <Text style={{ color: '#FC4600' }} onPress={this._onPressLink}>
+              Правила использования приложения
+            </Text>
+            {', '}
+            и полностью принимаю их.
+          </Text>
+        </View>
         <View style={styles.submit}>
-          <Button title="Опубликовать LOOK" onPress={handleSubmit(this.onSubmit)} />
+          <Button
+            title="Опубликовать LOOK"
+            onPress={handleSubmit(this.onSubmit)}
+          />
         </View>
       </ScrollView>
     );
