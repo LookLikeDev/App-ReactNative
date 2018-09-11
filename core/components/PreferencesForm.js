@@ -8,12 +8,15 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+
+import { WebBrowser } from 'expo';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Actions } from 'react-native-router-flux';
 import InputField from './Common/InputField';
 import SwitchField from './Common/SwitchField';
 import DateField from './Common/DateField';
 import NativePicker from './Common/Picker';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -72,7 +75,14 @@ export default class PreferencesForm extends React.Component {
 
     updateUserInfo(values);
   };
-
+  
+  _onPressLink = () => {
+    WebBrowser.openBrowserAsync(
+      'https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf',
+    );
+  };
+  
+  
   renderSwitch = ({
     style, input: {
       onChange, checked, value, ...restInput
@@ -138,7 +148,7 @@ export default class PreferencesForm extends React.Component {
             {('Информация').toUpperCase()}
           </Text>
         </View>
-        <TouchableOpacity onPress={Actions.policy}>
+        <TouchableOpacity onPress={this._onPressLink}>
           <View style={styles.link}>
             <Text style={styles.linkText}>
               Политика конфиденциальности

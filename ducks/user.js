@@ -11,8 +11,11 @@ const UserRecord = Record({
   name: null,
   birthday: null,
   is_female: null,
+  is_blocked: null,
   liked_looks: null,
   disliked_looks: null,
+  blocked_looks: null,
+  blocked_users: null,
   counter_looks_voted: 0,
   counter_items_voted: 0,
   date_discounts_view: null, // дата последнего просмотра страницы скидок
