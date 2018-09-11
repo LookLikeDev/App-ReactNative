@@ -170,15 +170,12 @@ export default class PublishForm extends React.Component {
       value={value}
     />
   );
-<<<<<<< HEAD
-=======
 
   _onPressLink = () => {
     WebBrowser.openBrowserAsync(
       'https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf',
     );
   };
->>>>>>> tasks-72
 
   render() {
     const {
@@ -215,16 +212,9 @@ export default class PublishForm extends React.Component {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
           Магазин:
-<<<<<<< HEAD
-
             {' '}
             <Text style={styles.required}>
             *
-
-=======
-            <Text style={styles.required}>
-            *
->>>>>>> tasks-72
             </Text>
           </Text>
           <TouchableOpacity
@@ -265,14 +255,10 @@ export default class PublishForm extends React.Component {
         <View style={styles.submit}>
           <Button
             title="Опубликовать LOOK"
-<<<<<<< HEAD
             onPress={() => {
               this.isUserBlocked() && handleSubmit(this.onSubmit);
             }
           }
-=======
-            onPress={handleSubmit(this.onSubmit)}
->>>>>>> tasks-72
           />
         </View>
       </ScrollView>
