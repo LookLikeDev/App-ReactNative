@@ -56,7 +56,7 @@ export default class LooksListFavorites extends React.Component {
     if (loaded) return <LooksLoadedText />;
 
     if (loading) {
-      return (
+      return (  
         <View style={{ marginBottom: 26 }}>
           <ActivityIndicator animating size="large" />
         </View>

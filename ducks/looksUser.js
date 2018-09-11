@@ -24,6 +24,7 @@ const LookRecord = Record({
   reference: null,
   picture_uri: null,
   date_published: null,
+  is_reported: false,
 });
 
 /**

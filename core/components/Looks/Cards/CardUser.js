@@ -76,13 +76,14 @@ export default class CardUser extends React.Component {
         </Text>
         <View style={styles.imageWrap}>
           <Image style={styles.image} source={{ uri, cache: 'force-cache' }} />
-          {items && items.length && items.map(item => (
+
+          {items && items.length && items.map(item => { console.log(item); return (
             <UserThing
               key={item.id}
               discount={discount}
               {...item}
             />
-          ))}
+          )})}
         </View>
       </View>
     );
