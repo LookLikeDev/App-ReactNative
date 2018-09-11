@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     color: '#A1A1A1',
   },
+  link: {
+    color: '#FC4600',
+  },
   inputGroup: {
     height: 56,
     marginLeft: 20,
@@ -167,13 +170,21 @@ export default class PublishForm extends React.Component {
       value={value}
     />
   );
+<<<<<<< HEAD
+=======
+
+  _onPressLink = () => {
+    WebBrowser.openBrowserAsync(
+      'https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf',
+    );
+  };
+>>>>>>> tasks-72
 
   render() {
     const {
       shop, handleSubmit, uploading, uploaded,
     } = this.props;
     const { submitPressed } = this.state;
-
     if (uploading) {
       return (
         <View style={{ flex: 1, alignSelf: 'stretch' }}>
@@ -204,11 +215,16 @@ export default class PublishForm extends React.Component {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
           Магазин:
+<<<<<<< HEAD
 
             {' '}
             <Text style={styles.required}>
             *
 
+=======
+            <Text style={styles.required}>
+            *
+>>>>>>> tasks-72
             </Text>
           </Text>
           <TouchableOpacity
@@ -235,13 +251,28 @@ export default class PublishForm extends React.Component {
           </Text>
           <Field name="publishAnonymous" component={this.renderSwitch} />
         </View>
+        <View>
+          <Text style={[styles.text, styles.subTitle, { marginBottom: 24 }]}>
+          Нажимая кнопку «Опубликовать», я подтверждаю, что я прочитал
+            {' '}
+            <Text style={{ color: '#FC4600' }} onPress={this._onPressLink}>
+              Правила использования приложения
+            </Text>
+            {', '}
+            и полностью принимаю их.
+          </Text>
+        </View>
         <View style={styles.submit}>
           <Button
             title="Опубликовать LOOK"
+<<<<<<< HEAD
             onPress={() => {
               this.isUserBlocked() && handleSubmit(this.onSubmit);
             }
           }
+=======
+            onPress={handleSubmit(this.onSubmit)}
+>>>>>>> tasks-72
           />
         </View>
       </ScrollView>
