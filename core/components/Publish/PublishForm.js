@@ -11,6 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  WebBrowser
+} from 'expo';
 import { firestore } from '../../../config';
 import Button from '../Common/Button';
 import InputField from '../Common/InputField';
@@ -124,7 +127,7 @@ export default class PublishForm extends React.Component {
     submitPressed: false,
   };
 
-  onSubmit = (values) => {
+  onSubmit = async (values) => {
     const {
       image, userId, shop, discount, saveLook, setUserInfo,
     } = this.props;
@@ -133,29 +136,31 @@ export default class PublishForm extends React.Component {
       submitPressed: true,
     });
 
+    const isBlocked = await this.isUserBlocked(userId);
+
     if (shop && shop.name && shop.name.length > 0) {
       setUserInfo(values.name || null, values.birthday || null);
-      saveLook(userId, image, values, shop, discount);
+      isBlocked && saveLook(userId, image, values, shop, discount);
     }
   };
 
-  isUserBlocked = async () => {
-    const { userId } = this.props;
+  isUserBlocked = async (userId) => {
     const userRef = await firestore.collection('users').doc(userId);
-    window.data = userRef.get().then((doc) => {
+    const isBlocked = userRef.get().then((doc) => {
       if (doc.exists) {
         const data = doc.data();
+        console.log('return doc exists', data.is_blocked);
         if (data && data.is_blocked) {
           console.log('return data.is_blocked;', data.is_blocked);
-          return !data.is_blocked;
+          return data.is_blocked;
+        } else {
+          return false;
         }
-        return true;
       }
-      // doc.data() will be undefined in this case
-      console.log('No such document!');
     }).catch((error) => {
       console.log('Error getting document:', error);
     });
+    return !isBlocked;
   };
 
   renderSwitch = ({
@@ -255,10 +260,9 @@ export default class PublishForm extends React.Component {
         <View style={styles.submit}>
           <Button
             title="Опубликовать LOOK"
-            onPress={() => {
-              this.isUserBlocked() && handleSubmit(this.onSubmit);
+            onPress={
+              handleSubmit(this.onSubmit)
             }
-          }
           />
         </View>
       </ScrollView>
