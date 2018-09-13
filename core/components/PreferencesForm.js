@@ -76,9 +76,9 @@ export default class PreferencesForm extends React.Component {
     updateUserInfo(values);
   };
   
-  _onPressLink = () => {
+  _onPressLink = (url) => {
     WebBrowser.openBrowserAsync(
-      'https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf',
+      url,
     );
   };
   
@@ -148,10 +148,18 @@ export default class PreferencesForm extends React.Component {
             {('Информация').toUpperCase()}
           </Text>
         </View>
-        <TouchableOpacity onPress={this._onPressLink}>
+        <TouchableOpacity onPress={() => this._onPressLink('https://look-like-dev.firebaseapp.com/download/privacy_policy_mobile_view.pdf')}>
           <View style={styles.link}>
             <Text style={styles.linkText}>
               Политика конфиденциальности
+            </Text>
+            <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this._onPressLink('https://look-like-dev.firebaseapp.com/download/EULA_mobile_view.pdf')}>
+          <View style={styles.link}>
+            <Text style={styles.linkText}>
+              Правила использования приложения
             </Text>
             <MaterialIcons name="navigate-next" size={26} color="#A1A1A1" />
           </View>

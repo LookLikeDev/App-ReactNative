@@ -9,7 +9,7 @@
 	<key>isSplashScreenDisabled</key>
 	<false/>
 	<key>manifestUrl</key>
-	<string>exp://exp.host/@gekistolyarov/app-reactnative</string>
+	<string>exp://exp.host/@meerrec/app-reactnative</string>
 	<key>releaseChannel</key>
 	<string>default</string>
 </dict>

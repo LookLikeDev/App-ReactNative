@@ -27,6 +27,8 @@ const LookRecord = Record({
   reference: null,
   picture_uri: null,
   date_published: null,
+  is_reported: null,
+  is_blocked: null,
 });
 
 /**
@@ -241,10 +243,23 @@ export const updateListSaga = function* ({ payload: { votedItems } }) {
         let items = querySnapshot.docs;
 
         if (votedItems !== null) {
-          items = yield all(querySnapshot.docs.filter(
-            item => !Object.prototype.hasOwnProperty.call(votedItems,
+          items = items.filter(
+            item => !Object.prototype.hasOwnProperty.call(votedItems, item.id),
+          );
+        }
+
+        if (blockedLooks !== null) {
+          items = items.filter(
+            item => !Object.prototype.hasOwnProperty.call(blockedLooks,
               item.id),
-          ));
+          );
+        }
+
+        if (blockedUsers !== null) {
+          items = items.filter(
+            item => !Object.prototype.hasOwnProperty.call(blockedLooks,
+              item.user.id),
+          );
         }
 
         items = yield all(items.map(getData));
